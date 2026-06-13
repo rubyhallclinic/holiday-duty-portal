@@ -543,13 +543,27 @@
 
   <!-- ════════ LOGIN CARD ════════ -->
   <div class="card" id="loginCard">
-    <div class="card-header">
+    <!-- ROLE SELECTOR -->
+    <div style="display:flex;gap:0;border-bottom:2px solid var(--grey-1);">
+      <button type="button" id="roleManager" onclick="selectRole('MANAGER')"
+        style="flex:1;padding:13px;border:none;background:var(--navy);color:white;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border-radius:0;display:flex;align-items:center;justify-content:center;gap:7px;transition:background 0.2s;">
+        <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:white;"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+        Department Manager
+      </button>
+      <button type="button" id="roleAdmin" onclick="selectRole('ADMIN')"
+        style="flex:1;padding:13px;border:none;background:var(--grey-1);color:var(--grey-3);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border-radius:0;display:flex;align-items:center;justify-content:center;gap:7px;transition:background 0.2s;">
+        <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        Attendance Manager
+      </button>
+    </div>
+
+    <div class="card-header" id="loginCardHeader">
       <div class="card-header-icon">
         <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
       </div>
       <div>
-        <h2>Department Manager Login</h2>
-        <p>Enter your credentials to access the portal</p>
+        <h2 id="loginCardTitle">Department Manager Login</h2>
+        <p id="loginCardSubtitle">Enter your credentials to access the portal</p>
       </div>
     </div>
 
@@ -790,7 +804,19 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
     const authData    = await authRes.json();
     const accessToken = authData.access_token;
 
-    // Check managers table
+    // Store token
+    sessionStorage.setItem('auth_token', accessToken);
+    sessionStorage.setItem('user_email', email);
+
+    // If Admin tab selected — bypass manager check, go direct to Admin Dashboard
+    if (selectedRole === 'ADMIN') {
+      sessionStorage.setItem('user_role',    'ADMIN');
+      sessionStorage.setItem('manager_name', email.split('@')[0].toUpperCase());
+      window.location.href = 'screen7_admin_dashboard.html';
+      return;
+    }
+
+    // Manager tab — check managers table
     const mgrRes = await fetch(
       `${SUPABASE_URL}/rest/v1/managers?email=eq.${encodeURIComponent(email)}&is_active=eq.true&select=manager_id,manager_name,is_first_login,location_id`,
       { headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${accessToken}` } }
@@ -799,7 +825,14 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 
     if (!mgrData || mgrData.length === 0) {
       // Could be admin — redirect
-      window.location.href = 'admin_dashboard.html';
+      if (selectedRole === 'ADMIN') {
+        sessionStorage.setItem('user_role', 'ADMIN');
+        sessionStorage.setItem('manager_name', email.split('@')[0].toUpperCase());
+        window.location.href = 'screen7_admin_dashboard.html';
+      } else {
+        sessionStorage.clear();
+        showError('loginAlert','loginAlertMsg','Your account was not found. Please contact HR Admin.');
+      }
       return;
     }
 
@@ -819,7 +852,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
       return;
     }
 
-    window.location.href = 'manager_dashboard.html';
+    window.location.href = 'screen2_manager_dashboard.html';
 
   } catch(err) {
     const msg = err.message === 'INVALID_CREDENTIALS'
@@ -862,9 +895,8 @@ document.getElementById('forgotLink').addEventListener('click', async function(e
       body: JSON.stringify({ email: forgotEmail, otp_code: otp, is_used: false, expires_at: expiresAt })
     });
 
-    // Make.com webhook picks up OTP and emails it to manager
-    // Testing only — remove in production:
-    // console.log('OTP for testing:', otp);
+    // TEMPORARY: Show OTP until email automation is ready
+    alert(`Your OTP is: ${otp}\n\nThis is temporary. OTP will be emailed once Make.com is configured.`);
 
     document.getElementById('otpEmailDisplay').textContent = email;
     showPanel('otpCard');
@@ -1095,6 +1127,43 @@ document.getElementById('resetForm').addEventListener('submit', async function(e
     setLoading('resetBtn','resetSpinner','resetBtnIcon', false);
   }
 });
+
+// ══════════════════════════════════════
+// ROLE SELECTOR
+// ══════════════════════════════════════
+let selectedRole = 'MANAGER';
+
+function selectRole(role) {
+  selectedRole = role;
+  const mgrBtn   = document.getElementById('roleManager');
+  const adminBtn = document.getElementById('roleAdmin');
+  const title    = document.getElementById('loginCardTitle');
+  const subtitle = document.getElementById('loginCardSubtitle');
+  const hdrIcon  = document.getElementById('loginCardHeader').querySelector('svg path');
+  const pwdHint  = document.querySelector('.pwd-hint');
+
+  if (role === 'ADMIN') {
+    mgrBtn.style.background   = 'var(--grey-1)';
+    mgrBtn.style.color        = 'var(--grey-3)';
+    adminBtn.style.background = 'var(--navy)';
+    adminBtn.style.color      = 'white';
+    adminBtn.querySelector('svg').style.fill = 'white';
+    mgrBtn.querySelector('svg').style.fill   = 'var(--grey-3)';
+    title.textContent    = 'Attendance Manager Login';
+    subtitle.textContent = 'HR & ER Admin access — Department of HR & ER';
+    if (pwdHint) pwdHint.style.display = 'none';
+  } else {
+    mgrBtn.style.background   = 'var(--navy)';
+    mgrBtn.style.color        = 'white';
+    adminBtn.style.background = 'var(--grey-1)';
+    adminBtn.style.color      = 'var(--grey-3)';
+    mgrBtn.querySelector('svg').style.fill   = 'white';
+    adminBtn.querySelector('svg').style.fill = 'var(--grey-3)';
+    title.textContent    = 'Department Manager Login';
+    subtitle.textContent = 'Enter your credentials to access the portal';
+    if (pwdHint) pwdHint.style.display = 'flex';
+  }
+}
 
 // Init
 showPanel('loginCard');
