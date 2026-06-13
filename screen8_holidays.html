@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Holiday Events — Approved Holiday Duty Confirmation Portal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Montserrat:wght@500;600;700;800&display=swap');
+  :root {
+    --navy:#1B3A6B;--navy-d:#122850;--navy-l:#2A5298;--red:#D32F2F;--yellow:#F5A800;
+    --blue-bg:#EAF4FB;--white:#FFFFFF;--grey-bg:#F5F7FA;--grey-1:#E8ECF0;--grey-2:#C5CDD6;
+    --grey-3:#7F8C9A;--text:#1A2332;--text-s:#4A5568;--border:#D0D8E0;
+    --green:#1B5E20;--green-l:#E8F5E9;--green-b:#43A047;--amber:#E65100;--amber-l:#FFF3E0;--red-l:#FFEBEE;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;text-decoration:none !important;}
+  body{font-family:'Open Sans',sans-serif;background:var(--blue-bg);min-height:100vh;display:flex;flex-direction:column;}
+  .site-header{width:100%;background:var(--white);border-bottom:3px solid var(--red);padding:12px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(27,58,107,0.10);position:sticky;top:0;z-index:100;}
+  .logo-area{display:flex;align-items:center;gap:12px;}
+  .rhc-cross{width:48px;height:48px;flex-shrink:0;}
+  .logo-gmf{font-size:11px;color:var(--navy);}
+  .logo-rhc{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:700;color:var(--navy);}
+  .header-right{display:flex;align-items:center;gap:16px;}
+  .dept-label{font-size:12px;font-weight:600;color:var(--navy);text-align:right;line-height:1.5;}
+  .dept-label span{display:block;font-size:11px;font-weight:400;color:var(--grey-3);}
+  .admin-pill{display:flex;align-items:center;gap:8px;background:var(--navy);border-radius:24px;padding:6px 14px 6px 8px;}
+  .admin-avatar{width:30px;height:30px;background:var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .admin-avatar svg{width:17px;height:17px;fill:var(--navy);}
+  .admin-name{font-size:12px;font-weight:700;color:white;}
+  .admin-role{font-size:11px;color:rgba(255,255,255,0.65);}
+  .back-btn{background:none;border:1.5px solid var(--border);border-radius:6px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--text-s);cursor:pointer;display:flex;align-items:center;gap:6px;transition:border-color 0.2s,color 0.2s;}
+  .back-btn:hover{border-color:var(--navy);color:var(--navy);}
+  .back-btn svg{width:14px;height:14px;fill:currentColor;}
+  .portal-band{width:100%;background:linear-gradient(135deg,var(--navy-d) 0%,var(--navy) 60%,var(--navy-l) 100%);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;}
+  .portal-title{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:700;color:white;}
+  .admin-badge{background:var(--yellow);color:var(--navy-d);font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;padding:3px 10px;border-radius:3px;letter-spacing:0.06em;}
+  .main-content{flex:1;padding:24px 32px 40px;max-width:1100px;width:100%;margin:0 auto;}
+  .page-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:12px;}
+  .page-heading h1{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:700;color:var(--navy-d);}
+  .page-heading p{font-size:13px;color:var(--text-s);margin-top:4px;}
+  .btn-primary{padding:10px 20px;background:var(--navy);color:white;border:none;border-radius:6px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background 0.2s;box-shadow:0 2px 8px rgba(27,58,107,0.2);}
+  .btn-primary:hover{background:var(--navy-d);}
+  .btn-primary svg{width:16px;height:16px;fill:white;}
+  /* FILTER */
+  .filter-bar{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin-bottom:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;box-shadow:0 1px 4px rgba(27,58,107,0.06);}
+  .flt-grp{display:flex;flex-direction:column;gap:4px;}
+  .flt-grp label{font-size:11px;font-weight:700;color:var(--text-s);text-transform:uppercase;letter-spacing:0.05em;}
+  .flt-sel{padding:8px 12px;border:1.5px solid var(--grey-1);border-radius:6px;font-family:'Open Sans',sans-serif;font-size:13px;color:var(--text);background:var(--grey-bg);outline:none;min-width:140px;}
+  .flt-sel:focus{border-color:var(--navy);background:white;}
+  /* CARDS GRID */
+  .holiday-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;}
+  .h-card{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 6px rgba(27,58,107,0.07);transition:box-shadow 0.2s,transform 0.15s;}
+  .h-card:hover{box-shadow:0 4px 16px rgba(27,58,107,0.13);transform:translateY(-2px);}
+  .h-card-top{background:linear-gradient(135deg,var(--navy-d),var(--navy));padding:14px 18px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
+  .h-card-top.closed-top{background:linear-gradient(135deg,#37474F,#546E7A);}
+  .h-card-name{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;color:white;line-height:1.3;}
+  .date-chip{background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);border-radius:4px;padding:3px 9px;font-size:11px;font-weight:600;color:white;white-space:nowrap;flex-shrink:0;}
+  .h-card-body{padding:14px 18px;}
+  .h-meta{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+  .h-meta-row{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--text-s);}
+  .h-meta-row svg{width:14px;height:14px;fill:var(--grey-3);flex-shrink:0;}
+  .h-meta-row strong{color:var(--text);}
+  .loc-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;}
+  .loc-chip{background:var(--blue-bg);border:1px solid var(--blue-mid,#B3D4ED);border-radius:3px;padding:2px 8px;font-size:10px;font-weight:600;color:var(--navy);}
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
+  .b-active{background:var(--green-l);color:var(--green);border:1px solid #A5D6A7;}
+  .b-closed{background:var(--grey-1);color:var(--grey-3);border:1px solid var(--border);}
+  .b-expired{background:var(--red-l);color:var(--red);border:1px solid #FFCDD2;}
+  .h-card-actions{display:flex;gap:8px;padding:12px 18px;border-top:1px solid var(--grey-1);background:var(--grey-bg);}
+  .btn-card{flex:1;padding:8px 10px;border-radius:5px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;transition:all 0.2s;border:none;text-transform:uppercase;letter-spacing:0.03em;}
+  .btn-card svg{width:13px;height:13px;fill:currentColor;}
+  .btn-edit{background:#E3EAF5;color:var(--navy);}
+  .btn-edit:hover{background:#C5D5EC;}
+  .btn-close-hol{background:var(--red-l);color:var(--red);border:1.5px solid #FFCDD2;}
+  .btn-close-hol:hover{background:#FFCDD2;}
+  .btn-reopen{background:var(--green-l);color:var(--green);border:1.5px solid #A5D6A7;}
+  .btn-reopen:hover{background:#C8E6C9;}
+  .btn-view-stat{background:var(--amber-l);color:var(--amber);border:1.5px solid #FFCC80;}
+  .btn-view-stat:hover{background:#FFE0B2;}
+  .empty-state{text-align:center;padding:48px 24px;color:var(--grey-3);background:var(--white);border:1px solid var(--border);border-radius:8px;}
+  .empty-state svg{width:44px;height:44px;fill:var(--grey-2);margin-bottom:12px;}
+  .empty-state p{font-size:13px;}
+  .spin{display:inline-block;width:18px;height:18px;border:2px solid var(--grey-2);border-top-color:var(--navy);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:8px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  /* MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:center;justify-content:center;padding:16px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:white;border-radius:8px;width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.2);overflow:hidden;animation:fadeUp 0.25s ease;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+  .modal-header{background:linear-gradient(135deg,var(--navy-d),var(--navy));padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+  .modal-header h3{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;color:white;}
+  .modal-close{background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:white;font-size:16px;}
+  .modal-close:hover{background:rgba(255,255,255,0.25);}
+  .modal-body{padding:22px;max-height:60vh;overflow-y:auto;}
+  .modal-footer{padding:14px 20px;border-top:1px solid var(--grey-1);display:flex;gap:10px;justify-content:flex-end;}
+  .form-group{margin-bottom:16px;}
+  .form-group label{display:block;font-size:11px;font-weight:700;color:var(--text-s);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;}
+  .form-group label span{color:var(--red);}
+  .form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 13px;border:1.5px solid var(--grey-1);border-radius:6px;font-family:'Open Sans',sans-serif;font-size:13px;color:var(--text);background:var(--grey-bg);outline:none;}
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--navy);background:white;}
+  .form-group .field-note{font-size:11px;color:var(--grey-3);margin-top:4px;}
+  /* Location checkboxes */
+  .loc-checkboxes{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;margin-top:6px;}
+  .loc-cb-row{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1.5px solid var(--grey-1);border-radius:6px;cursor:pointer;transition:border-color 0.2s,background 0.2s;}
+  .loc-cb-row:hover{border-color:var(--navy-l);background:#EFF4FB;}
+  .loc-cb-row.checked{border-color:var(--navy);background:#E3EAF5;}
+  .loc-cb-row input[type=checkbox]{accent-color:var(--navy);width:15px;height:15px;flex-shrink:0;}
+  .loc-cb-label{font-size:12px;font-weight:600;color:var(--text);}
+  .btn-modal-cancel{padding:9px 18px;background:white;color:var(--text-s);border:1.5px solid var(--border);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
+  .btn-modal-cancel:hover{border-color:var(--red);color:var(--red);}
+  .btn-modal-confirm{padding:9px 22px;background:var(--navy);color:white;border:none;border-radius:6px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;}
+  .btn-modal-confirm:hover{background:var(--navy-d);}
+  .alert{padding:10px 14px;border-radius:6px;font-size:12.5px;margin-bottom:14px;display:flex;align-items:flex-start;gap:8px;line-height:1.5;}
+  .alert svg{width:15px;height:15px;flex-shrink:0;margin-top:1px;}
+  .alert-error{background:var(--red-l);border:1px solid #FFCDD2;color:var(--red);}
+  .alert-error svg{fill:var(--red);}
+  .alert-success{background:var(--green-l);border:1px solid #A5D6A7;color:var(--green);}
+  .alert-success svg{fill:var(--green-b);}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy-d);color:white;padding:10px 20px;border-radius:6px;font-size:13px;font-weight:600;z-index:500;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
+  .toast.show{opacity:1;}
+  .page-footer{text-align:center;font-size:11px;color:var(--grey-3);padding:14px;border-top:1px solid var(--grey-1);background:var(--white);margin-top:auto;}
+  @media(max-width:768px){.site-header{padding:10px 16px;}.portal-band{padding:12px 16px;}.main-content{padding:16px 12px 32px;}.dept-label{display:none;}.holiday-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="site-header">
+  <div class="logo-area">
+    <svg class="rhc-cross" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="13,1 25,1 25,25 1,25 1,13 13,13" fill="#D32F2F"/>
+      <polygon points="29,1 41,1 41,13 53,13 53,25 29,25" fill="#F5A800"/>
+      <polygon points="1,29 25,29 25,53 13,53 13,41 1,41" fill="#1565C0"/>
+      <polygon points="29,29 53,29 53,41 41,41 41,53 29,53" fill="#2E7D32"/>
+    </svg>
+    <div><div class="logo-gmf">Grant Medical Foundation</div><div class="logo-rhc">Ruby Hall Clinic</div></div>
+  </div>
+  <div class="header-right">
+    <div class="dept-label">Department of HR &amp; ER<span>Attendance &amp; Leave Management</span></div>
+    <div class="admin-pill">
+      <div class="admin-avatar"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+      <div><div class="admin-name" id="adminName">ADMIN</div><div class="admin-role">Attendance Manager</div></div>
+    </div>
+    <button class="back-btn" onclick="window.location.href='screen7_admin_dashboard.html'">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Dashboard
+    </button>
+  </div>
+</div>
+
+<!-- PORTAL BAND -->
+<div class="portal-band">
+  <div class="portal-title">Approved Holiday Duty Confirmation Portal</div>
+  <div class="admin-badge">HOLIDAY EVENTS</div>
+</div>
+
+<!-- MAIN -->
+<div class="main-content">
+
+  <div class="page-top">
+    <div class="page-heading">
+      <h1>Holiday Event Management</h1>
+      <p>Create and manage paid holiday events. Managers see only holidays assigned to their location.</p>
+    </div>
+    <button class="btn-primary" onclick="openCreateModal()">
+      <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+      + Create Holiday Event
+    </button>
+  </div>
+
+  <!-- Global Alert -->
+  <div class="alert" id="pageAlert" style="display:none;">
+    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+    <span id="pageAlertMsg"></span>
+  </div>
+
+  <!-- Filters -->
+  <div class="filter-bar">
+    <div class="flt-grp">
+      <label>Status</label>
+      <select class="flt-sel" id="statusFlt" onchange="renderCards()">
+        <option value="">All</option>
+        <option value="ACTIVE">Active</option>
+        <option value="CLOSED">Closed</option>
+      </select>
+    </div>
+    <div class="flt-grp">
+      <label>Year</label>
+      <select class="flt-sel" id="yearFlt" onchange="renderCards()">
+        <option value="">All Years</option>
+      </select>
+    </div>
+    <div class="flt-grp">
+      <label>Location</label>
+      <select class="flt-sel" id="locFlt" onchange="renderCards()">
+        <option value="">All Locations</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Cards -->
+  <div id="cardsContainer">
+    <div class="empty-state"><span class="spin"></span><p>Loading holidays...</p></div>
+  </div>
+
+</div>
+
+<!-- CREATE / EDIT MODAL -->
+<div class="modal-overlay" id="holidayModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Create Holiday Event</h3>
+      <button class="modal-close" onclick="closeModal()">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="alert alert-error" id="modalError" style="display:none;">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="modalErrorMsg"></span>
+      </div>
+
+      <div class="form-group">
+        <label>Holiday Name <span>*</span></label>
+        <input type="text" id="fHolidayName" placeholder="E.G. DIWALI, REPUBLIC DAY" maxlength="100" style="text-transform:uppercase;" required/>
+      </div>
+      <div class="form-group">
+        <label>Holiday Date <span>*</span></label>
+        <input type="date" id="fHolidayDate" required/>
+      </div>
+      <div class="form-group">
+        <label>Submission Deadline — Date &amp; Time <span>*</span></label>
+        <input type="datetime-local" id="fDeadline" required/>
+        <div class="field-note">Managers cannot submit after this date and time.</div>
+      </div>
+      <div class="form-group">
+        <label>Applicable Locations <span>*</span></label>
+        <div class="field-note" style="margin-bottom:8px;">Select all locations where this holiday applies.</div>
+        <div class="loc-checkboxes" id="locCheckboxes">
+          <!-- populated from DB -->
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-modal-confirm" id="modalSaveBtn" onclick="saveHoliday()">
+        <span id="modalSaveBtnText">Create Holiday</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="page-footer">&copy; 2026 &nbsp;Grant Medical Foundation &nbsp;|&nbsp; Ruby Hall Clinic &nbsp;|&nbsp; Department of HR &amp; ER</div>
+
+<script>
+const SUPABASE_URL  = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
+const authToken = sessionStorage.getItem('auth_token');
+const adminName = sessionStorage.getItem('manager_name') || 'ADMIN';
+if (!authToken) window.location.href = 'index.html';
+document.getElementById('adminName').textContent = adminName;
+
+let allHolidays = [];
+let allLocations = [];
+let editingId = null;
+
+async function api(path) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { headers:{'apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`} });
+  if (!res.ok) throw new Error('API error');
+  return res.json();
+}
+async function apiPost(path, body) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { method:'POST', headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`,'Prefer':'return=representation'}, body:JSON.stringify(body) });
+  if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.message||e.details||'Error'); }
+  return res.json();
+}
+async function apiPatch(path, body) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, { method:'PATCH', headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`,'Prefer':'return=minimal'}, body:JSON.stringify(body) });
+  if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.message||'Error'); }
+}
+
+function fmtDate(d) { if(!d) return '—'; return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'}); }
+function fmtDateTime(d) { if(!d) return '—'; const dt=new Date(d); return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})+', '+dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true}).toUpperCase(); }
+function isExpired(d) { return new Date(d).getTime() < Date.now(); }
+function showToast(msg,dur=2800){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
+function showPageAlert(type,msg){const el=document.getElementById('pageAlert');el.className=`alert alert-${type}`;document.getElementById('pageAlertMsg').textContent=msg;el.style.display='flex';setTimeout(()=>el.style.display='none',5000);}
+
+async function init() {
+  allLocations = await api(`locations?is_active=eq.true&order=location_name.asc&select=location_id,location_name`);
+  // Populate location filter
+  const locFlt = document.getElementById('locFlt');
+  allLocations.forEach(l => { const o=document.createElement('option'); o.value=l.location_id; o.textContent=l.location_name; locFlt.appendChild(o); });
+  // Build location checkboxes for modal
+  buildLocCheckboxes();
+  await loadHolidays();
+}
+
+function buildLocCheckboxes() {
+  const wrap = document.getElementById('locCheckboxes');
+  wrap.innerHTML = allLocations.map(l => `
+    <label class="loc-cb-row" id="lrow_${l.location_id}">
+      <input type="checkbox" value="${l.location_id}" id="lcb_${l.location_id}" onchange="updateLocRow('${l.location_id}')"/>
+      <span class="loc-cb-label">${l.location_name}</span>
+    </label>`).join('');
+}
+
+function updateLocRow(locId) {
+  const cb = document.getElementById(`lcb_${locId}`);
+  document.getElementById(`lrow_${locId}`).classList.toggle('checked', cb.checked);
+}
+
+async function loadHolidays() {
+  allHolidays = await api(`holidays?order=holiday_date.desc&select=holiday_id,holiday_name,holiday_date,deadline_datetime,status,applicable_locations,created_by,created_at`);
+  // Populate year filter
+  const years = [...new Set(allHolidays.map(h=>new Date(h.holiday_date).getFullYear()))].sort((a,b)=>b-a);
+  const yearFlt = document.getElementById('yearFlt');
+  yearFlt.innerHTML = '<option value="">All Years</option>';
+  years.forEach(y=>{ const o=document.createElement('option'); o.value=y; o.textContent=y; yearFlt.appendChild(o); });
+  renderCards();
+}
+
+function renderCards() {
+  const statusF = document.getElementById('statusFlt').value;
+  const yearF   = document.getElementById('yearFlt').value;
+  const locF    = document.getElementById('locFlt').value;
+  let filtered  = allHolidays;
+  if (statusF) filtered = filtered.filter(h=>h.status===statusF);
+  if (yearF)   filtered = filtered.filter(h=>new Date(h.holiday_date).getFullYear()==yearF);
+  if (locF)    filtered = filtered.filter(h=>h.applicable_locations?.includes(locF));
+
+  const container = document.getElementById('cardsContainer');
+  if (filtered.length===0) {
+    container.innerHTML=`<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg><p>No holiday events found for selected filters.</p></div>`;
+    return;
+  }
+
+  container.innerHTML = `<div class="holiday-grid">${filtered.map(h=>buildCard(h)).join('')}</div>`;
+}
+
+function buildCard(h) {
+  const expired = isExpired(h.deadline_datetime);
+  const topClass = h.status==='CLOSED' ? 'h-card-top closed-top' : 'h-card-top';
+  const statusBadge = h.status==='CLOSED'
+    ? `<span class="badge b-closed">Closed</span>`
+    : expired
+    ? `<span class="badge b-expired">Deadline Passed</span>`
+    : `<span class="badge b-active">● Active</span>`;
+
+  // Location names
+  const locNames = h.applicable_locations?.map(lid => allLocations.find(l=>l.location_id===lid)?.location_name).filter(Boolean) || [];
+
+  const actions = h.status==='ACTIVE'
+    ? `<button class="btn-card btn-edit" onclick="openEditModal('${h.holiday_id}')">
+        <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>Edit
+       </button>
+       <button class="btn-card btn-view-stat" onclick="viewStatus('${h.holiday_id}')">
+        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>Status
+       </button>
+       <button class="btn-card btn-close-hol" onclick="closeHoliday('${h.holiday_id}','${h.holiday_name}')">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.47 2 2 6.47 2 12s4.47 10 10 10 10-4.47 10-10S17.53 2 12 2zm5 13.59L15.59 17 12 13.41 8.41 17 7 15.59 10.59 12 7 8.41 8.41 7 12 10.59 15.59 7 17 8.41 13.41 12 17 15.59z"/></svg>Close
+       </button>`
+    : `<button class="btn-card btn-reopen" onclick="reopenHoliday('${h.holiday_id}','${h.holiday_name}')">
+        <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>Re-open
+       </button>
+       <button class="btn-card btn-view-stat" onclick="viewStatus('${h.holiday_id}')">
+        <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>Status
+       </button>`;
+
+  return `<div class="h-card">
+    <div class="${topClass}">
+      <div class="h-card-name">${h.holiday_name}</div>
+      <div class="date-chip">${fmtDate(h.holiday_date)}</div>
+    </div>
+    <div class="h-card-body">
+      <div class="h-meta">
+        <div class="h-meta-row">
+          <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+          Deadline: <strong>${fmtDateTime(h.deadline_datetime)}</strong>
+        </div>
+        <div class="h-meta-row">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+          Locations:
+        </div>
+        <div class="loc-chips">${locNames.map(n=>`<span class="loc-chip">${n}</span>`).join('')}</div>
+        <div class="h-meta-row" style="margin-top:4px;">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+          Created by: <strong>${h.created_by}</strong>
+        </div>
+      </div>
+      ${statusBadge}
+    </div>
+    <div class="h-card-actions">${actions}</div>
+  </div>`;
+}
+
+// OPEN CREATE MODAL
+function openCreateModal() {
+  editingId = null;
+  document.getElementById('modalTitle').textContent = 'Create Holiday Event';
+  document.getElementById('modalSaveBtnText').textContent = 'Create Holiday';
+  document.getElementById('fHolidayName').value = '';
+  document.getElementById('fHolidayDate').value = '';
+  document.getElementById('fDeadline').value = '';
+  document.getElementById('modalError').style.display = 'none';
+  // Uncheck all locations
+  allLocations.forEach(l => {
+    const cb = document.getElementById(`lcb_${l.location_id}`);
+    if (cb) { cb.checked=false; document.getElementById(`lrow_${l.location_id}`).classList.remove('checked'); }
+  });
+  document.getElementById('holidayModal').classList.add('open');
+}
+
+// OPEN EDIT MODAL
+function openEditModal(hid) {
+  const h = allHolidays.find(x=>x.holiday_id===hid);
+  if (!h) return;
+  editingId = hid;
+  document.getElementById('modalTitle').textContent = 'Edit Holiday Event';
+  document.getElementById('modalSaveBtnText').textContent = 'Save Changes';
+  document.getElementById('fHolidayName').value = h.holiday_name;
+  document.getElementById('fHolidayDate').value = h.holiday_date;
+  // Format datetime-local
+  const dl = new Date(h.deadline_datetime);
+  dl.setMinutes(dl.getMinutes() - dl.getTimezoneOffset());
+  document.getElementById('fDeadline').value = dl.toISOString().slice(0,16);
+  document.getElementById('modalError').style.display = 'none';
+  // Set location checkboxes
+  allLocations.forEach(l => {
+    const cb  = document.getElementById(`lcb_${l.location_id}`);
+    const row = document.getElementById(`lrow_${l.location_id}`);
+    const checked = h.applicable_locations?.includes(l.location_id);
+    if (cb)  cb.checked = !!checked;
+    if (row) row.classList.toggle('checked', !!checked);
+  });
+  document.getElementById('holidayModal').classList.add('open');
+}
+
+function closeModal() { document.getElementById('holidayModal').classList.remove('open'); }
+
+async function saveHoliday() {
+  const name     = document.getElementById('fHolidayName').value.trim().toUpperCase();
+  const date     = document.getElementById('fHolidayDate').value;
+  const deadline = document.getElementById('fDeadline').value;
+  const locs     = allLocations.filter(l=>document.getElementById(`lcb_${l.location_id}`)?.checked).map(l=>l.location_id);
+
+  if (!name||!date||!deadline||locs.length===0) {
+    document.getElementById('modalError').style.display='flex';
+    document.getElementById('modalErrorMsg').textContent='All fields are required and at least one location must be selected.';
+    return;
+  }
+
+  const btn = document.getElementById('modalSaveBtn');
+  btn.disabled=true; btn.textContent='Saving...';
+
+  try {
+    if (editingId) {
+      await apiPatch(`holidays?holiday_id=eq.${editingId}`, {
+        holiday_name: name, holiday_date: date,
+        deadline_datetime: new Date(deadline).toISOString(),
+        applicable_locations: locs, updated_at: new Date().toISOString()
+      });
+      showToast('Holiday updated successfully.');
+    } else {
+      await apiPost('holidays', {
+        holiday_name: name, holiday_date: date,
+        deadline_datetime: new Date(deadline).toISOString(),
+        applicable_locations: locs, status:'ACTIVE', created_by: adminName
+      });
+      showToast('Holiday event created successfully.');
+    }
+    closeModal();
+    await loadHolidays();
+    showPageAlert('success', editingId ? `${name} updated.` : `${name} created. Managers at selected locations can now see it.`);
+  } catch(e) {
+    document.getElementById('modalError').style.display='flex';
+    document.getElementById('modalErrorMsg').textContent = e.message.includes('unique') ? 'A holiday with this name and date already exists.' : e.message;
+  } finally {
+    btn.disabled=false; document.getElementById('modalSaveBtnText').textContent = editingId?'Save Changes':'Create Holiday';
+  }
+}
+
+async function closeHoliday(hid, name) {
+  if (!confirm(`Close holiday "${name}"?\n\nAll submissions will be locked. This cannot be undone unless you re-open the holiday.`)) return;
+  try {
+    await apiPatch(`holidays?holiday_id=eq.${hid}`, { status:'CLOSED', updated_at: new Date().toISOString() });
+    showToast(`${name} closed.`);
+    await loadHolidays();
+  } catch(e) { alert('Failed to close holiday. Please try again.'); }
+}
+
+async function reopenHoliday(hid, name) {
+  if (!confirm(`Re-open holiday "${name}"?\n\nThis will allow submissions again for active departments.`)) return;
+  try {
+    await apiPatch(`holidays?holiday_id=eq.${hid}`, { status:'ACTIVE', updated_at: new Date().toISOString() });
+    showToast(`${name} re-opened.`);
+    await loadHolidays();
+  } catch(e) { alert('Failed to re-open holiday. Please try again.'); }
+}
+
+function viewStatus(hid) {
+  sessionStorage.setItem('current_holiday_id', hid);
+  window.location.href='screen7_admin_dashboard.html';
+}
+
+init();
+</script>
+</body>
+</html>

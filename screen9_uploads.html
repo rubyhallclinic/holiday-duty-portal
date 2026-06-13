@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Upload Data — Approved Holiday Duty Confirmation Portal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Montserrat:wght@500;600;700;800&display=swap');
+  :root{--navy:#1B3A6B;--navy-d:#122850;--navy-l:#2A5298;--red:#D32F2F;--yellow:#F5A800;--blue-bg:#EAF4FB;--white:#FFFFFF;--grey-bg:#F5F7FA;--grey-1:#E8ECF0;--grey-2:#C5CDD6;--grey-3:#7F8C9A;--text:#1A2332;--text-s:#4A5568;--border:#D0D8E0;--green:#1B5E20;--green-l:#E8F5E9;--green-b:#43A047;--amber:#E65100;--amber-l:#FFF3E0;--red-l:#FFEBEE;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;text-decoration:none !important;}
+  body{font-family:'Open Sans',sans-serif;background:var(--blue-bg);min-height:100vh;display:flex;flex-direction:column;}
+  .site-header{width:100%;background:var(--white);border-bottom:3px solid var(--red);padding:12px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(27,58,107,0.10);position:sticky;top:0;z-index:100;}
+  .logo-area{display:flex;align-items:center;gap:12px;}
+  .rhc-cross{width:48px;height:48px;flex-shrink:0;}
+  .logo-gmf{font-size:11px;color:var(--navy);}
+  .logo-rhc{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:700;color:var(--navy);}
+  .header-right{display:flex;align-items:center;gap:16px;}
+  .dept-label{font-size:12px;font-weight:600;color:var(--navy);text-align:right;line-height:1.5;}
+  .dept-label span{display:block;font-size:11px;font-weight:400;color:var(--grey-3);}
+  .admin-pill{display:flex;align-items:center;gap:8px;background:var(--navy);border-radius:24px;padding:6px 14px 6px 8px;}
+  .admin-avatar{width:30px;height:30px;background:var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .admin-avatar svg{width:17px;height:17px;fill:var(--navy);}
+  .admin-name{font-size:12px;font-weight:700;color:white;}
+  .admin-role{font-size:11px;color:rgba(255,255,255,0.65);}
+  .back-btn{background:none;border:1.5px solid var(--border);border-radius:6px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--text-s);cursor:pointer;display:flex;align-items:center;gap:6px;transition:border-color 0.2s,color 0.2s;}
+  .back-btn:hover{border-color:var(--navy);color:var(--navy);}
+  .back-btn svg{width:14px;height:14px;fill:currentColor;}
+  .portal-band{width:100%;background:linear-gradient(135deg,var(--navy-d) 0%,var(--navy) 60%,var(--navy-l) 100%);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;}
+  .portal-title{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:700;color:white;}
+  .admin-badge{background:var(--yellow);color:var(--navy-d);font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;padding:3px 10px;border-radius:3px;letter-spacing:0.06em;}
+  /* TABS */
+  .upload-tabs{display:flex;gap:0;border-bottom:2px solid var(--border);background:var(--white);padding:0 32px;}
+  .upload-tab{padding:13px 22px;background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-2px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:var(--grey-3);cursor:pointer;display:flex;align-items:center;gap:7px;transition:color 0.2s;white-space:nowrap;}
+  .upload-tab svg{width:15px;height:15px;fill:currentColor;}
+  .upload-tab:hover{color:var(--navy);}
+  .upload-tab.active{color:var(--navy);border-bottom-color:var(--navy);}
+  .main-content{flex:1;padding:24px 32px 40px;max-width:1000px;width:100%;margin:0 auto;}
+  .tab-pane{display:none;}
+  .tab-pane.active{display:block;}
+  /* UPLOAD CARD */
+  .upload-card{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 6px rgba(27,58,107,0.07);margin-bottom:24px;}
+  .upload-card-header{background:linear-gradient(135deg,var(--navy-d),var(--navy));padding:16px 22px;display:flex;align-items:center;gap:12px;}
+  .upload-card-header-icon{width:38px;height:38px;background:rgba(245,168,0,0.2);border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .upload-card-header-icon svg{width:20px;height:20px;fill:var(--yellow);}
+  .upload-card-header h3{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;color:white;}
+  .upload-card-header p{font-size:12px;color:rgba(255,255,255,0.65);margin-top:2px;}
+  .upload-card-body{padding:22px;}
+  /* FORMAT INFO */
+  .format-box{background:var(--grey-bg);border:1px solid var(--border);border-left:4px solid var(--navy);border-radius:6px;padding:14px 18px;margin-bottom:20px;}
+  .format-box h4{font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.05em;}
+  .col-chips{display:flex;flex-wrap:wrap;gap:7px;}
+  .col-chip{background:var(--navy);color:white;border-radius:4px;padding:4px 10px;font-size:11px;font-weight:700;font-family:'Montserrat',sans-serif;letter-spacing:0.04em;}
+  .col-chip.optional{background:var(--grey-2);color:var(--text);}
+  .format-notes{margin-top:10px;font-size:12px;color:var(--text-s);line-height:1.7;}
+  .format-notes li{margin-left:16px;margin-bottom:3px;}
+  /* DROP ZONE */
+  .drop-zone{border:2px dashed var(--grey-2);border-radius:8px;padding:32px 20px;text-align:center;cursor:pointer;transition:border-color 0.2s,background 0.2s;margin-bottom:16px;position:relative;}
+  .drop-zone:hover,.drop-zone.dragover{border-color:var(--navy);background:#EFF4FB;}
+  .drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+  .drop-zone svg{width:40px;height:40px;fill:var(--grey-2);margin-bottom:10px;}
+  .drop-zone p{font-size:13px;color:var(--text-s);}
+  .drop-zone .file-types{font-size:11px;color:var(--grey-3);margin-top:4px;}
+  .drop-zone.has-file{border-color:var(--green-b);background:var(--green-l);}
+  .drop-zone.has-file svg{fill:var(--green-b);}
+  .drop-zone.has-file p{color:var(--green);}
+  /* PREVIEW TABLE */
+  .preview-section{display:none;margin-bottom:16px;}
+  .preview-section.visible{display:block;}
+  .preview-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+  .preview-header h4{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--navy-d);}
+  .preview-stats{display:flex;gap:14px;flex-wrap:wrap;}
+  .prev-stat{display:flex;align-items:center;gap:5px;font-size:12px;}
+  .prev-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+  .pd-new{background:var(--green-b);}
+  .pd-update{background:var(--yellow);}
+  .pd-exit{background:var(--red);}
+  .pd-err{background:var(--red);}
+  .table-wrap-sm{max-height:280px;overflow-y:auto;border:1px solid var(--border);border-radius:6px;}
+  table{width:100%;border-collapse:collapse;font-size:12px;}
+  thead tr{background:var(--navy);position:sticky;top:0;}
+  thead th{padding:8px 12px;text-align:left;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:white;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;}
+  tbody tr{border-bottom:1px solid var(--grey-1);}
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr.row-new{background:#F0FAF4;}
+  tbody tr.row-update{background:#FFFDE7;}
+  tbody tr.row-exit{background:var(--red-l);}
+  tbody tr.row-err{background:var(--red-l);}
+  tbody td{padding:7px 12px;color:var(--text);vertical-align:middle;}
+  /* BUTTONS */
+  .btn-upload{padding:11px 24px;background:var(--navy);color:white;border:none;border-radius:6px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background 0.2s;text-transform:uppercase;letter-spacing:0.03em;}
+  .btn-upload:hover{background:var(--navy-d);}
+  .btn-upload:disabled{background:var(--grey-2);color:var(--grey-3);cursor:not-allowed;}
+  .btn-upload svg{width:15px;height:15px;fill:currentColor;}
+  .btn-download-template{padding:9px 18px;background:var(--green-l);color:var(--green);border:1.5px solid #A5D6A7;border-radius:6px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px;margin-bottom:16px;transition:background 0.2s;}
+  .btn-download-template:hover{background:#C8E6C9;}
+  .btn-download-template svg{width:14px;height:14px;fill:var(--green);}
+  /* ALERT */
+  .alert{padding:10px 14px;border-radius:6px;font-size:12.5px;margin-bottom:14px;display:flex;align-items:flex-start;gap:8px;line-height:1.5;}
+  .alert svg{width:15px;height:15px;flex-shrink:0;margin-top:1px;}
+  .alert-error{background:var(--red-l);border:1px solid #FFCDD2;color:var(--red);}
+  .alert-error svg{fill:var(--red);}
+  .alert-success{background:var(--green-l);border:1px solid #A5D6A7;color:var(--green);}
+  .alert-success svg{fill:var(--green-b);}
+  .alert-warn{background:var(--amber-l);border:1px solid #FFCC80;color:var(--amber);}
+  .alert-warn svg{fill:var(--amber);}
+  /* HISTORY TABLE */
+  .history-card{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 6px rgba(27,58,107,0.07);}
+  .history-header{background:var(--navy);padding:12px 18px;}
+  .history-header h4{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:white;}
+  .spin{display:inline-block;width:16px;height:16px;border:2px solid var(--grey-2);border-top-color:var(--navy);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy-d);color:white;padding:10px 20px;border-radius:6px;font-size:13px;font-weight:600;z-index:500;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
+  .toast.show{opacity:1;}
+  .page-footer{text-align:center;font-size:11px;color:var(--grey-3);padding:14px;border-top:1px solid var(--grey-1);background:var(--white);margin-top:auto;}
+  @media(max-width:768px){.site-header{padding:10px 16px;}.portal-band,.upload-tabs{padding-left:12px;padding-right:12px;}.main-content{padding:16px 12px 32px;}.dept-label{display:none;}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="site-header">
+  <div class="logo-area">
+    <svg class="rhc-cross" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="13,1 25,1 25,25 1,25 1,13 13,13" fill="#D32F2F"/>
+      <polygon points="29,1 41,1 41,13 53,13 53,25 29,25" fill="#F5A800"/>
+      <polygon points="1,29 25,29 25,53 13,53 13,41 1,41" fill="#1565C0"/>
+      <polygon points="29,29 53,29 53,41 41,41 41,53 29,53" fill="#2E7D32"/>
+    </svg>
+    <div><div class="logo-gmf">Grant Medical Foundation</div><div class="logo-rhc">Ruby Hall Clinic</div></div>
+  </div>
+  <div class="header-right">
+    <div class="dept-label">Department of HR &amp; ER<span>Attendance &amp; Leave Management</span></div>
+    <div class="admin-pill">
+      <div class="admin-avatar"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+      <div><div class="admin-name" id="adminName">ADMIN</div><div class="admin-role">Attendance Manager</div></div>
+    </div>
+    <button class="back-btn" onclick="window.location.href='screen7_admin_dashboard.html'">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Dashboard
+    </button>
+  </div>
+</div>
+
+<div class="portal-band">
+  <div class="portal-title">Approved Holiday Duty Confirmation Portal</div>
+  <div class="admin-badge">UPLOAD DATA</div>
+</div>
+
+<!-- TABS -->
+<div class="upload-tabs">
+  <button class="upload-tab active" onclick="switchTab('empTab',this)">
+    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+    Employee Master Upload
+  </button>
+  <button class="upload-tab" onclick="switchTab('mgrTab',this)">
+    <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+    Manager User Upload
+  </button>
+</div>
+
+<div class="main-content">
+
+  <!-- ══ TAB 1: EMPLOYEE MASTER ══ -->
+  <div class="tab-pane active" id="empTab">
+
+    <div class="upload-card">
+      <div class="upload-card-header">
+        <div class="upload-card-header-icon"><svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg></div>
+        <div><h3>Upload Employee Master List</h3><p>Replace or update the active employee database across all locations</p></div>
+      </div>
+      <div class="upload-card-body">
+
+        <button class="btn-download-template" onclick="downloadEmpTemplate()">
+          <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          Download Excel Template
+        </button>
+
+        <div class="format-box">
+          <h4>Required Columns (in exact order)</h4>
+          <div class="col-chips">
+            <span class="col-chip">Emp Code</span>
+            <span class="col-chip">PF No.</span>
+            <span class="col-chip">Employee Name</span>
+            <span class="col-chip">Designation</span>
+            <span class="col-chip">Department</span>
+            <span class="col-chip">Location</span>
+          </div>
+          <ul class="format-notes">
+            <li>File format: <strong>.xlsx or .csv</strong></li>
+            <li>First row must be column headers exactly as shown above</li>
+            <li>Location must exactly match one of: RHC MAIN, RHC WANOWRIE, RHC HINJAWADI, MMDH SHIRUR, TGINE, MEDICAL CENTER, COA</li>
+            <li>All text will be auto-converted to CAPITALS on upload</li>
+            <li>Existing employees will be updated; new ones will be added; employees not in the file will be <strong>marked inactive</strong></li>
+            <li>Employees already in a submitted list will be retained in that submission even if marked inactive</li>
+          </ul>
+        </div>
+
+        <div class="alert alert-warn" style="display:flex;">
+          <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+          This upload replaces the active employee list. Please preview carefully before confirming.
+        </div>
+
+        <div id="empUploadAlert" class="alert" style="display:none;">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+          <span id="empUploadAlertMsg"></span>
+        </div>
+
+        <div class="drop-zone" id="empDropZone">
+          <input type="file" id="empFileInput" accept=".xlsx,.csv,.xls" onchange="handleEmpFile(this)"/>
+          <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+          <p id="empDropText">Click to select file or drag &amp; drop here</p>
+          <div class="file-types">Accepted: .xlsx, .xls, .csv</div>
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-section" id="empPreview">
+          <div class="preview-header">
+            <h4>Upload Preview — <span id="empPreviewTitle">0 records</span></h4>
+            <div class="preview-stats">
+              <div class="prev-stat"><div class="prev-dot pd-new"></div>New: <strong id="empNewCount">0</strong></div>
+              <div class="prev-stat"><div class="prev-dot pd-update"></div>Updated: <strong id="empUpdCount">0</strong></div>
+              <div class="prev-stat"><div class="prev-dot pd-exit"></div>To Deactivate: <strong id="empExitCount">0</strong></div>
+              <div class="prev-stat"><div class="prev-dot pd-err"></div>Errors: <strong id="empErrCount">0</strong></div>
+            </div>
+          </div>
+          <div class="table-wrap-sm">
+            <table>
+              <thead><tr><th>#</th><th>Emp Code</th><th>PF No.</th><th>Name</th><th>Designation</th><th>Department</th><th>Location</th><th>Status</th></tr></thead>
+              <tbody id="empPreviewBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;">
+          <button class="btn-upload" id="empUploadBtn" onclick="confirmEmpUpload()" disabled>
+            <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+            Confirm &amp; Upload
+          </button>
+          <button class="btn-download-template" id="empClearBtn" onclick="clearEmpUpload()" style="display:none;">
+            Clear
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Upload History -->
+    <div class="history-card">
+      <div class="history-header"><h4>Employee Master Upload History</h4></div>
+      <div class="table-wrap-sm">
+        <table>
+          <thead><tr><th>Date &amp; Time</th><th>File Name</th><th>Total</th><th>New</th><th>Updated</th><th>Deactivated</th><th>Status</th><th>Uploaded By</th></tr></thead>
+          <tbody id="empHistoryBody"><tr><td colspan="8" style="text-align:center;padding:20px;color:var(--grey-3);"><span class="spin"></span>Loading history...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /empTab -->
+
+  <!-- ══ TAB 2: MANAGER UPLOAD ══ -->
+  <div class="tab-pane" id="mgrTab">
+
+    <div class="upload-card">
+      <div class="upload-card-header">
+        <div class="upload-card-header-icon"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></div>
+        <div><h3>Upload Department Manager User List</h3><p>Create or update manager accounts. Welcome emails with login credentials are sent automatically.</p></div>
+      </div>
+      <div class="upload-card-body">
+
+        <button class="btn-download-template" onclick="downloadMgrTemplate()">
+          <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          Download Excel Template
+        </button>
+
+        <div class="format-box">
+          <h4>Required Columns</h4>
+          <div class="col-chips">
+            <span class="col-chip">Manager Name</span>
+            <span class="col-chip">Email ID</span>
+            <span class="col-chip">Department</span>
+            <span class="col-chip">Location</span>
+          </div>
+          <ul class="format-notes">
+            <li>File format: <strong>.xlsx or .csv</strong></li>
+            <li>For managers covering multiple departments: add one row per department with the same email</li>
+            <li>Email ID is used as login username — must be unique per manager</li>
+            <li>Location must exactly match one of the 7 defined locations</li>
+            <li>First-time login password: <strong>ruby@123</strong> (shown on login page)</li>
+            <li>Welcome email with credentials will be sent via Make.com automation</li>
+            <li>Existing managers (matched by email) will be updated — their password is NOT reset</li>
+          </ul>
+        </div>
+
+        <div class="alert alert-warn" style="display:flex;">
+          <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+          New managers will receive welcome emails with login credentials after upload is confirmed.
+        </div>
+
+        <div id="mgrUploadAlert" class="alert" style="display:none;">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+          <span id="mgrUploadAlertMsg"></span>
+        </div>
+
+        <div class="drop-zone" id="mgrDropZone">
+          <input type="file" id="mgrFileInput" accept=".xlsx,.csv,.xls" onchange="handleMgrFile(this)"/>
+          <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+          <p id="mgrDropText">Click to select file or drag &amp; drop here</p>
+          <div class="file-types">Accepted: .xlsx, .xls, .csv</div>
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-section" id="mgrPreview">
+          <div class="preview-header">
+            <h4>Upload Preview — <span id="mgrPreviewTitle">0 records</span></h4>
+            <div class="preview-stats">
+              <div class="prev-stat"><div class="prev-dot pd-new"></div>New: <strong id="mgrNewCount">0</strong></div>
+              <div class="prev-stat"><div class="prev-dot pd-update"></div>Updated: <strong id="mgrUpdCount">0</strong></div>
+              <div class="prev-stat"><div class="prev-dot pd-err"></div>Errors: <strong id="mgrErrCount">0</strong></div>
+            </div>
+          </div>
+          <div class="table-wrap-sm">
+            <table>
+              <thead><tr><th>#</th><th>Manager Name</th><th>Email ID</th><th>Department</th><th>Location</th><th>Status</th></tr></thead>
+              <tbody id="mgrPreviewBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px;">
+          <button class="btn-upload" id="mgrUploadBtn" onclick="confirmMgrUpload()" disabled>
+            <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+            Confirm &amp; Upload
+          </button>
+          <button class="btn-download-template" id="mgrClearBtn" onclick="clearMgrUpload()" style="display:none;">
+            Clear
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Upload History -->
+    <div class="history-card">
+      <div class="history-header"><h4>Manager Upload History</h4></div>
+      <div class="table-wrap-sm">
+        <table>
+          <thead><tr><th>Date &amp; Time</th><th>File Name</th><th>Total</th><th>New</th><th>Updated</th><th>Status</th><th>Uploaded By</th></tr></thead>
+          <tbody id="mgrHistoryBody"><tr><td colspan="7" style="text-align:center;padding:20px;color:var(--grey-3);"><span class="spin"></span>Loading history...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /mgrTab -->
+
+</div><!-- /main-content -->
+
+<div class="toast" id="toast"></div>
+<div class="page-footer">&copy; 2026 &nbsp;Grant Medical Foundation &nbsp;|&nbsp; Ruby Hall Clinic &nbsp;|&nbsp; Department of HR &amp; ER</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const SUPABASE_URL  = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
+const authToken = sessionStorage.getItem('auth_token');
+const adminName = sessionStorage.getItem('manager_name') || 'ADMIN';
+if (!authToken) window.location.href = 'index.html';
+document.getElementById('adminName').textContent = adminName;
+
+let empParsedData = [];
+let mgrParsedData = [];
+let allLocations  = [];
+let allDepts      = [];
+let existingEmps  = [];
+let existingMgrs  = [];
+
+const VALID_LOCATIONS = ['RHC MAIN','RHC WANOWRIE','RHC HINJAWADI','MMDH SHIRUR','TGINE','MEDICAL CENTER','COA'];
+
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.upload-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  btn.classList.add('active');
+}
+
+function showToast(msg,dur=3000){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
+
+function fmtDateTime(d){if(!d) return '—';const dt=new Date(d);return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})+', '+dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true}).toUpperCase();}
+
+async function api(path){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{headers:{'apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`}});
+  if(!res.ok) throw new Error('API error');
+  return res.json();
+}
+async function apiPost(path,body){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`,'Prefer':'return=minimal'},body:JSON.stringify(body)});
+  if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.message||'Error');}
+}
+async function apiPatch(path,body){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`,'Prefer':'return=minimal'},body:JSON.stringify(body)});
+  if(!res.ok) throw new Error('Patch error');
+}
+
+async function init(){
+  allLocations = await api(`locations?is_active=eq.true&select=location_id,location_name`);
+  allDepts     = await api(`departments?is_active=eq.true&select=department_id,department_name,location_id`);
+  existingEmps = await api(`employees?select=emp_code,pf_no,employee_name,is_active`);
+  existingMgrs = await api(`managers?select=email,manager_name`);
+  loadEmpHistory();
+  loadMgrHistory();
+}
+
+// ── DRAG-DROP ──
+['empDropZone','mgrDropZone'].forEach(id=>{
+  const dz=document.getElementById(id);
+  dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('dragover');});
+  dz.addEventListener('dragleave',()=>dz.classList.remove('dragover'));
+  dz.addEventListener('drop',e=>{
+    e.preventDefault();dz.classList.remove('dragover');
+    const file=e.dataTransfer.files[0];
+    if(id==='empDropZone') processEmpFile(file);
+    else processMgrFile(file);
+  });
+});
+
+// ══ EMPLOYEE UPLOAD ══
+function handleEmpFile(input){if(input.files[0]) processEmpFile(input.files[0]);}
+
+function processEmpFile(file){
+  const dz=document.getElementById('empDropZone');
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const wb=XLSX.read(e.target.result,{type:'binary'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      // Skip header row
+      const rows=raw.slice(1).filter(r=>r.some(c=>String(c).trim()));
+      empParsedData=[];
+      let newCount=0,updCount=0,errCount=0;
+
+      rows.forEach((r,i)=>{
+        const code  = String(r[0]||'').trim().toUpperCase();
+        const pf    = String(r[1]||'').trim().toUpperCase();
+        const name  = String(r[2]||'').trim().toUpperCase();
+        const desig = String(r[3]||'').trim().toUpperCase();
+        const dept  = String(r[4]||'').trim().toUpperCase();
+        const loc   = String(r[5]||'').trim().toUpperCase();
+        let rowStatus='NEW'; let rowErr='';
+
+        if(!code||!pf||!name||!desig||!dept||!loc){rowErr='Missing required field(s)';rowStatus='ERROR';}
+        else if(!VALID_LOCATIONS.includes(loc)){rowErr=`Invalid location: ${loc}`;rowStatus='ERROR';}
+        else if(existingEmps.find(e=>e.emp_code===code)){rowStatus='UPDATE';}
+
+        if(rowStatus==='NEW') newCount++;
+        else if(rowStatus==='UPDATE') updCount++;
+        else errCount++;
+
+        empParsedData.push({code,pf,name,desig,dept,loc,rowStatus,rowErr,original:r});
+      });
+
+      // Deactivations = existing active employees not in upload
+      const uploadCodes=new Set(empParsedData.map(r=>r.code));
+      const toDeactivate=existingEmps.filter(e=>e.is_active && !uploadCodes.has(e.emp_code));
+
+      document.getElementById('empNewCount').textContent=newCount;
+      document.getElementById('empUpdCount').textContent=updCount;
+      document.getElementById('empExitCount').textContent=toDeactivate.length;
+      document.getElementById('empErrCount').textContent=errCount;
+      document.getElementById('empPreviewTitle').textContent=`${empParsedData.length} records`;
+
+      const tbody=document.getElementById('empPreviewBody');
+      tbody.innerHTML=empParsedData.slice(0,100).map((r,i)=>`<tr class="row-${r.rowStatus.toLowerCase()}">
+        <td>${i+1}</td><td>${r.code}</td><td>${r.pf}</td><td><strong>${r.name}</strong></td>
+        <td>${r.desig}</td><td>${r.dept}</td><td>${r.loc}</td>
+        <td><span style="font-size:11px;font-weight:700;color:${r.rowStatus==='NEW'?'var(--green)':r.rowStatus==='UPDATE'?'var(--amber)':'var(--red)'}">${r.rowStatus}${r.rowErr?' — '+r.rowErr:''}</span></td>
+      </tr>`).join('');
+
+      if(empParsedData.length>100) tbody.innerHTML+=`<tr><td colspan="8" style="text-align:center;color:var(--grey-3);padding:8px;font-size:12px;">... and ${empParsedData.length-100} more rows</td></tr>`;
+
+      dz.classList.add('has-file');
+      document.getElementById('empDropText').textContent=`${file.name} (${empParsedData.length} rows)`;
+      document.getElementById('empPreview').classList.add('visible');
+      document.getElementById('empUploadBtn').disabled=errCount===empParsedData.length;
+      document.getElementById('empClearBtn').style.display='inline-flex';
+
+    }catch(err){
+      document.getElementById('empUploadAlert').className='alert alert-error';
+      document.getElementById('empUploadAlert').style.display='flex';
+      document.getElementById('empUploadAlertMsg').textContent='Failed to read file. Please check the format and try again.';
+    }
+  };
+  reader.readAsBinaryString(file);
+}
+
+async function confirmEmpUpload(){
+  const valid=empParsedData.filter(r=>r.rowStatus!=='ERROR');
+  if(valid.length===0){alert('No valid records to upload.');return;}
+  if(!confirm(`Confirm upload of ${valid.length} employee records?\n\nNew: ${document.getElementById('empNewCount').textContent}\nUpdated: ${document.getElementById('empUpdCount').textContent}\nTo Deactivate: ${document.getElementById('empExitCount').textContent}\n\nProceed?`)) return;
+
+  const btn=document.getElementById('empUploadBtn');
+  btn.disabled=true; btn.innerHTML='<span class="spin" style="border-top-color:white;"></span>Uploading...';
+
+  try{
+    let newAdded=0,updated=0,deactivated=0;
+
+    // Get or create dept IDs
+    for(const r of valid){
+      // Find location_id
+      const locObj=allLocations.find(l=>l.location_name===r.loc);
+      if(!locObj) continue;
+      // Find or create dept
+      let deptObj=allDepts.find(d=>d.department_name===r.dept && d.location_id===locObj.location_id);
+      if(!deptObj){
+        const newDept=await fetch(`${SUPABASE_URL}/rest/v1/departments`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`,'Prefer':'return=representation'},body:JSON.stringify({department_name:r.dept,location_id:locObj.location_id})});
+        const deptData=await newDept.json();
+        deptObj=deptData[0];
+        allDepts.push(deptObj);
+      }
+
+      const payload={emp_code:r.code,pf_no:r.pf,employee_name:r.name,designation:r.desig,department_id:deptObj.department_id,location_id:locObj.location_id,is_active:true,uploaded_at:new Date().toISOString()};
+
+      if(r.rowStatus==='UPDATE'){
+        await apiPatch(`employees?emp_code=eq.${r.code}`,payload);
+        updated++;
+      } else {
+        await apiPost('employees',payload);
+        newAdded++;
+      }
+    }
+
+    // Deactivate
+    const uploadCodes=new Set(valid.map(r=>r.code));
+    const toDeact=existingEmps.filter(e=>e.is_active && !uploadCodes.has(e.emp_code));
+    for(const e of toDeact){
+      await apiPatch(`employees?emp_code=eq.${e.emp_code}`,{is_active:false});
+      deactivated++;
+    }
+
+    // Log history
+    const fname=document.getElementById('empFileInput').files[0]?.name||'unknown';
+    await apiPost('employee_upload_history',{uploaded_by:adminName,file_name:fname,total_records:valid.length,new_added:newAdded,updated,deactivated,upload_status:'SUCCESS'});
+
+    showToast(`Upload complete: ${newAdded} new, ${updated} updated, ${deactivated} deactivated.`);
+    document.getElementById('empUploadAlert').className='alert alert-success';
+    document.getElementById('empUploadAlert').style.display='flex';
+    document.getElementById('empUploadAlertMsg').textContent=`Upload successful — ${newAdded} added, ${updated} updated, ${deactivated} deactivated.`;
+    clearEmpUpload();
+    loadEmpHistory();
+
+  }catch(err){
+    document.getElementById('empUploadAlert').className='alert alert-error';
+    document.getElementById('empUploadAlert').style.display='flex';
+    document.getElementById('empUploadAlertMsg').textContent='Upload failed: '+err.message;
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor;"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>Confirm &amp; Upload';
+  }
+}
+
+function clearEmpUpload(){
+  empParsedData=[];
+  document.getElementById('empFileInput').value='';
+  document.getElementById('empDropZone').classList.remove('has-file');
+  document.getElementById('empDropText').textContent='Click to select file or drag & drop here';
+  document.getElementById('empPreview').classList.remove('visible');
+  document.getElementById('empUploadBtn').disabled=true;
+  document.getElementById('empClearBtn').style.display='none';
+}
+
+// ══ MANAGER UPLOAD ══
+function handleMgrFile(input){if(input.files[0]) processMgrFile(input.files[0]);}
+
+function processMgrFile(file){
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const wb=XLSX.read(e.target.result,{type:'binary'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
+      const rows=raw.slice(1).filter(r=>r.some(c=>String(c).trim()));
+      mgrParsedData=[];
+      let newCount=0,updCount=0,errCount=0;
+
+      rows.forEach((r)=>{
+        const name  = String(r[0]||'').trim().toUpperCase();
+        const email = String(r[1]||'').trim().toLowerCase();
+        const dept  = String(r[2]||'').trim().toUpperCase();
+        const loc   = String(r[3]||'').trim().toUpperCase();
+        let rowStatus='NEW'; let rowErr='';
+
+        if(!name||!email||!dept||!loc){rowErr='Missing required field(s)';rowStatus='ERROR';}
+        else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){rowErr='Invalid email format';rowStatus='ERROR';}
+        else if(!VALID_LOCATIONS.includes(loc)){rowErr=`Invalid location: ${loc}`;rowStatus='ERROR';}
+        else if(existingMgrs.find(m=>m.email===email)){rowStatus='UPDATE';}
+
+        if(rowStatus==='NEW') newCount++;
+        else if(rowStatus==='UPDATE') updCount++;
+        else errCount++;
+
+        mgrParsedData.push({name,email,dept,loc,rowStatus,rowErr});
+      });
+
+      document.getElementById('mgrNewCount').textContent=newCount;
+      document.getElementById('mgrUpdCount').textContent=updCount;
+      document.getElementById('mgrErrCount').textContent=errCount;
+      document.getElementById('mgrPreviewTitle').textContent=`${mgrParsedData.length} records`;
+
+      const tbody=document.getElementById('mgrPreviewBody');
+      tbody.innerHTML=mgrParsedData.map((r,i)=>`<tr class="row-${r.rowStatus.toLowerCase()}">
+        <td>${i+1}</td><td><strong>${r.name}</strong></td><td>${r.email}</td>
+        <td>${r.dept}</td><td>${r.loc}</td>
+        <td><span style="font-size:11px;font-weight:700;color:${r.rowStatus==='NEW'?'var(--green)':r.rowStatus==='UPDATE'?'var(--amber)':'var(--red)'}">${r.rowStatus}${r.rowErr?' — '+r.rowErr:''}</span></td>
+      </tr>`).join('');
+
+      document.getElementById('mgrDropZone').classList.add('has-file');
+      document.getElementById('mgrDropText').textContent=`${file.name} (${mgrParsedData.length} rows)`;
+      document.getElementById('mgrPreview').classList.add('visible');
+      document.getElementById('mgrUploadBtn').disabled=errCount===mgrParsedData.length;
+      document.getElementById('mgrClearBtn').style.display='inline-flex';
+
+    }catch(err){
+      document.getElementById('mgrUploadAlert').className='alert alert-error';
+      document.getElementById('mgrUploadAlert').style.display='flex';
+      document.getElementById('mgrUploadAlertMsg').textContent='Failed to read file. Please check the format.';
+    }
+  };
+  reader.readAsBinaryString(file);
+}
+
+async function confirmMgrUpload(){
+  const valid=mgrParsedData.filter(r=>r.rowStatus!=='ERROR');
+  if(valid.length===0){alert('No valid records to upload.');return;}
+  const newMgrs=valid.filter(r=>r.rowStatus==='NEW');
+  if(!confirm(`Confirm upload of ${valid.length} manager records?\nNew: ${newMgrs.length} | Updated: ${valid.filter(r=>r.rowStatus==='UPDATE').length}\n\nWelcome emails will be sent to ${newMgrs.length} new manager(s).\n\nProceed?`)) return;
+
+  const btn=document.getElementById('mgrUploadBtn');
+  btn.disabled=true; btn.innerHTML='<span class="spin" style="border-top-color:white;"></span>Uploading...';
+
+  try{
+    let newAdded=0,updated=0;
+
+    for(const r of valid){
+      const locObj=allLocations.find(l=>l.location_name===r.loc);
+      if(!locObj) continue;
+
+      // Find or create dept
+      let deptObj=allDepts.find(d=>d.department_name===r.dept && d.location_id===locObj.location_id);
+      if(!deptObj){
+        const nd=await fetch(`${SUPABASE_URL}/rest/v1/departments`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`,'Prefer':'return=representation'},body:JSON.stringify({department_name:r.dept,location_id:locObj.location_id})});
+        deptObj=(await nd.json())[0];
+        allDepts.push(deptObj);
+      }
+
+      if(r.rowStatus==='UPDATE'){
+        await apiPatch(`managers?email=eq.${r.email}`,{manager_name:r.name,location_id:locObj.location_id});
+        // Update dept mapping
+        const mgrData=await api(`managers?email=eq.${r.email}&select=manager_id`);
+        if(mgrData[0]){
+          // Add dept mapping if not exists
+          await fetch(`${SUPABASE_URL}/rest/v1/manager_departments`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`,'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({manager_id:mgrData[0].manager_id,department_id:deptObj.department_id})});
+        }
+        updated++;
+      } else {
+        // Create Supabase auth user with default password
+        const authRes=await fetch(`${SUPABASE_URL}/auth/v1/admin/users`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`},body:JSON.stringify({email:r.email,password:'ruby@123',email_confirm:true})});
+        const authData=await authRes.json().catch(()=>({}));
+        // Insert manager record
+        const mgrRes=await fetch(`${SUPABASE_URL}/rest/v1/managers`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`,'Prefer':'return=representation'},body:JSON.stringify({manager_name:r.name,email:r.email,location_id:locObj.location_id,is_first_login:true})});
+        const mgrData=await mgrRes.json();
+        if(mgrData[0]){
+          await apiPost('manager_departments',{manager_id:mgrData[0].manager_id,department_id:deptObj.department_id});
+        }
+        newAdded++;
+      }
+    }
+
+    const fname=document.getElementById('mgrFileInput').files[0]?.name||'unknown';
+    await apiPost('manager_upload_history',{uploaded_by:adminName,file_name:fname,total_records:valid.length,new_added:newAdded,updated,upload_status:'SUCCESS'});
+
+    showToast(`Upload complete: ${newAdded} new managers, ${updated} updated.`);
+    document.getElementById('mgrUploadAlert').className='alert alert-success';
+    document.getElementById('mgrUploadAlert').style.display='flex';
+    document.getElementById('mgrUploadAlertMsg').textContent=`Upload successful — ${newAdded} new managers added. Welcome emails will be sent via Make.com automation.`;
+    clearMgrUpload();
+    loadMgrHistory();
+
+  }catch(err){
+    document.getElementById('mgrUploadAlert').className='alert alert-error';
+    document.getElementById('mgrUploadAlert').style.display='flex';
+    document.getElementById('mgrUploadAlertMsg').textContent='Upload failed: '+err.message;
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML='<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor;"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>Confirm &amp; Upload';
+  }
+}
+
+function clearMgrUpload(){
+  mgrParsedData=[];
+  document.getElementById('mgrFileInput').value='';
+  document.getElementById('mgrDropZone').classList.remove('has-file');
+  document.getElementById('mgrDropText').textContent='Click to select file or drag & drop here';
+  document.getElementById('mgrPreview').classList.remove('visible');
+  document.getElementById('mgrUploadBtn').disabled=true;
+  document.getElementById('mgrClearBtn').style.display='none';
+}
+
+// LOAD HISTORIES
+async function loadEmpHistory(){
+  try{
+    const data=await api(`employee_upload_history?order=uploaded_at.desc&limit=20&select=uploaded_at,file_name,total_records,new_added,updated,deactivated,upload_status,uploaded_by`);
+    const tbody=document.getElementById('empHistoryBody');
+    if(!data||data.length===0){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;padding:16px;color:var(--grey-3);">No upload history yet.</td></tr>';return;}
+    tbody.innerHTML=data.map(r=>`<tr>
+      <td>${fmtDateTime(r.uploaded_at)}</td><td>${r.file_name||'—'}</td>
+      <td>${r.total_records}</td><td style="color:var(--green-b);">${r.new_added}</td>
+      <td style="color:var(--amber);">${r.updated}</td><td style="color:var(--red);">${r.deactivated}</td>
+      <td><span style="font-size:11px;font-weight:700;color:${r.upload_status==='SUCCESS'?'var(--green)':'var(--red)'};">${r.upload_status}</span></td>
+      <td>${r.uploaded_by}</td>
+    </tr>`).join('');
+  }catch(e){document.getElementById('empHistoryBody').innerHTML='<tr><td colspan="8" style="text-align:center;padding:16px;color:var(--red);">Failed to load history.</td></tr>';}
+}
+
+async function loadMgrHistory(){
+  try{
+    const data=await api(`manager_upload_history?order=uploaded_at.desc&limit=20&select=uploaded_at,file_name,total_records,new_added,updated,upload_status,uploaded_by`);
+    const tbody=document.getElementById('mgrHistoryBody');
+    if(!data||data.length===0){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;padding:16px;color:var(--grey-3);">No upload history yet.</td></tr>';return;}
+    tbody.innerHTML=data.map(r=>`<tr>
+      <td>${fmtDateTime(r.uploaded_at)}</td><td>${r.file_name||'—'}</td>
+      <td>${r.total_records}</td><td style="color:var(--green-b);">${r.new_added}</td>
+      <td style="color:var(--amber);">${r.updated}</td>
+      <td><span style="font-size:11px;font-weight:700;color:${r.upload_status==='SUCCESS'?'var(--green)':'var(--red)'};">${r.upload_status}</span></td>
+      <td>${r.uploaded_by}</td>
+    </tr>`).join('');
+  }catch(e){document.getElementById('mgrHistoryBody').innerHTML='<tr><td colspan="7" style="text-align:center;padding:16px;color:var(--red);">Failed to load history.</td></tr>';}
+}
+
+// TEMPLATE DOWNLOADS
+function downloadEmpTemplate(){
+  const ws=XLSX.utils.aoa_to_sheet([['Emp Code','PF No.','Employee Name','Designation','Department','Location'],['EMP001','MH/PUN/001','SAMPLE EMPLOYEE','STAFF NURSE','ICU','RHC MAIN']]);
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Employee Master');
+  XLSX.writeFile(wb,'Employee_Master_Template.xlsx');
+}
+function downloadMgrTemplate(){
+  const ws=XLSX.utils.aoa_to_sheet([['Manager Name','Email ID','Department','Location'],['SAMPLE MANAGER','manager@rubyhall.com','ICU','RHC MAIN']]);
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'Manager List');
+  XLSX.writeFile(wb,'Manager_List_Template.xlsx');
+}
+
+init();
+</script>
+</body>
+</html>

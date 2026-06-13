@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Consolidated Report — Approved Holiday Duty Confirmation Portal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Montserrat:wght@500;600;700;800&display=swap');
+  :root{--navy:#1B3A6B;--navy-d:#122850;--navy-l:#2A5298;--red:#D32F2F;--yellow:#F5A800;--blue-bg:#EAF4FB;--white:#FFFFFF;--grey-bg:#F5F7FA;--grey-1:#E8ECF0;--grey-2:#C5CDD6;--grey-3:#7F8C9A;--text:#1A2332;--text-s:#4A5568;--border:#D0D8E0;--green:#1B5E20;--green-l:#E8F5E9;--green-b:#43A047;--amber:#E65100;--amber-l:#FFF3E0;--red-l:#FFEBEE;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;text-decoration:none !important;}
+  body{font-family:'Open Sans',sans-serif;background:var(--blue-bg);min-height:100vh;display:flex;flex-direction:column;}
+  .site-header{width:100%;background:var(--white);border-bottom:3px solid var(--red);padding:12px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(27,58,107,0.10);position:sticky;top:0;z-index:100;}
+  .logo-area{display:flex;align-items:center;gap:12px;}
+  .rhc-cross{width:48px;height:48px;flex-shrink:0;}
+  .logo-gmf{font-size:11px;color:var(--navy);}
+  .logo-rhc{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:700;color:var(--navy);}
+  .header-right{display:flex;align-items:center;gap:16px;}
+  .dept-label{font-size:12px;font-weight:600;color:var(--navy);text-align:right;line-height:1.5;}
+  .dept-label span{display:block;font-size:11px;font-weight:400;color:var(--grey-3);}
+  .admin-pill{display:flex;align-items:center;gap:8px;background:var(--navy);border-radius:24px;padding:6px 14px 6px 8px;}
+  .admin-avatar{width:30px;height:30px;background:var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .admin-avatar svg{width:17px;height:17px;fill:var(--navy);}
+  .admin-name{font-size:12px;font-weight:700;color:white;}
+  .admin-role{font-size:11px;color:rgba(255,255,255,0.65);}
+  .back-btn{background:none;border:1.5px solid var(--border);border-radius:6px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--text-s);cursor:pointer;display:flex;align-items:center;gap:6px;transition:border-color 0.2s,color 0.2s;}
+  .back-btn:hover{border-color:var(--navy);color:var(--navy);}
+  .back-btn svg{width:14px;height:14px;fill:currentColor;}
+  .portal-band{width:100%;background:linear-gradient(135deg,var(--navy-d) 0%,var(--navy) 60%,var(--navy-l) 100%);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;}
+  .portal-title{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:700;color:white;}
+  .admin-badge{background:var(--yellow);color:var(--navy-d);font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;padding:3px 10px;border-radius:3px;letter-spacing:0.06em;}
+  .main-content{flex:1;padding:24px 32px 40px;max-width:1200px;width:100%;margin:0 auto;}
+  /* FILTER BAR */
+  .filter-bar{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px 20px;margin-bottom:18px;display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;box-shadow:0 1px 4px rgba(27,58,107,0.06);}
+  .flt-grp{display:flex;flex-direction:column;gap:4px;}
+  .flt-grp label{font-size:11px;font-weight:700;color:var(--text-s);text-transform:uppercase;letter-spacing:0.05em;}
+  .flt-sel{padding:9px 12px;border:1.5px solid var(--grey-1);border-radius:6px;font-family:'Open Sans',sans-serif;font-size:13px;color:var(--text);background:var(--grey-bg);outline:none;min-width:160px;}
+  .flt-sel:focus{border-color:var(--navy);}
+  .btn-flt{padding:9px 20px;background:var(--navy);color:white;border:none;border-radius:6px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;align-self:flex-end;display:flex;align-items:center;gap:6px;}
+  .btn-flt:hover{background:var(--navy-d);}
+  .btn-flt svg{width:13px;height:13px;fill:white;}
+  /* STAT CARDS */
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:20px;}
+  .stat-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px 16px;box-shadow:0 1px 4px rgba(27,58,107,0.06);text-align:center;}
+  .stat-val{font-family:'Montserrat',sans-serif;font-size:22px;font-weight:800;color:var(--text);}
+  .stat-lbl{font-size:11px;color:var(--grey-3);text-transform:uppercase;letter-spacing:0.05em;margin-top:3px;font-weight:600;}
+  /* ACTION BAR */
+  .action-bar{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:12px 18px;margin-bottom:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 4px rgba(27,58,107,0.06);}
+  .btn-export{padding:9px 18px;border-radius:6px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all 0.2s;border:none;text-transform:uppercase;}
+  .btn-export svg{width:13px;height:13px;fill:currentColor;}
+  .btn-xl{background:var(--green-l);color:var(--green);border:1.5px solid #A5D6A7;}
+  .btn-xl:hover{background:#C8E6C9;}
+  .btn-pdf{background:#E8EAF6;color:#283593;border:1.5px solid #9FA8DA;}
+  .btn-pdf:hover{background:#C5CAE9;}
+  .search-wrap{flex:1;position:relative;min-width:220px;}
+  .search-wrap svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:15px;height:15px;fill:var(--grey-3);pointer-events:none;}
+  .search-wrap input{width:100%;padding:9px 12px 9px 32px;border:1.5px solid var(--grey-1);border-radius:6px;font-family:'Open Sans',sans-serif;font-size:13px;background:var(--grey-bg);outline:none;text-transform:uppercase;}
+  .search-wrap input:focus{border-color:var(--navy);background:white;}
+  .result-count{font-size:13px;color:var(--text-s);white-space:nowrap;}
+  /* TABLE */
+  .table-card{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 6px rgba(27,58,107,0.07);}
+  .table-wrap{overflow-x:auto;max-height:600px;overflow-y:auto;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  thead tr{background:var(--navy);position:sticky;top:0;z-index:5;}
+  thead th{padding:10px 13px;text-align:left;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;color:white;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;cursor:pointer;}
+  thead th:hover{background:var(--navy-l);}
+  thead th .sort-arrow{display:inline;opacity:0.5;margin-left:4px;}
+  thead th.sorted .sort-arrow{opacity:1;}
+  tbody tr{border-bottom:1px solid var(--grey-1);transition:background 0.15s;}
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:#F0F6FC;}
+  tbody tr.manual-row{background:#FFF8E1;}
+  tbody td{padding:9px 13px;color:var(--text);vertical-align:middle;}
+  .badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;}
+  .b-approved{background:var(--green-l);color:var(--green);border:1px solid #A5D6A7;}
+  .b-rejected{background:var(--red-l);color:var(--red);border:1px solid #FFCDD2;}
+  .b-pending{background:var(--grey-1);color:var(--grey-3);border:1px solid var(--border);}
+  .manual-tag{display:inline-flex;background:#FFF3E0;border:1px solid #FFD54F;border-radius:3px;padding:1px 5px;font-size:10px;font-weight:700;color:#E65100;margin-left:4px;}
+  .empty-cell{text-align:center;padding:40px;color:var(--grey-3);font-size:13px;}
+  .spin{display:inline-block;width:16px;height:16px;border:2px solid var(--grey-2);border-top-color:var(--navy);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  /* PRINT */
+  @media print{
+    .site-header,.portal-band,.filter-bar,.action-bar,.page-footer{display:none !important;}
+    .print-header{display:block !important;}
+    body{background:white !important;}
+    .table-wrap{max-height:none !important;overflow:visible !important;}
+    .table-card{box-shadow:none !important;border:1px solid #ccc !important;}
+    thead tr{background:#1B3A6B !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    @page{margin:12mm;size:A4 landscape;}
+  }
+  .print-header{display:none;text-align:center;margin-bottom:16px;padding-bottom:12px;border-bottom:2px solid #1B3A6B;}
+  .print-header h2{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;color:#1B3A6B;}
+  .print-header p{font-size:11px;color:#4A5568;margin-top:4px;}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy-d);color:white;padding:10px 20px;border-radius:6px;font-size:13px;font-weight:600;z-index:500;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
+  .toast.show{opacity:1;}
+  .page-footer{text-align:center;font-size:11px;color:var(--grey-3);padding:14px;border-top:1px solid var(--grey-1);background:var(--white);margin-top:auto;}
+  @media(max-width:900px){.site-header{padding:10px 16px;}.portal-band{padding:12px 16px;}.main-content{padding:16px 12px 32px;}.dept-label{display:none;}}
+</style>
+</head>
+<body>
+<!-- HEADER -->
+<div class="site-header">
+  <div class="logo-area">
+    <svg class="rhc-cross" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="13,1 25,1 25,25 1,25 1,13 13,13" fill="#D32F2F"/>
+      <polygon points="29,1 41,1 41,13 53,13 53,25 29,25" fill="#F5A800"/>
+      <polygon points="1,29 25,29 25,53 13,53 13,41 1,41" fill="#1565C0"/>
+      <polygon points="29,29 53,29 53,41 41,41 41,53 29,53" fill="#2E7D32"/>
+    </svg>
+    <div><div class="logo-gmf">Grant Medical Foundation</div><div class="logo-rhc">Ruby Hall Clinic</div></div>
+  </div>
+  <div class="header-right">
+    <div class="dept-label">Department of HR &amp; ER<span>Attendance &amp; Leave Management</span></div>
+    <div class="admin-pill">
+      <div class="admin-avatar"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+      <div><div class="admin-name" id="adminName">ADMIN</div><div class="admin-role">Attendance Manager</div></div>
+    </div>
+    <button class="back-btn" onclick="window.location.href='screen7_admin_dashboard.html'">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Dashboard
+    </button>
+  </div>
+</div>
+<div class="portal-band">
+  <div class="portal-title">Approved Holiday Duty Confirmation Portal</div>
+  <div class="admin-badge">CONSOLIDATED REPORT</div>
+</div>
+
+<div class="main-content">
+
+  <!-- PRINT HEADER -->
+  <div class="print-header" id="printHeader">
+    <h2>GRANT MEDICAL FOUNDATION — RUBY HALL CLINIC</h2>
+    <p>Approved Holiday Duty Confirmation Portal | Department of HR &amp; ER</p>
+    <p id="printReportTitle">Consolidated Report</p>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filter-bar">
+    <div class="flt-grp">
+      <label>Holiday</label>
+      <select class="flt-sel" id="fHoliday" onchange="applyFilters()">
+        <option value="">All Holidays</option>
+      </select>
+    </div>
+    <div class="flt-grp">
+      <label>Year</label>
+      <select class="flt-sel" id="fYear" onchange="applyFilters()">
+        <option value="">All Years</option>
+      </select>
+    </div>
+    <div class="flt-grp">
+      <label>Location</label>
+      <select class="flt-sel" id="fLocation" onchange="applyFilters()">
+        <option value="">All Locations</option>
+      </select>
+    </div>
+    <div class="flt-grp">
+      <label>Department</label>
+      <select class="flt-sel" id="fDept" onchange="applyFilters()">
+        <option value="">All Departments</option>
+      </select>
+    </div>
+    <div class="flt-grp">
+      <label>Validation Status</label>
+      <select class="flt-sel" id="fValStatus" onchange="applyFilters()">
+        <option value="">All</option>
+        <option value="APPROVED">Approved</option>
+        <option value="REJECTED">Rejected</option>
+        <option value="PENDING">Pending Validation</option>
+        <option value="MANUAL">Manual Entries Only</option>
+      </select>
+    </div>
+    <button class="btn-flt" onclick="resetFilters()">
+      <svg viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+      Reset
+    </button>
+  </div>
+
+  <!-- STAT CARDS -->
+  <div class="stat-row" id="statRow">
+    <div class="stat-card"><div class="stat-val" id="sTotal">—</div><div class="stat-lbl">Total Employees</div></div>
+    <div class="stat-card"><div class="stat-val" id="sApproved" style="color:var(--green-b);">—</div><div class="stat-lbl">Approved</div></div>
+    <div class="stat-card"><div class="stat-val" id="sRejected" style="color:var(--red);">—</div><div class="stat-lbl">Rejected</div></div>
+    <div class="stat-card"><div class="stat-val" id="sPending" style="color:var(--grey-3);">—</div><div class="stat-lbl">Pending Validation</div></div>
+    <div class="stat-card"><div class="stat-val" id="sManual" style="color:var(--amber);">—</div><div class="stat-lbl">Manual Entries</div></div>
+    <div class="stat-card"><div class="stat-val" id="sDepts">—</div><div class="stat-lbl">Departments</div></div>
+  </div>
+
+  <!-- ACTION BAR -->
+  <div class="action-bar">
+    <button class="btn-export btn-xl" onclick="exportExcel()">
+      <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+      Export Excel
+    </button>
+    <button class="btn-export btn-pdf" onclick="window.print()">
+      <svg viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+      Print / PDF
+    </button>
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <input type="text" id="searchInput" placeholder="SEARCH BY NAME, EMP CODE, PF NO..." oninput="applyFilters()"/>
+    </div>
+    <div class="result-count" id="resultCount">Loading...</div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="table-card">
+    <div class="table-wrap">
+      <table id="reportTable">
+        <thead>
+          <tr>
+            <th onclick="sortTable('sno')"># <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('holiday_name')">Holiday <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('holiday_date')">Date <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('location_name')">Location <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('department_name')">Department <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('emp_code')">Emp Code <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('pf_no')">PF No. <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('employee_name')">Employee Name <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('designation')">Designation <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('validation_status')">Validation Status <span class="sort-arrow">↕</span></th>
+            <th>HR Remarks</th>
+            <th onclick="sortTable('submitted_by')">Submitted By <span class="sort-arrow">↕</span></th>
+            <th onclick="sortTable('submitted_at')">Submitted On <span class="sort-arrow">↕</span></th>
+          </tr>
+        </thead>
+        <tbody id="reportBody">
+          <tr><td colspan="13" class="empty-cell"><span class="spin"></span>Loading report...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="page-footer">&copy; 2026 &nbsp;Grant Medical Foundation &nbsp;|&nbsp; Ruby Hall Clinic &nbsp;|&nbsp; Department of HR &amp; ER</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const SUPABASE_URL  = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
+const authToken = sessionStorage.getItem('auth_token');
+const adminName = sessionStorage.getItem('manager_name') || 'ADMIN';
+if (!authToken) window.location.href = 'index.html';
+document.getElementById('adminName').textContent = adminName;
+
+let allData       = [];
+let filteredData  = [];
+let sortKey       = 'holiday_date';
+let sortAsc       = true;
+
+function showToast(msg,dur=3000){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
+function fmtDate(d){if(!d) return '—';return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}
+function fmtDateTime(d){if(!d) return '—';const dt=new Date(d);return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})+', '+dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true}).toUpperCase();}
+
+async function api(path){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{headers:{'apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`}});
+  if(!res.ok) throw new Error('API error');
+  return res.json();
+}
+
+async function init(){
+  try{
+    // Load from consolidated view
+    const data = await api(`vw_consolidated_submissions?select=*&order=holiday_date.desc,location_name.asc,department_name.asc,employee_name.asc`);
+    allData = data;
+
+    // Populate filter dropdowns
+    const holidays  = [...new Map(data.map(r=>[r.holiday_id,{id:r.holiday_id,name:r.holiday_name,date:r.holiday_date}])).values()];
+    const years     = [...new Set(data.map(r=>new Date(r.holiday_date).getFullYear()))].sort((a,b)=>b-a);
+    const locations = [...new Set(data.map(r=>r.location_name))].sort();
+    const depts     = [...new Set(data.map(r=>r.department_name))].sort();
+
+    const fHol = document.getElementById('fHoliday');
+    holidays.forEach(h=>{const o=document.createElement('option');o.value=h.id;o.textContent=`${h.name} — ${fmtDate(h.date)}`;fHol.appendChild(o);});
+
+    const fYear = document.getElementById('fYear');
+    years.forEach(y=>{const o=document.createElement('option');o.value=y;o.textContent=y;fYear.appendChild(o);});
+
+    const fLoc = document.getElementById('fLocation');
+    locations.forEach(l=>{const o=document.createElement('option');o.value=l;o.textContent=l;fLoc.appendChild(o);});
+
+    const fDept = document.getElementById('fDept');
+    depts.forEach(d=>{const o=document.createElement('option');o.value=d;o.textContent=d;fDept.appendChild(o);});
+
+    // Pre-select from session if coming from admin dashboard
+    const preHol = sessionStorage.getItem('current_holiday_id');
+    if(preHol) fHol.value = preHol;
+
+    applyFilters();
+
+  }catch(e){
+    document.getElementById('reportBody').innerHTML=`<tr><td colspan="13" class="empty-cell" style="color:var(--red);">Failed to load report. Please refresh.</td></tr>`;
+  }
+}
+
+function applyFilters(){
+  const fHol    = document.getElementById('fHoliday').value;
+  const fYear   = document.getElementById('fYear').value;
+  const fLoc    = document.getElementById('fLocation').value;
+  const fDept   = document.getElementById('fDept').value;
+  const fVal    = document.getElementById('fValStatus').value;
+  const search  = document.getElementById('searchInput').value.toUpperCase().trim();
+
+  filteredData = allData.filter(r=>{
+    if(fHol  && r.holiday_id       !== fHol)       return false;
+    if(fYear && new Date(r.holiday_date).getFullYear()!=fYear) return false;
+    if(fLoc  && r.location_name    !== fLoc)        return false;
+    if(fDept && r.department_name  !== fDept)       return false;
+    if(fVal){
+      if(fVal==='APPROVED'  && !r.validation_status?.includes('APPROVED'))  return false;
+      if(fVal==='REJECTED'  && (!r.validation_status || r.validation_status.includes('APPROVED'))) return false;
+      if(fVal==='PENDING'   && r.validation_status)  return false;
+      if(fVal==='MANUAL'    && !r.entry_remarks?.includes('MANUAL')) return false;
+    }
+    if(search){
+      const hay=`${r.emp_code}${r.pf_no}${r.employee_name}${r.designation}${r.department_name}`;
+      if(!hay.includes(search)) return false;
+    }
+    return true;
+  });
+
+  // Sort
+  filteredData.sort((a,b)=>{
+    const av=a[sortKey]||'', bv=b[sortKey]||'';
+    return sortAsc ? av.toString().localeCompare(bv.toString()) : bv.toString().localeCompare(av.toString());
+  });
+
+  updateStats();
+  renderTable();
+  updatePrintHeader();
+}
+
+function resetFilters(){
+  ['fHoliday','fYear','fLocation','fDept','fValStatus'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('searchInput').value='';
+  applyFilters();
+}
+
+function updateStats(){
+  const approved = filteredData.filter(r=>r.validation_status?.includes('APPROVED')).length;
+  const rejected = filteredData.filter(r=>r.validation_status && !r.validation_status.includes('APPROVED')).length;
+  const pending  = filteredData.filter(r=>!r.validation_status).length;
+  const manual   = filteredData.filter(r=>r.entry_remarks?.includes('MANUAL')).length;
+  const depts    = new Set(filteredData.map(r=>r.department_name)).size;
+  document.getElementById('sTotal').textContent    = filteredData.length;
+  document.getElementById('sApproved').textContent = approved;
+  document.getElementById('sRejected').textContent = rejected;
+  document.getElementById('sPending').textContent  = pending;
+  document.getElementById('sManual').textContent   = manual;
+  document.getElementById('sDepts').textContent    = depts;
+  document.getElementById('resultCount').textContent = `${filteredData.length} record${filteredData.length!==1?'s':''}`;
+}
+
+function renderTable(){
+  const tbody = document.getElementById('reportBody');
+  if(filteredData.length===0){
+    tbody.innerHTML='<tr><td colspan="13" class="empty-cell">No records match the selected filters.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = filteredData.map((r,i)=>{
+    const vs = r.validation_status;
+    let vBadge = `<span class="badge b-pending">PENDING</span>`;
+    if(vs){
+      vBadge = vs.includes('APPROVED')
+        ? `<span class="badge b-approved">✓ ${vs}</span>`
+        : `<span class="badge b-rejected">✗ ${vs}</span>`;
+    }
+    const isManual = r.entry_remarks?.includes('MANUAL');
+    return `<tr class="${isManual?'manual-row':''}">
+      <td>${i+1}</td>
+      <td style="white-space:nowrap;">${r.holiday_name}</td>
+      <td style="white-space:nowrap;">${fmtDate(r.holiday_date)}</td>
+      <td>${r.location_name}</td>
+      <td>${r.department_name}</td>
+      <td>${r.emp_code}</td>
+      <td>${r.pf_no}</td>
+      <td><strong>${r.employee_name}</strong>${isManual?'<span class="manual-tag">MANUAL</span>':''}</td>
+      <td>${r.designation}</td>
+      <td>${vBadge}</td>
+      <td style="font-size:11px;color:var(--text-s);max-width:160px;">${r.validation_remarks||''}</td>
+      <td style="font-size:12px;">${r.submitted_by||'—'}</td>
+      <td style="font-size:12px;white-space:nowrap;">${fmtDateTime(r.submitted_at)}</td>
+    </tr>`;
+  }).join('');
+}
+
+function sortTable(key){
+  if(sortKey===key) sortAsc=!sortAsc;
+  else{sortKey=key;sortAsc=true;}
+  document.querySelectorAll('thead th').forEach(th=>th.classList.remove('sorted'));
+  applyFilters();
+}
+
+function updatePrintHeader(){
+  const hName = document.getElementById('fHoliday');
+  const hText = hName.options[hName.selectedIndex]?.text||'All Holidays';
+  document.getElementById('printReportTitle').textContent=
+    `${hText} | ${document.getElementById('fLocation').value||'All Locations'} | ${filteredData.length} Records | Generated: ${new Date().toLocaleDateString('en-IN')}`;
+}
+
+function exportExcel(){
+  if(filteredData.length===0){alert('No data to export.');return;}
+  const hName = document.getElementById('fHoliday');
+  const hText = hName.options[hName.selectedIndex]?.text||'All Holidays';
+
+  const rows=[
+    ['GRANT MEDICAL FOUNDATION — RUBY HALL CLINIC'],
+    ['Approved Holiday Duty Confirmation Portal | Department of HR & ER'],
+    [`Report: ${hText} | Generated by: ${adminName} | On: ${new Date().toLocaleDateString('en-IN')}`],
+    [],
+    ['#','Holiday','Date','Location','Department','Emp Code','PF No.','Employee Name','Designation','Entry Type','Validation Status','HR Remarks','Submitted By','Submitted On'],
+    ...filteredData.map((r,i)=>[
+      i+1, r.holiday_name, r.holiday_date, r.location_name, r.department_name,
+      r.emp_code, r.pf_no, r.employee_name, r.designation,
+      r.entry_remarks?.includes('MANUAL')?'MANUAL ENTRY':'MASTER DATA',
+      r.validation_status||'PENDING VALIDATION',
+      r.validation_remarks||'',
+      r.submitted_by||'—',
+      r.submitted_at?new Date(r.submitted_at).toLocaleDateString('en-IN'):''
+    ])
+  ];
+
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  ws['!cols']=[{wch:4},{wch:18},{wch:12},{wch:14},{wch:22},{wch:10},{wch:16},{wch:28},{wch:20},{wch:14},{wch:38},{wch:28},{wch:22},{wch:18}];
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,'Consolidated Report');
+  XLSX.writeFile(wb,`Holiday_Duty_Report_${(hText).replace(/[^a-zA-Z0-9]/g,'_').slice(0,40)}.xlsx`);
+  showToast(`Exported ${filteredData.length} records.`);
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Historic Submissions — Approved Holiday Duty Confirmation Portal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Montserrat:wght@500;600;700;800&display=swap');
+
+  :root {
+    --navy:      #1B3A6B;
+    --navy-d:    #122850;
+    --navy-l:    #2A5298;
+    --red:       #D32F2F;
+    --yellow:    #F5A800;
+    --blue-bg:   #EAF4FB;
+    --white:     #FFFFFF;
+    --grey-bg:   #F5F7FA;
+    --grey-1:    #E8ECF0;
+    --grey-2:    #C5CDD6;
+    --grey-3:    #7F8C9A;
+    --text:      #1A2332;
+    --text-s:    #4A5568;
+    --border:    #D0D8E0;
+    --green:     #1B5E20;
+    --green-l:   #E8F5E9;
+    --green-b:   #43A047;
+    --amber:     #E65100;
+    --amber-l:   #FFF3E0;
+    --red-l:     #FFEBEE;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; text-decoration: none !important; }
+
+  body { font-family: 'Open Sans', sans-serif; background: var(--blue-bg); min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* HEADER */
+  .site-header { width: 100%; background: var(--white); border-bottom: 3px solid var(--red); padding: 12px 32px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(27,58,107,0.10); position: sticky; top: 0; z-index: 100; }
+  .logo-area { display: flex; align-items: center; gap: 12px; }
+  .rhc-cross { width: 48px; height: 48px; flex-shrink: 0; }
+  .logo-gmf { font-size: 11px; color: var(--navy); }
+  .logo-rhc { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700; color: var(--navy); }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .dept-label { font-size: 12px; font-weight: 600; color: var(--navy); text-align: right; line-height: 1.5; }
+  .dept-label span { display: block; font-size: 11px; font-weight: 400; color: var(--grey-3); }
+  .user-pill { display: flex; align-items: center; gap: 8px; background: var(--grey-bg); border: 1px solid var(--border); border-radius: 24px; padding: 6px 14px 6px 8px; }
+  .user-avatar { width: 30px; height: 30px; background: var(--navy); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .user-avatar svg { width: 17px; height: 17px; fill: white; }
+  .user-name { font-size: 12px; font-weight: 700; color: var(--text); }
+  .user-dept { font-size: 11px; color: var(--grey-3); }
+  .back-btn { background: none; border: 1.5px solid var(--border); border-radius: 6px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: var(--text-s); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: border-color 0.2s, color 0.2s; }
+  .back-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .back-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+  /* PORTAL BAND */
+  .portal-band { width: 100%; background: linear-gradient(135deg, var(--navy-d) 0%, var(--navy) 60%, var(--navy-l) 100%); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .portal-title { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700; color: white; }
+  .portal-breadcrumb { font-size: 12px; color: rgba(255,255,255,0.65); }
+
+  /* MAIN */
+  .main-content { flex: 1; padding: 28px 32px 40px; max-width: 1100px; width: 100%; margin: 0 auto; }
+
+  .page-heading { margin-bottom: 22px; }
+  .page-heading h1 { font-family: 'Montserrat', sans-serif; font-size: 20px; font-weight: 700; color: var(--navy-d); }
+  .page-heading p { font-size: 13px; color: var(--text-s); margin-top: 4px; }
+
+  /* FILTER BAR */
+  .filter-bar {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px 20px; margin-bottom: 20px;
+    display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;
+    box-shadow: 0 1px 4px rgba(27,58,107,0.06);
+  }
+
+  .filter-group { display: flex; flex-direction: column; gap: 5px; }
+  .filter-group label { font-size: 11px; font-weight: 700; color: var(--text-s); text-transform: uppercase; letter-spacing: 0.06em; }
+
+  .filter-select, .filter-input {
+    padding: 9px 12px; border: 1.5px solid var(--grey-1);
+    border-radius: 6px; font-family: 'Open Sans', sans-serif;
+    font-size: 13px; color: var(--text); background: var(--grey-bg);
+    outline: none; min-width: 160px;
+  }
+  .filter-select:focus, .filter-input:focus { border-color: var(--navy); background: white; }
+
+  .btn-filter { padding: 9px 20px; background: var(--navy); color: white; border: none; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: background 0.2s; align-self: flex-end; }
+  .btn-filter:hover { background: var(--navy-d); }
+  .btn-filter svg { width: 14px; height: 14px; fill: white; }
+  .btn-reset { padding: 9px 16px; background: var(--grey-1); color: var(--text-s); border: 1.5px solid var(--border); border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; align-self: flex-end; transition: background 0.2s; }
+  .btn-reset:hover { background: var(--grey-2); }
+
+  /* HOLIDAY GROUP CARD */
+  .holiday-group { background: var(--white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 1px 6px rgba(27,58,107,0.07); }
+
+  .group-header {
+    background: linear-gradient(135deg, var(--navy-d), var(--navy));
+    padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 10px; cursor: pointer;
+  }
+
+  .group-header-left h3 { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 700; color: white; }
+  .group-header-left p { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 3px; }
+
+  .group-header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+  .chip { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.30); border-radius: 4px; padding: 3px 10px; font-size: 11px; font-weight: 600; color: white; white-space: nowrap; }
+
+  .chip-green  { background: rgba(76,175,80,0.25); border-color: rgba(76,175,80,0.5); }
+  .chip-amber  { background: rgba(230,81,0,0.25);  border-color: rgba(230,81,0,0.5); }
+  .chip-grey   { background: rgba(255,255,255,0.10); }
+
+  .toggle-arrow { width: 20px; height: 20px; fill: rgba(255,255,255,0.7); transition: transform 0.25s; flex-shrink: 0; }
+  .group-header.collapsed .toggle-arrow { transform: rotate(-90deg); }
+
+  .group-body { padding: 0; }
+  .group-body.collapsed { display: none; }
+
+  /* Validation stats bar */
+  .val-stats-bar {
+    display: flex; gap: 16px; padding: 12px 20px;
+    background: var(--grey-bg); border-bottom: 1px solid var(--grey-1);
+    flex-wrap: wrap; align-items: center;
+  }
+
+  .val-stat { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+  .val-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .val-dot-approved { background: var(--green-b); }
+  .val-dot-rejected { background: var(--red); }
+  .val-dot-pending  { background: var(--grey-3); }
+  .val-stat strong  { color: var(--text); }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: #EBF1FA; }
+  thead th { padding: 10px 14px; text-align: left; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: var(--navy); letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; border-bottom: 2px solid var(--border); }
+  tbody tr { border-bottom: 1px solid var(--grey-1); transition: background 0.15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #F0F6FC; }
+  tbody tr.manual-row { background: #FFF8E1; }
+  tbody td { padding: 10px 14px; color: var(--text); vertical-align: middle; }
+
+  .manual-tag { display: inline-flex; align-items: center; gap: 3px; background: #FFF3E0; border: 1px solid #FFD54F; border-radius: 3px; padding: 1px 6px; font-size: 10px; font-weight: 700; color: #E65100; margin-left: 6px; }
+
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+  .badge-approved { background: var(--green-l); color: var(--green); border: 1px solid #A5D6A7; }
+  .badge-rejected { background: var(--red-l); color: var(--red); border: 1px solid #FFCDD2; }
+  .badge-pending  { background: var(--grey-1); color: var(--grey-3); border: 1px solid var(--border); }
+
+  /* Group action buttons */
+  .group-actions { padding: 12px 20px; border-top: 1px solid var(--grey-1); display: flex; gap: 10px; flex-wrap: wrap; background: var(--grey-bg); }
+
+  .btn-group-action { padding: 7px 16px; border-radius: 5px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; border: none; text-transform: uppercase; letter-spacing: 0.03em; }
+  .btn-group-action svg { width: 13px; height: 13px; fill: currentColor; }
+  .btn-print-grp    { background: var(--navy); color: white; }
+  .btn-print-grp:hover { background: var(--navy-d); }
+  .btn-download-grp { background: var(--green-l); color: var(--green); border: 1.5px solid #A5D6A7; }
+  .btn-download-grp:hover { background: #C8E6C9; }
+
+  /* Empty / Loading */
+  .empty-state { text-align: center; padding: 48px 24px; color: var(--grey-3); background: var(--white); border: 1px solid var(--border); border-radius: 8px; }
+  .empty-state svg { width: 44px; height: 44px; fill: var(--grey-2); margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+  .spin { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--grey-2); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Print styles */
+  @media print {
+    .site-header, .portal-band, .filter-bar, .page-heading,
+    .group-actions, .page-footer, .toggle-arrow { display: none !important; }
+    .group-body.collapsed { display: block !important; }
+    .group-header { cursor: default; background: #1B3A6B !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: white !important; }
+    @page { margin: 12mm; size: A4; }
+  }
+
+  .page-footer { text-align: center; font-size: 11px; color: var(--grey-3); padding: 14px; border-top: 1px solid var(--grey-1); background: var(--white); margin-top: auto; }
+
+  @media (max-width: 768px) {
+    .site-header { padding: 10px 16px; }
+    .portal-band { padding: 12px 16px; }
+    .main-content { padding: 16px 12px 32px; }
+    .dept-label { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="site-header">
+  <div class="logo-area">
+    <svg class="rhc-cross" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="13,1 25,1 25,25 1,25 1,13 13,13" fill="#D32F2F"/>
+      <polygon points="29,1 41,1 41,13 53,13 53,25 29,25" fill="#F5A800"/>
+      <polygon points="1,29 25,29 25,53 13,53 13,41 1,41" fill="#1565C0"/>
+      <polygon points="29,29 53,29 53,41 41,41 41,53 29,53" fill="#2E7D32"/>
+    </svg>
+    <div>
+      <div class="logo-gmf">Grant Medical Foundation</div>
+      <div class="logo-rhc">Ruby Hall Clinic</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="dept-label">Department of HR &amp; ER<span>Human Resources &amp; Employee Relations</span></div>
+    <div class="user-pill">
+      <div class="user-avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></div>
+      <div><div class="user-name" id="headerManagerName">MANAGER</div><div class="user-dept" id="headerDeptName">—</div></div>
+    </div>
+    <button class="back-btn" onclick="window.location.href='screen2_manager_dashboard.html'">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back to Dashboard
+    </button>
+  </div>
+</div>
+
+<!-- PORTAL BAND -->
+<div class="portal-band">
+  <div class="portal-title">Approved Holiday Duty Confirmation Portal</div>
+  <div class="portal-breadcrumb">Dashboard &rsaquo; Past Submissions</div>
+</div>
+
+<!-- MAIN -->
+<div class="main-content">
+
+  <div class="page-heading">
+    <h1>Past Submissions &amp; Validation Status</h1>
+    <p>View all your previously submitted holiday duty lists. Validation status is updated by HR &amp; ER after attendance log verification.</p>
+  </div>
+
+  <!-- Filter Bar -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label>Year</label>
+      <select class="filter-select" id="yearFilter">
+        <option value="">All Years</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Department</label>
+      <select class="filter-select" id="deptFilter">
+        <option value="">All My Departments</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Holiday Name</label>
+      <input type="text" class="filter-input" id="holidayNameFilter" placeholder="SEARCH HOLIDAY..." style="text-transform:uppercase;"/>
+    </div>
+    <div class="filter-group">
+      <label>Validation Status</label>
+      <select class="filter-select" id="valStatusFilter">
+        <option value="">All Statuses</option>
+        <option value="APPROVED">Approved</option>
+        <option value="REJECTED">Rejected</option>
+        <option value="PENDING">Pending Validation</option>
+      </select>
+    </div>
+    <button class="btn-filter" onclick="applyFilters()">
+      <svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg>
+      Apply Filter
+    </button>
+    <button class="btn-reset" onclick="resetFilters()">Reset</button>
+  </div>
+
+  <!-- Results Container -->
+  <div id="resultsContainer">
+    <div class="empty-state"><span class="spin"></span><p>Loading your submission history...</p></div>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  &copy; 2026 &nbsp;Grant Medical Foundation &nbsp;|&nbsp; Ruby Hall Clinic &nbsp;|&nbsp; Department of HR &amp; ER
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════
+const SUPABASE_URL  = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY';
+
+// ═══════════════════════════════════════
+// SESSION
+// ═══════════════════════════════════════
+const managerId   = sessionStorage.getItem('manager_id');
+const managerName = sessionStorage.getItem('manager_name') || 'MANAGER';
+const authToken   = sessionStorage.getItem('auth_token');
+
+if (!managerId || !authToken) window.location.href = 'index.html';
+
+document.getElementById('headerManagerName').textContent = managerName;
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let allData       = []; // raw grouped data
+let myDepartments = [];
+
+// ═══════════════════════════════════════
+// API
+// ═══════════════════════════════════════
+async function api(path) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${authToken}` }
+  });
+  if (!res.ok) throw new Error('API error');
+  return res.json();
+}
+
+// ═══════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════
+function fmtDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+}
+function fmtDateShort(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+}
+function fmtDateTime(d) {
+  if (!d) return '—';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) + ', ' +
+    dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true}).toUpperCase();
+}
+
+// ═══════════════════════════════════════
+// LOAD
+// ═══════════════════════════════════════
+async function loadDepts() {
+  const data = await api(
+    `manager_departments?manager_id=eq.${managerId}&select=department_id,departments(department_id,department_name)`
+  );
+  myDepartments = data.map(d => ({ id: d.departments.department_id, name: d.departments.department_name }));
+
+  const sel = document.getElementById('deptFilter');
+  myDepartments.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d.id; opt.textContent = d.name;
+    sel.appendChild(opt);
+  });
+
+  if (myDepartments.length === 1) {
+    document.getElementById('headerDeptName').textContent = myDepartments[0].name;
+  } else {
+    document.getElementById('headerDeptName').textContent = `${myDepartments.length} Departments`;
+  }
+}
+
+async function loadHistory() {
+  const container = document.getElementById('resultsContainer');
+  container.innerHTML = `<div class="empty-state"><span class="spin"></span><p>Loading...</p></div>`;
+
+  try {
+    // Load all submissions for this manager
+    const subs = await api(
+      `submissions?manager_id=eq.${managerId}&status=eq.SUBMITTED&order=submitted_at.desc&select=submission_id,holiday_id,emp_code,pf_no,employee_name,designation,department_name,location_name,is_manual_entry,submitted_at,holidays(holiday_id,holiday_name,holiday_date)`
+    );
+
+    if (subs.length === 0) {
+      container.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg><p>No past submissions found.<br/>Your submitted holiday duty lists will appear here.</p></div>`;
+      return;
+    }
+
+    // Load validation results for all submitted records
+    const empCodes = [...new Set(subs.map(s => s.emp_code))];
+    const holidayIds = [...new Set(subs.map(s => s.holiday_id))];
+    let validations = [];
+    try {
+      validations = await api(
+        `validation_results?holiday_id=in.(${holidayIds.join(',')})&emp_code=in.(${empCodes.join(',')})&select=holiday_id,emp_code,validation_status,remarks`
+      );
+    } catch(e) {}
+
+    const valMap = {};
+    validations.forEach(v => {
+      valMap[`${v.holiday_id}_${v.emp_code}`] = v;
+    });
+
+    // Attach validation to each submission
+    const enriched = subs.map(s => ({
+      ...s,
+      validation: valMap[`${s.holiday_id}_${s.emp_code}`] || null
+    }));
+
+    // Group by holiday_id + department_name
+    const groups = {};
+    enriched.forEach(s => {
+      const key = `${s.holiday_id}__${s.department_name}`;
+      if (!groups[key]) {
+        groups[key] = {
+          holiday: s.holidays,
+          dept: s.department_name,
+          location: s.location_name,
+          submitted_at: s.submitted_at,
+          rows: []
+        };
+      }
+      groups[key].rows.push(s);
+    });
+
+    allData = Object.values(groups);
+
+    // Populate year filter
+    const years = [...new Set(allData.map(g => new Date(g.holiday.holiday_date).getFullYear()))].sort((a,b)=>b-a);
+    const yearSel = document.getElementById('yearFilter');
+    years.forEach(y => {
+      const opt = document.createElement('option');
+      opt.value = y; opt.textContent = y;
+      yearSel.appendChild(opt);
+    });
+
+    renderGroups(allData);
+
+  } catch(e) {
+    container.innerHTML = `<div class="empty-state"><p style="color:var(--red);">Failed to load history. Please refresh.</p></div>`;
+  }
+}
+
+// ═══════════════════════════════════════
+// RENDER GROUPS
+// ═══════════════════════════════════════
+function renderGroups(groups) {
+  const container = document.getElementById('resultsContainer');
+  if (groups.length === 0) {
+    container.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/></svg><p>No records match the selected filters.</p></div>`;
+    return;
+  }
+
+  container.innerHTML = groups.map((g, gi) => {
+    const totalEmp    = g.rows.length;
+    const approved    = g.rows.filter(r => r.validation?.validation_status?.includes('APPROVED')).length;
+    const rejected    = g.rows.filter(r => r.validation?.validation_status && !r.validation.validation_status.includes('APPROVED')).length;
+    const pending     = totalEmp - approved - rejected;
+    const manualCount = g.rows.filter(r => r.is_manual_entry).length;
+
+    const rows = g.rows.map((r, i) => {
+      const vs = r.validation?.validation_status;
+      const vr = r.validation?.remarks || '';
+      let badge = `<span class="badge badge-pending">Pending</span>`;
+      if (vs) {
+        badge = vs.includes('APPROVED')
+          ? `<span class="badge badge-approved">✓ ${vs}</span>`
+          : `<span class="badge badge-rejected">✗ ${vs}</span>`;
+      }
+      return `<tr class="${r.is_manual_entry ? 'manual-row' : ''}">
+        <td>${i+1}</td>
+        <td>${r.emp_code}</td>
+        <td>${r.pf_no}</td>
+        <td><strong>${r.employee_name}</strong>${r.is_manual_entry ? '<span class="manual-tag">MANUAL</span>' : ''}</td>
+        <td>${r.designation}</td>
+        <td>${badge}</td>
+        <td style="font-size:12px;color:var(--text-s);">${vr}</td>
+      </tr>`;
+    }).join('');
+
+    return `
+      <div class="holiday-group" id="group_${gi}">
+        <div class="group-header" onclick="toggleGroup(${gi}, this)">
+          <div class="group-header-left">
+            <h3>${g.holiday.holiday_name}</h3>
+            <p>${fmtDate(g.holiday.holiday_date)} &nbsp;|&nbsp; ${g.dept} &nbsp;|&nbsp; ${g.location}</p>
+          </div>
+          <div class="group-header-right">
+            <span class="chip">${totalEmp} Employees</span>
+            ${approved > 0 ? `<span class="chip chip-green">✓ ${approved} Approved</span>` : ''}
+            ${rejected > 0 ? `<span class="chip" style="background:rgba(211,47,47,0.25);border-color:rgba(211,47,47,0.5);">✗ ${rejected} Rejected</span>` : ''}
+            ${pending > 0  ? `<span class="chip chip-grey">${pending} Pending</span>` : ''}
+            ${manualCount > 0 ? `<span class="chip" style="background:rgba(245,168,0,0.25);border-color:rgba(245,168,0,0.5);">${manualCount} Manual</span>` : ''}
+            <svg class="toggle-arrow" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+          </div>
+        </div>
+
+        <div class="group-body" id="body_${gi}">
+          <div class="val-stats-bar">
+            <div class="val-stat"><div class="val-dot val-dot-approved"></div>Approved: <strong>${approved}</strong></div>
+            <div class="val-stat"><div class="val-dot val-dot-rejected"></div>Rejected: <strong>${rejected}</strong></div>
+            <div class="val-stat"><div class="val-dot val-dot-pending"></div>Pending Validation: <strong>${pending}</strong></div>
+            <div style="margin-left:auto;font-size:12px;color:var(--text-s);">Submitted: ${fmtDateTime(g.submitted_at)}</div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Emp Code</th>
+                  <th>PF No.</th>
+                  <th>Employee Name</th>
+                  <th>Designation</th>
+                  <th>Validation Status</th>
+                  <th>HR Remarks</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+
+          <div class="group-actions">
+            <button class="btn-group-action btn-print-grp" onclick="printGroup(${gi})">
+              <svg viewBox="0 0 24 24"><path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/></svg>
+              Print
+            </button>
+            <button class="btn-group-action btn-download-grp" onclick="downloadGroup(${gi})">
+              <svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+              Download CSV
+            </button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// TOGGLE GROUP
+// ═══════════════════════════════════════
+function toggleGroup(gi, header) {
+  const body = document.getElementById(`body_${gi}`);
+  body.classList.toggle('collapsed');
+  header.classList.toggle('collapsed');
+}
+
+// ═══════════════════════════════════════
+// FILTERS
+// ═══════════════════════════════════════
+function applyFilters() {
+  const year    = document.getElementById('yearFilter').value;
+  const deptId  = document.getElementById('deptFilter').value;
+  const holiday = document.getElementById('holidayNameFilter').value.toUpperCase().trim();
+  const valStat = document.getElementById('valStatusFilter').value.toUpperCase();
+
+  let filtered = allData;
+
+  if (year) {
+    filtered = filtered.filter(g => new Date(g.holiday.holiday_date).getFullYear() == year);
+  }
+
+  if (deptId) {
+    const dept = myDepartments.find(d => d.id === deptId);
+    if (dept) filtered = filtered.filter(g => g.dept === dept.name);
+  }
+
+  if (holiday) {
+    filtered = filtered.filter(g => g.holiday.holiday_name.includes(holiday));
+  }
+
+  if (valStat) {
+    filtered = filtered.filter(g => {
+      if (valStat === 'PENDING') return g.rows.some(r => !r.validation?.validation_status);
+      if (valStat === 'APPROVED') return g.rows.some(r => r.validation?.validation_status?.includes('APPROVED'));
+      if (valStat === 'REJECTED') return g.rows.some(r => r.validation?.validation_status && !r.validation.validation_status.includes('APPROVED'));
+      return true;
+    });
+  }
+
+  renderGroups(filtered);
+}
+
+function resetFilters() {
+  document.getElementById('yearFilter').value = '';
+  document.getElementById('deptFilter').value = '';
+  document.getElementById('holidayNameFilter').value = '';
+  document.getElementById('valStatusFilter').value = '';
+  renderGroups(allData);
+}
+
+// ═══════════════════════════════════════
+// PRINT GROUP
+// ═══════════════════════════════════════
+function printGroup(gi) {
+  sessionStorage.setItem('current_holiday_id', allData[gi].holiday.holiday_id);
+  sessionStorage.setItem('current_dept_name', allData[gi].dept);
+  window.location.href = 'screen5_confirmation.html';
+}
+
+// ═══════════════════════════════════════
+// DOWNLOAD GROUP CSV
+// ═══════════════════════════════════════
+function downloadGroup(gi) {
+  const g = allData[gi];
+  const rows = [
+    ['GRANT MEDICAL FOUNDATION — RUBY HALL CLINIC'],
+    ['Approved Holiday Duty Confirmation Portal | Department of HR & ER'],
+    [`Holiday: ${g.holiday.holiday_name} | Date: ${fmtDate(g.holiday.holiday_date)}`],
+    [`Department: ${g.dept} | Location: ${g.location}`],
+    [`Submitted By: ${managerName} | Submitted On: ${fmtDateTime(g.submitted_at)}`],
+    [],
+    ['#','Emp Code','PF No.','Employee Name','Designation','Entry Type','Validation Status','HR Remarks'],
+    ...g.rows.map((r,i) => [
+      i+1, r.emp_code, r.pf_no, r.employee_name, r.designation,
+      r.is_manual_entry ? 'MANUAL ENTRY' : 'MASTER DATA',
+      r.validation?.validation_status || 'PENDING VALIDATION',
+      r.validation?.remarks || ''
+    ])
+  ];
+
+  const csv = rows.map(row => row.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv], { type:'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `Holiday_Duty_${g.holiday.holiday_name.replace(/\s+/g,'_')}_${g.dept.replace(/\s+/g,'_')}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+async function init() {
+  await loadDepts();
+  await loadHistory();
+}
+
+init();
+</script>
+</body>
+</html>
