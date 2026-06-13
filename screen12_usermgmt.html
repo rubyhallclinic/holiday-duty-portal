@@ -120,6 +120,9 @@
   .toast.show{opacity:1;}
   .page-footer{text-align:center;font-size:11px;color:var(--grey-3);padding:14px;border-top:1px solid var(--grey-1);background:var(--white);margin-top:auto;}
   @media(max-width:900px){.site-header{padding:10px 16px;}.portal-band,.nav-tabs{padding-left:12px;padding-right:12px;}.main-content{padding:16px 12px 32px;}.dept-label{display:none;}}
+  /* Password fields must NEVER be uppercase */
+  input[type="password"] { text-transform: none !important; letter-spacing: 0.05em; }
+  #resetNewPwd, #resetConfirmPwd { text-transform: none !important; }
 </style>
 </head>
 <body>
