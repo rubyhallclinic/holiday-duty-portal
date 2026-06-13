@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Employee Selection — Approved Holiday Duty Confirmation Portal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Montserrat:wght@500;600;700;800&display=swap');
+
+  :root {
+    --navy:      #1B3A6B;
+    --navy-d:    #122850;
+    --navy-l:    #2A5298;
+    --red:       #D32F2F;
+    --yellow:    #F5A800;
+    --blue-bg:   #EAF4FB;
+    --white:     #FFFFFF;
+    --grey-bg:   #F5F7FA;
+    --grey-1:    #E8ECF0;
+    --grey-2:    #C5CDD6;
+    --grey-3:    #7F8C9A;
+    --text:      #1A2332;
+    --text-s:    #4A5568;
+    --border:    #D0D8E0;
+    --green:     #1B5E20;
+    --green-l:   #E8F5E9;
+    --green-b:   #43A047;
+    --amber:     #E65100;
+    --amber-l:   #FFF3E0;
+    --red-l:     #FFEBEE;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; text-decoration: none !important; }
+
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background: var(--blue-bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    width: 100%; background: var(--white);
+    border-bottom: 3px solid var(--red);
+    padding: 12px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(27,58,107,0.10);
+    position: sticky; top: 0; z-index: 100;
+  }
+
+  .logo-area { display: flex; align-items: center; gap: 12px; }
+  .rhc-cross { width: 48px; height: 48px; flex-shrink: 0; }
+  .logo-gmf { font-size: 11px; color: var(--navy); }
+  .logo-rhc { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700; color: var(--navy); }
+
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .dept-label { font-size: 12px; font-weight: 600; color: var(--navy); text-align: right; line-height: 1.5; }
+  .dept-label span { display: block; font-size: 11px; font-weight: 400; color: var(--grey-3); }
+
+  .user-pill { display: flex; align-items: center; gap: 8px; background: var(--grey-bg); border: 1px solid var(--border); border-radius: 24px; padding: 6px 14px 6px 8px; }
+  .user-avatar { width: 30px; height: 30px; background: var(--navy); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .user-avatar svg { width: 17px; height: 17px; fill: white; }
+  .user-name { font-size: 12px; font-weight: 700; color: var(--text); }
+  .user-dept { font-size: 11px; color: var(--grey-3); }
+
+  .back-btn { background: none; border: 1.5px solid var(--border); border-radius: 6px; padding: 6px 14px; font-size: 12px; font-weight: 600; color: var(--text-s); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: border-color 0.2s, color 0.2s; }
+  .back-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .back-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+  /* ── PORTAL BAND ── */
+  .portal-band { width: 100%; background: linear-gradient(135deg, var(--navy-d) 0%, var(--navy) 60%, var(--navy-l) 100%); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .portal-title { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700; color: white; }
+  .portal-breadcrumb { font-size: 12px; color: rgba(255,255,255,0.65); }
+
+  /* ── PROGRESS ── */
+  .progress-wrap { background: var(--white); border-bottom: 1px solid var(--border); padding: 16px 32px; }
+  .steps { display: flex; align-items: center; max-width: 600px; margin: 0 auto; }
+  .step { display: flex; flex-direction: column; align-items: center; gap: 5px; flex: 1; }
+  .step-circle { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; border: 2px solid var(--grey-2); background: var(--white); color: var(--grey-3); }
+  .step.active .step-circle { background: var(--navy); border-color: var(--navy); color: white; }
+  .step.done .step-circle { background: var(--green-b); border-color: var(--green-b); color: white; }
+  .step-label { font-size: 10px; font-weight: 600; color: var(--grey-3); text-transform: uppercase; letter-spacing: 0.05em; text-align: center; }
+  .step.active .step-label { color: var(--navy); }
+  .step.done .step-label { color: var(--green-b); }
+  .step-line { flex: 1; height: 2px; background: var(--grey-2); margin: 0 4px; margin-bottom: 18px; }
+  .step-line.done { background: var(--green-b); }
+
+  /* ── MAIN ── */
+  .main-content { flex: 1; padding: 24px 32px 40px; max-width: 1100px; width: 100%; margin: 0 auto; }
+
+  /* Holiday banner */
+  .holiday-banner {
+    background: linear-gradient(135deg, var(--navy-d), var(--navy));
+    border-radius: 8px; padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 10px; margin-bottom: 20px;
+  }
+
+  .holiday-banner-left h2 { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 700; color: white; }
+  .holiday-banner-left p { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 3px; }
+
+  .holiday-banner-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+  .banner-chip { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; padding: 4px 12px; font-size: 12px; font-weight: 600; color: white; }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    background: var(--white); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 18px; margin-bottom: 16px;
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+    box-shadow: 0 1px 4px rgba(27,58,107,0.06);
+  }
+
+  .search-wrap { flex: 1; position: relative; min-width: 200px; }
+  .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; fill: var(--grey-3); pointer-events: none; }
+  .search-wrap input { width: 100%; padding: 9px 12px 9px 32px; border: 1.5px solid var(--grey-1); border-radius: 6px; font-family: 'Open Sans', sans-serif; font-size: 13px; color: var(--text); background: var(--grey-bg); outline: none; text-transform: uppercase; }
+  .search-wrap input:focus { border-color: var(--navy); background: white; }
+
+  .selected-count-badge { background: var(--navy); color: white; border-radius: 20px; padding: 4px 14px; font-size: 12px; font-weight: 700; white-space: nowrap; }
+
+  .btn-toolbar { padding: 9px 16px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s; border: none; text-transform: uppercase; letter-spacing: 0.03em; white-space: nowrap; }
+  .btn-toolbar svg { width: 14px; height: 14px; fill: currentColor; }
+  .btn-add    { background: var(--green-l); color: var(--green); border: 1.5px solid #A5D6A7; }
+  .btn-add:hover { background: #C8E6C9; }
+  .btn-select-all { background: var(--grey-1); color: var(--navy); border: 1.5px solid var(--border); }
+  .btn-select-all:hover { background: var(--grey-2); }
+  .btn-clear-sel  { background: var(--red-l); color: var(--red); border: 1.5px solid #FFCDD2; }
+  .btn-clear-sel:hover { background: #FFCDD2; }
+
+  /* ── TABLE ── */
+  .table-wrap { background: var(--white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 6px rgba(27,58,107,0.07); margin-bottom: 20px; }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead tr { background: var(--navy); }
+  thead th { padding: 11px 14px; text-align: left; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: white; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
+  thead th:first-child { width: 44px; text-align: center; }
+
+  tbody tr { border-bottom: 1px solid var(--grey-1); transition: background 0.15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #F0F6FC; }
+  tbody tr.selected-row { background: #E8F5E9; }
+  tbody tr.manual-row { background: #FFF8E1; }
+  tbody tr.manual-row.selected-row { background: #DCEDC8; }
+
+  tbody td { padding: 11px 14px; color: var(--text); font-size: 13px; vertical-align: middle; }
+  tbody td:first-child { text-align: center; }
+
+  /* Custom checkbox in table */
+  .tbl-checkbox { width: 18px; height: 18px; border: 2px solid var(--grey-2); border-radius: 3px; background: white; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; flex-shrink: 0; }
+  .tbl-checkbox svg { width: 11px; height: 11px; fill: white; display: none; }
+  .tbl-checkbox.checked { background: var(--navy); border-color: var(--navy); }
+  .tbl-checkbox.checked svg { display: block; }
+
+  .manual-tag { display: inline-flex; align-items: center; gap: 3px; background: #FFF3E0; border: 1px solid #FFD54F; border-radius: 3px; padding: 1px 6px; font-size: 10px; font-weight: 700; color: #E65100; margin-left: 6px; }
+
+  /* Empty state */
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--grey-3); }
+  .empty-state svg { width: 40px; height: 40px; fill: var(--grey-2); margin-bottom: 10px; }
+  .empty-state p { font-size: 13px; }
+
+  /* Loading */
+  .loading-row td { text-align: center; padding: 32px; color: var(--grey-3); }
+  .spin { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--grey-2); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── BOTTOM ACTION BAR ── */
+  .action-bar {
+    position: sticky; bottom: 0;
+    background: var(--white); border-top: 2px solid var(--border);
+    padding: 14px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+    box-shadow: 0 -4px 16px rgba(27,58,107,0.10);
+    z-index: 50;
+  }
+
+  .action-bar-left { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .action-bar-right { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .selection-summary { font-size: 13px; color: var(--text-s); }
+  .selection-summary strong { color: var(--navy); font-size: 15px; }
+
+  .btn-save {
+    padding: 11px 22px; background: white; color: var(--navy);
+    border: 2px solid var(--navy); border-radius: 6px;
+    font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 7px;
+    transition: background 0.2s; text-transform: uppercase; letter-spacing: 0.03em;
+  }
+  .btn-save:hover { background: var(--grey-bg); }
+  .btn-save svg { width: 15px; height: 15px; fill: var(--navy); }
+
+  .btn-submit {
+    padding: 11px 28px; background: var(--navy); color: white;
+    border: none; border-radius: 6px;
+    font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; gap: 7px;
+    transition: background 0.2s, transform 0.15s; text-transform: uppercase; letter-spacing: 0.03em;
+    box-shadow: 0 3px 10px rgba(27,58,107,0.25);
+  }
+  .btn-submit:hover { background: var(--navy-d); transform: translateY(-1px); }
+  .btn-submit:disabled { background: var(--grey-2); color: var(--grey-3); cursor: not-allowed; box-shadow: none; transform: none; }
+  .btn-submit svg { width: 15px; height: 15px; fill: currentColor; }
+
+  /* ── MANUAL ADD MODAL ── */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: white; border-radius: 8px; width: 100%; max-width: 500px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); animation: fadeUp 0.25s ease; overflow: hidden; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+
+  .modal-header { background: linear-gradient(135deg, var(--navy-d), var(--navy)); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .modal-header h3 { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 700; color: white; }
+  .modal-close { background: rgba(255,255,255,0.15); border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 16px; }
+  .modal-close:hover { background: rgba(255,255,255,0.25); }
+  .modal-body { padding: 22px; }
+
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text-s); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .form-group label span { color: var(--red); }
+  .form-group input { width: 100%; padding: 10px 14px; border: 1.5px solid var(--grey-1); border-radius: 6px; font-family: 'Open Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--grey-bg); outline: none; text-transform: uppercase; }
+  .form-group input:focus { border-color: var(--navy); background: white; box-shadow: 0 0 0 3px rgba(27,58,107,0.09); }
+  .form-group .field-note { font-size: 11px; color: var(--grey-3); margin-top: 4px; }
+
+  .modal-footer { padding: 14px 22px; border-top: 1px solid var(--grey-1); display: flex; gap: 10px; justify-content: flex-end; }
+
+  .btn-modal-cancel { padding: 9px 18px; background: white; color: var(--text-s); border: 1.5px solid var(--border); border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: border-color 0.2s; }
+  .btn-modal-cancel:hover { border-color: var(--red); color: var(--red); }
+
+  .btn-modal-add { padding: 9px 22px; background: var(--navy); color: white; border: none; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+  .btn-modal-add:hover { background: var(--navy-d); }
+
+  /* Alert */
+  .alert { padding: 10px 14px; border-radius: 6px; font-size: 12.5px; margin-bottom: 14px; display: none; align-items: flex-start; gap: 8px; line-height: 1.5; }
+  .alert svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; }
+  .alert-error { background: var(--red-l); border: 1px solid #FFCDD2; color: var(--red); display: flex; }
+  .alert-error svg { fill: var(--red); }
+  .alert-success { background: var(--green-l); border: 1px solid #A5D6A7; color: var(--green); display: flex; }
+  .alert-success svg { fill: var(--green-b); }
+  .alert-warn { background: var(--amber-l); border: 1px solid #FFCC80; color: var(--amber); display: flex; }
+  .alert-warn svg { fill: var(--amber); }
+
+  /* Duplicate warning modal */
+  .dup-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 300; align-items: center; justify-content: center; padding: 16px; }
+  .dup-modal.open { display: flex; }
+  .dup-box { background: white; border-radius: 8px; max-width: 440px; width: 100%; overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+  .dup-box-header { background: var(--red); padding: 14px 18px; }
+  .dup-box-header h3 { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; color: white; }
+  .dup-box-body { padding: 18px; font-size: 13.5px; color: var(--text); line-height: 1.6; }
+  .dup-box-footer { padding: 12px 18px; border-top: 1px solid var(--grey-1); display: flex; gap: 10px; justify-content: flex-end; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: var(--navy-d); color: white; padding: 10px 20px; border-radius: 6px; font-size: 13px; font-weight: 600; z-index: 500; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
+  .toast.show { opacity: 1; }
+
+  /* Footer */
+  .page-footer { text-align: center; font-size: 11px; color: var(--grey-3); padding: 14px; border-top: 1px solid var(--grey-1); background: var(--white); }
+
+  @media (max-width: 768px) {
+    .site-header { padding: 10px 16px; }
+    .portal-band { padding: 12px 16px; }
+    .main-content { padding: 16px 12px 100px; }
+    .action-bar { padding: 12px 16px; }
+    .dept-label { display: none; }
+    thead th:nth-child(3), tbody td:nth-child(3) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="site-header">
+  <div class="logo-area">
+    <svg class="rhc-cross" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="13,1 25,1 25,25 1,25 1,13 13,13" fill="#D32F2F"/>
+      <polygon points="29,1 41,1 41,13 53,13 53,25 29,25" fill="#F5A800"/>
+      <polygon points="1,29 25,29 25,53 13,53 13,41 1,41" fill="#1565C0"/>
+      <polygon points="29,29 53,29 53,41 41,41 41,53 29,53" fill="#2E7D32"/>
+    </svg>
+    <div>
+      <div class="logo-gmf">Grant Medical Foundation</div>
+      <div class="logo-rhc">Ruby Hall Clinic</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="dept-label">Department of HR &amp; ER<span>Human Resources &amp; Employee Relations</span></div>
+    <div class="user-pill">
+      <div class="user-avatar"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></div>
+      <div><div class="user-name" id="headerManagerName">MANAGER</div><div class="user-dept" id="headerDeptName">—</div></div>
+    </div>
+    <button class="back-btn" onclick="confirmBack()">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Back
+    </button>
+  </div>
+</div>
+
+<!-- PORTAL BAND -->
+<div class="portal-band">
+  <div class="portal-title">Approved Holiday Duty Confirmation Portal</div>
+  <div class="portal-breadcrumb">Dashboard &rsaquo; Acknowledgement &rsaquo; Employee Selection</div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="steps">
+    <div class="step done">
+      <div class="step-circle"><svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:white;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+      <div class="step-label">Acknowledge</div>
+    </div>
+    <div class="step-line done"></div>
+    <div class="step active">
+      <div class="step-circle">2</div>
+      <div class="step-label">Select Staff</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="step-circle">3</div>
+      <div class="step-label">Submit</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-content">
+
+  <!-- Holiday Banner -->
+  <div class="holiday-banner">
+    <div class="holiday-banner-left">
+      <h2 id="holidayNameBanner">Loading...</h2>
+      <p id="deptNameBanner">Department — Location</p>
+    </div>
+    <div class="holiday-banner-right">
+      <div class="banner-chip" id="holidayDateBanner">—</div>
+      <div class="banner-chip" id="deadlineBanner">Deadline: —</div>
+    </div>
+  </div>
+
+  <!-- Global Alert -->
+  <div class="alert" id="globalAlert">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+    <span id="globalAlertMsg"></span>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      <input type="text" id="filterInput" placeholder="FILTER BY NAME, EMP CODE OR PF NO." oninput="filterTable()"/>
+    </div>
+    <span class="selected-count-badge" id="selectedBadge">0 Selected</span>
+    <button class="btn-toolbar btn-select-all" onclick="selectAll()">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM17.99 9l-1.41-1.42-6.59 6.59-2.58-2.57-1.42 1.41 4 3.99z"/></svg>
+      Select All
+    </button>
+    <button class="btn-toolbar btn-clear-sel" onclick="clearSelection()">
+      <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+      Clear
+    </button>
+    <button class="btn-toolbar btn-add" onclick="openManualModal()">
+      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+      Add Manually
+    </button>
+  </div>
+
+  <!-- Employee Table -->
+  <div class="table-wrap">
+    <table id="empTable">
+      <thead>
+        <tr>
+          <th><input type="checkbox" id="headerCheckbox" onchange="toggleAllCheckboxes(this)" style="width:16px;height:16px;cursor:pointer;accent-color:var(--yellow);"/></th>
+          <th>#</th>
+          <th>Emp Code</th>
+          <th>PF No.</th>
+          <th>Employee Name</th>
+          <th>Designation</th>
+          <th>Department</th>
+        </tr>
+      </thead>
+      <tbody id="empTableBody">
+        <tr class="loading-row">
+          <td colspan="7"><span class="spin"></span>Loading employees...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- STICKY ACTION BAR -->
+<div class="action-bar">
+  <div class="action-bar-left">
+    <div class="selection-summary">
+      <strong id="selectedCount">0</strong> employees selected for holiday duty
+    </div>
+    <span id="manualCountNote" style="font-size:12px;color:var(--amber);display:none;"></span>
+  </div>
+  <div class="action-bar-right">
+    <button class="btn-save" id="saveDraftBtn" onclick="saveDraft()">
+      <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+      Save Draft
+    </button>
+    <button class="btn-submit" id="submitBtn" onclick="confirmSubmit()" disabled>
+      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+      Submit Final List
+    </button>
+  </div>
+</div>
+
+<!-- MANUAL ADD MODAL -->
+<div class="modal-overlay" id="manualModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Add Employee Manually</h3>
+      <button class="modal-close" onclick="closeModal('manualModal')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="alert alert-warn" id="manualWarn">
+        <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+        <span id="manualWarnMsg">Use this only if the employee is not in the uploaded master list. Manual entries are flagged for HR verification.</span>
+      </div>
+      <div class="alert alert-error" id="manualError" style="display:none;">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="manualErrorMsg"></span>
+      </div>
+      <form id="manualForm" autocomplete="off">
+        <div class="form-group">
+          <label>Employee Code <span>*</span></label>
+          <input type="text" id="manualEmpCode" placeholder="E.G. EMP12345" maxlength="20" required/>
+          <div class="field-note">Enter the employee's official code</div>
+        </div>
+        <div class="form-group">
+          <label>PF Number <span>*</span></label>
+          <input type="text" id="manualPfNo" placeholder="E.G. MH/PUN/12345" maxlength="30" required/>
+        </div>
+        <div class="form-group">
+          <label>Employee Name <span>*</span></label>
+          <input type="text" id="manualEmpName" placeholder="FULL NAME" maxlength="80" required/>
+        </div>
+        <div class="form-group">
+          <label>Designation <span>*</span></label>
+          <input type="text" id="manualDesig" placeholder="E.G. STAFF NURSE" maxlength="60" required/>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal('manualModal')">Cancel</button>
+      <button class="btn-modal-add" onclick="addManualEmployee()">Add to List</button>
+    </div>
+  </div>
+</div>
+
+<!-- DUPLICATE WARNING MODAL -->
+<div class="dup-modal" id="dupModal">
+  <div class="dup-box">
+    <div class="dup-box-header">
+      <h3>⚠ Duplicate Entry Detected</h3>
+    </div>
+    <div class="dup-box-body" id="dupModalMsg">
+      This employee is already in the list.
+    </div>
+    <div class="dup-box-footer">
+      <button class="btn-modal-cancel" onclick="closeDupModal(false)">Cancel</button>
+      <button id="dupProceedBtn" class="btn-modal-add" onclick="closeDupModal(true)" style="display:none;">Proceed Anyway</button>
+      <button class="btn-modal-cancel" style="border-color:var(--red);color:var(--red);" onclick="closeDupModal(false)">OK</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<div class="page-footer">&copy; 2026 &nbsp;Grant Medical Foundation &nbsp;|&nbsp; Ruby Hall Clinic &nbsp;|&nbsp; Department of HR &amp; ER</div>
+
+<script>
+// ═══════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════
+const SUPABASE_URL  = 'sb_publishable_m9N8d07XWyZa0SWxN0f06w_t1TIiVL9';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwcWxxZ3l4Zm1jb3FxamNnY2hkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4MjU3MjMsImV4cCI6MjA5NjQwMTcyM30.tKoN4jw7a_YiyhxqCUQE5o5Ev8zFKvPXpOv56tMTSBU';
+
+// ═══════════════════════════════════════
+// SESSION
+// ═══════════════════════════════════════
+const managerId   = sessionStorage.getItem('manager_id');
+const managerName = sessionStorage.getItem('manager_name') || 'MANAGER';
+const authToken   = sessionStorage.getItem('auth_token');
+const holidayId   = sessionStorage.getItem('current_holiday_id');
+const deptId      = sessionStorage.getItem('current_dept_id');
+const deptName    = sessionStorage.getItem('current_dept_name') || '—';
+const locationId  = sessionStorage.getItem('location_id');
+
+if (!managerId || !authToken) window.location.href = 'index.html';
+if (!holidayId || !deptId)    window.location.href = 'screen2_manager_dashboard.html';
+
+document.getElementById('headerManagerName').textContent = managerName;
+document.getElementById('headerDeptName').textContent    = deptName;
+document.getElementById('deptNameBanner').textContent    = deptName;
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let allEmployees  = [];   // full list from DB
+let displayRows   = [];   // currently visible rows (after filter)
+let selectedIds   = new Set(); // emp_codes selected
+let manualEntries = [];   // manually added
+let dupResolve    = null; // promise resolver for dup modal
+
+// ═══════════════════════════════════════
+// API
+// ═══════════════════════════════════════
+async function api(path) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${authToken}` }
+  });
+  if (!res.ok) throw new Error('API error ' + res.status);
+  return res.json();
+}
+
+async function apiPost(path, body) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json', 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${authToken}`, 'Prefer':'return=minimal' },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.message||'Error'); }
+}
+
+async function apiUpsert(path, body) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json', 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${authToken}`, 'Prefer':'resolution=merge-duplicates,return=minimal' },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.message||'Error'); }
+}
+
+async function apiDelete(path) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    method: 'DELETE',
+    headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${authToken}` }
+  });
+  if (!res.ok) throw new Error('Delete error');
+}
+
+// ═══════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════
+function fmtDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'});
+}
+function fmtDateShort(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+}
+function fmtDateTime(d) {
+  if (!d) return '—';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) + ', ' +
+    dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});
+}
+
+function showToast(msg, dur=2500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+function showGlobalAlert(type, msg) {
+  const el = document.getElementById('globalAlert');
+  el.className = `alert alert-${type}`;
+  document.getElementById('globalAlertMsg').textContent = msg;
+  el.style.display = 'flex';
+  el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+  setTimeout(() => el.style.display = 'none', 6000);
+}
+
+// ═══════════════════════════════════════
+// LOAD HOLIDAY INFO
+// ═══════════════════════════════════════
+async function loadHoliday() {
+  try {
+    const data = await api(`holidays?holiday_id=eq.${holidayId}&select=holiday_name,holiday_date,deadline_datetime`);
+    if (!data || data.length === 0) return;
+    const h = data[0];
+    document.getElementById('holidayNameBanner').textContent = h.holiday_name;
+    document.getElementById('holidayDateBanner').textContent = fmtDateShort(h.holiday_date);
+    document.getElementById('deadlineBanner').textContent    = 'Deadline: ' + fmtDateTime(h.deadline_datetime);
+    sessionStorage.setItem('holiday_name', h.holiday_name);
+    sessionStorage.setItem('holiday_date', h.holiday_date);
+  } catch(e) { console.error(e); }
+}
+
+// ═══════════════════════════════════════
+// LOAD EMPLOYEES
+// ═══════════════════════════════════════
+async function loadEmployees() {
+  try {
+    // Load active employees for this department
+    const data = await api(
+      `employees?department_id=eq.${deptId}&is_active=eq.true&order=employee_name.asc&select=employee_id,emp_code,pf_no,employee_name,designation,departments(department_name)`
+    );
+
+    allEmployees = data.map(e => ({
+      id:   e.employee_id,
+      code: e.emp_code,
+      pf:   e.pf_no,
+      name: e.employee_name,
+      desig: e.designation,
+      dept: e.departments?.department_name || deptName,
+      manual: false
+    }));
+
+    // Load existing draft/submitted selections for this holiday+dept
+    const subs = await api(
+      `submissions?holiday_id=eq.${holidayId}&department_id=eq.${deptId}&manager_id=eq.${managerId}&select=emp_code,pf_no,employee_name,designation,is_manual_entry,status`
+    );
+
+    // Mark already selected
+    selectedIds.clear();
+    manualEntries = [];
+
+    subs.forEach(s => {
+      selectedIds.add(s.emp_code);
+      if (s.is_manual_entry) {
+        // Add manual entry to allEmployees if not already there
+        if (!allEmployees.find(e => e.code === s.emp_code)) {
+          manualEntries.push({
+            id: null, code: s.emp_code, pf: s.pf_no,
+            name: s.employee_name, desig: s.designation,
+            dept: deptName, manual: true
+          });
+        }
+      }
+    });
+
+    allEmployees = [...allEmployees, ...manualEntries];
+    renderTable(allEmployees);
+    updateCounts();
+
+  } catch(e) {
+    document.getElementById('empTableBody').innerHTML =
+      `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--red);">Failed to load employees. Please refresh.</td></tr>`;
+  }
+}
+
+// ═══════════════════════════════════════
+// RENDER TABLE
+// ═══════════════════════════════════════
+function renderTable(rows) {
+  displayRows = rows;
+  const tbody = document.getElementById('empTableBody');
+
+  if (rows.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg><p>No employees found.</p></div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows.map((emp, i) => {
+    const isChecked = selectedIds.has(emp.code);
+    const rowClass  = `${isChecked ? 'selected-row' : ''} ${emp.manual ? 'manual-row' : ''}`.trim();
+    return `<tr class="${rowClass}" data-code="${emp.code}" onclick="toggleRow('${emp.code}')">
+      <td onclick="event.stopPropagation()">
+        <div class="tbl-checkbox ${isChecked ? 'checked' : ''}" onclick="toggleRow('${emp.code}')">
+          <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+        </div>
+      </td>
+      <td>${i+1}</td>
+      <td>${emp.code}</td>
+      <td>${emp.pf}</td>
+      <td><strong>${emp.name}</strong>${emp.manual ? '<span class="manual-tag">MANUAL</span>' : ''}</td>
+      <td>${emp.desig}</td>
+      <td>${emp.dept}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// TOGGLE ROW
+// ═══════════════════════════════════════
+async function toggleRow(code) {
+  if (selectedIds.has(code)) {
+    selectedIds.delete(code);
+  } else {
+    // Check duplicate before adding
+    const dupResult = await checkDuplicate(code);
+    if (dupResult === 'HARD_BLOCK_EMPCODE' || dupResult === 'HARD_BLOCK_PFNO') return;
+    selectedIds.add(code);
+  }
+  // Re-render only changed row
+  const rows = document.querySelectorAll(`tr[data-code="${code}"]`);
+  rows.forEach(row => {
+    const isChecked = selectedIds.has(code);
+    row.classList.toggle('selected-row', isChecked);
+    const cb = row.querySelector('.tbl-checkbox');
+    if (cb) cb.classList.toggle('checked', isChecked);
+  });
+  updateCounts();
+}
+
+// ═══════════════════════════════════════
+// DUPLICATE CHECK
+// ═══════════════════════════════════════
+async function checkDuplicate(empCode) {
+  const emp = allEmployees.find(e => e.code === empCode);
+  if (!emp) return 'OK';
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/fn_check_duplicate`, {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${authToken}` },
+      body: JSON.stringify({ p_holiday_id: holidayId, p_emp_code: emp.code, p_pf_no: emp.pf, p_emp_name: emp.name, p_dept_id: deptId })
+    });
+    const result = await res.json();
+
+    if (result === 'HARD_BLOCK_EMPCODE') {
+      await showDupModal(`<strong>${emp.name}</strong> (Emp Code: ${emp.code}) is already submitted for this holiday in another department. This is a hard block — the same employee cannot appear twice for the same holiday.`, false);
+      return result;
+    }
+    if (result === 'HARD_BLOCK_PFNO') {
+      await showDupModal(`<strong>${emp.name}</strong> (PF No: ${emp.pf}) is already submitted for this holiday. This is a hard block — the same PF number cannot appear twice.`, false);
+      return result;
+    }
+    if (result === 'SOFT_WARN_NAME') {
+      const proceed = await showDupModal(`An employee with the name <strong>${emp.name}</strong> is already in this department's list for this holiday. This may be a duplicate. Do you want to proceed?`, true);
+      return proceed ? 'OK' : 'CANCELLED';
+    }
+    return 'OK';
+  } catch(e) { return 'OK'; }
+}
+
+function showDupModal(msg, showProceed) {
+  return new Promise(resolve => {
+    document.getElementById('dupModalMsg').innerHTML = msg;
+    document.getElementById('dupProceedBtn').style.display = showProceed ? 'inline-flex' : 'none';
+    document.getElementById('dupModal').classList.add('open');
+    dupResolve = resolve;
+  });
+}
+
+function closeDupModal(proceed) {
+  document.getElementById('dupModal').classList.remove('open');
+  if (dupResolve) { dupResolve(proceed); dupResolve = null; }
+}
+
+// ═══════════════════════════════════════
+// SELECT ALL / CLEAR
+// ═══════════════════════════════════════
+async function selectAll() {
+  for (const emp of displayRows) {
+    if (!selectedIds.has(emp.code)) {
+      selectedIds.add(emp.code);
+    }
+  }
+  renderTable(displayRows);
+  updateCounts();
+}
+
+function clearSelection() {
+  selectedIds.clear();
+  renderTable(displayRows);
+  updateCounts();
+}
+
+function toggleAllCheckboxes(cb) {
+  if (cb.checked) selectAll();
+  else clearSelection();
+}
+
+// ═══════════════════════════════════════
+// FILTER
+// ═══════════════════════════════════════
+function filterTable() {
+  const term = document.getElementById('filterInput').value.toUpperCase().trim();
+  if (!term) { renderTable(allEmployees); return; }
+  const filtered = allEmployees.filter(e =>
+    e.code.includes(term) || e.pf.includes(term) || e.name.includes(term) || e.desig.includes(term)
+  );
+  renderTable(filtered);
+}
+
+// ═══════════════════════════════════════
+// UPDATE COUNTS
+// ═══════════════════════════════════════
+function updateCounts() {
+  const count   = selectedIds.size;
+  const manCount = [...selectedIds].filter(code => allEmployees.find(e => e.code === code && e.manual)).length;
+  document.getElementById('selectedCount').textContent = count;
+  document.getElementById('selectedBadge').textContent = `${count} Selected`;
+  document.getElementById('submitBtn').disabled = count === 0;
+  const note = document.getElementById('manualCountNote');
+  if (manCount > 0) { note.textContent = `${manCount} manual entr${manCount>1?'ies':'y'} included — flagged for HR verification`; note.style.display='inline'; }
+  else note.style.display='none';
+}
+
+// ═══════════════════════════════════════
+// MANUAL ADD MODAL
+// ═══════════════════════════════════════
+function openManualModal() {
+  document.getElementById('manualForm').reset();
+  document.getElementById('manualError').style.display='none';
+  document.getElementById('manualModal').classList.add('open');
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+async function addManualEmployee() {
+  const code  = document.getElementById('manualEmpCode').value.trim().toUpperCase();
+  const pf    = document.getElementById('manualPfNo').value.trim().toUpperCase();
+  const name  = document.getElementById('manualEmpName').value.trim().toUpperCase();
+  const desig = document.getElementById('manualDesig').value.trim().toUpperCase();
+
+  if (!code || !pf || !name || !desig) {
+    document.getElementById('manualError').style.display='flex';
+    document.getElementById('manualErrorMsg').textContent='All fields are required.';
+    return;
+  }
+
+  // Check if already exists in list
+  if (allEmployees.find(e => e.code === code)) {
+    document.getElementById('manualError').style.display='flex';
+    document.getElementById('manualErrorMsg').textContent=`Employee with code ${code} already exists in the list.`;
+    return;
+  }
+
+  if (allEmployees.find(e => e.pf === pf)) {
+    document.getElementById('manualError').style.display='flex';
+    document.getElementById('manualErrorMsg').textContent=`Employee with PF No. ${pf} already exists in the list.`;
+    return;
+  }
+
+  // Check duplicate against holiday submissions
+  const dupCheck = await checkDuplicate(code);
+  if (dupCheck === 'HARD_BLOCK_EMPCODE' || dupCheck === 'HARD_BLOCK_PFNO' || dupCheck === 'CANCELLED') return;
+
+  const newEmp = { id: null, code, pf, name, desig, dept: deptName, manual: true };
+  allEmployees.push(newEmp);
+  selectedIds.add(code);
+  renderTable(allEmployees);
+  updateCounts();
+  closeModal('manualModal');
+  showToast(`${name} added manually and selected.`);
+}
+
+// ═══════════════════════════════════════
+// SAVE DRAFT
+// ═══════════════════════════════════════
+async function saveDraft() {
+  const btn = document.getElementById('saveDraftBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin"></span>Saving...';
+
+  try {
+    // Delete existing drafts for this holiday+dept+manager
+    await apiDelete(`submissions?holiday_id=eq.${holidayId}&department_id=eq.${deptId}&manager_id=eq.${managerId}&status=eq.DRAFT`);
+
+    // Insert selected employees as DRAFT
+    const records = buildSubmissionRecords('DRAFT');
+    if (records.length > 0) {
+      await apiPost('submissions', records);
+    }
+
+    showToast('Draft saved successfully.');
+    showGlobalAlert('success', `Draft saved — ${records.length} employee(s) saved. You can continue modifying until the deadline.`);
+
+  } catch(e) {
+    showGlobalAlert('error', 'Failed to save draft. Please try again.');
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:var(--navy);"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>Save Draft';
+  }
+}
+
+// ═══════════════════════════════════════
+// CONFIRM SUBMIT
+// ═══════════════════════════════════════
+function confirmSubmit() {
+  const count = selectedIds.size;
+  if (count === 0) return;
+  const manCount = [...selectedIds].filter(code => allEmployees.find(e => e.code === code && e.manual)).length;
+  const msg = `You are about to submit the final holiday duty list for:\n\nHoliday: ${sessionStorage.getItem('holiday_name')||'—'}\nDepartment: ${deptName}\nTotal Employees: ${count}${manCount>0?`\nManual Entries: ${manCount} (flagged for HR verification)`:''}\n\nThis will be submitted to HR & ER for validation. You can still modify until the deadline.\n\nProceed?`;
+  if (confirm(msg)) submitFinal();
+}
+
+async function submitFinal() {
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin" style="border-top-color:white;"></span>Submitting...';
+
+  try {
+    // Delete existing submissions for this holiday+dept+manager
+    await apiDelete(`submissions?holiday_id=eq.${holidayId}&department_id=eq.${deptId}&manager_id=eq.${managerId}`);
+
+    const records = buildSubmissionRecords('SUBMITTED');
+    if (records.length > 0) {
+      await apiPost('submissions', records);
+    }
+
+    // Store submission summary for confirmation screen
+    sessionStorage.setItem('submission_count', records.length);
+    sessionStorage.setItem('submission_timestamp', new Date().toISOString());
+
+    window.location.href = 'screen5_confirmation.html';
+
+  } catch(e) {
+    showGlobalAlert('error', 'Submission failed. Please try again.');
+    btn.disabled = false;
+    btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:currentColor;"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>Submit Final List';
+  }
+}
+
+// ═══════════════════════════════════════
+// BUILD SUBMISSION RECORDS
+// ═══════════════════════════════════════
+function buildSubmissionRecords(status) {
+  const records = [];
+  const ackAt   = sessionStorage.getItem('ack_timestamp') || new Date().toISOString();
+
+  for (const code of selectedIds) {
+    const emp = allEmployees.find(e => e.code === code);
+    if (!emp) continue;
+    records.push({
+      holiday_id:      holidayId,
+      department_id:   deptId,
+      location_id:     locationId,
+      manager_id:      managerId,
+      employee_id:     emp.id || null,
+      emp_code:        emp.code,
+      pf_no:           emp.pf,
+      employee_name:   emp.name,
+      designation:     emp.desig,
+      department_name: emp.dept,
+      location_name:   sessionStorage.getItem('location_name') || '',
+      is_manual_entry: emp.manual,
+      status:          status,
+      acknowledged_at: ackAt,
+      modified_by:     managerName
+    });
+  }
+  return records;
+}
+
+// ═══════════════════════════════════════
+// CONFIRM BACK
+// ═══════════════════════════════════════
+function confirmBack() {
+  if (selectedIds.size > 0) {
+    if (!confirm('You have unsaved selections. Go back without saving?')) return;
+  }
+  window.location.href = 'screen3_acknowledgement.html';
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+async function init() {
+  await loadHoliday();
+  await loadEmployees();
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin Dashboard — Approved Holiday Duty Confirmation Portal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Montserrat:wght@500;600;700;800&display=swap');
+
+  :root {
+    --navy:      #1B3A6B;
+    --navy-d:    #122850;
+    --navy-l:    #2A5298;
+    --red:       #D32F2F;
+    --yellow:    #F5A800;
+    --blue-bg:   #EAF4FB;
+    --white:     #FFFFFF;
+    --grey-bg:   #F5F7FA;
+    --grey-1:    #E8ECF0;
+    --grey-2:    #C5CDD6;
+    --grey-3:    #7F8C9A;
+    --text:      #1A2332;
+    --text-s:    #4A5568;
+    --border:    #D0D8E0;
+    --green:     #1B5E20;
+    --green-l:   #E8F5E9;
+    --green-b:   #43A047;
+    --amber:     #E65100;
+    --amber-l:   #FFF3E0;
+    --red-l:     #FFEBEE;
+    --purple:    #4527A0;
+    --purple-l:  #EDE7F6;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; text-decoration: none !important; }
+
+  body { font-family: 'Open Sans', sans-serif; background: var(--blue-bg); min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* HEADER */
+  .site-header { width: 100%; background: var(--white); border-bottom: 3px solid var(--red); padding: 12px 32px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(27,58,107,0.10); position: sticky; top: 0; z-index: 100; }
+  .logo-area { display: flex; align-items: center; gap: 12px; }
+  .rhc-cross { width: 48px; height: 48px; flex-shrink: 0; }
+  .logo-gmf { font-size: 11px; color: var(--navy); }
+  .logo-rhc { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700; color: var(--navy); }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .dept-label { font-size: 12px; font-weight: 600; color: var(--navy); text-align: right; line-height: 1.5; }
+  .dept-label span { display: block; font-size: 11px; font-weight: 400; color: var(--grey-3); }
+  .admin-pill { display: flex; align-items: center; gap: 8px; background: var(--navy); border-radius: 24px; padding: 6px 14px 6px 8px; }
+  .admin-avatar { width: 30px; height: 30px; background: var(--yellow); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .admin-avatar svg { width: 17px; height: 17px; fill: var(--navy); }
+  .admin-name { font-size: 12px; font-weight: 700; color: white; }
+  .admin-role { font-size: 11px; color: rgba(255,255,255,0.65); }
+  .logout-btn { background: none; border: 1.5px solid var(--border); border-radius: 6px; padding: 6px 12px; font-size: 12px; font-weight: 600; color: var(--text-s); cursor: pointer; display: flex; align-items: center; gap: 5px; transition: border-color 0.2s, color 0.2s; }
+  .logout-btn:hover { border-color: var(--red); color: var(--red); }
+  .logout-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+  /* PORTAL BAND */
+  .portal-band { width: 100%; background: linear-gradient(135deg, var(--navy-d) 0%, var(--navy) 60%, var(--navy-l) 100%); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+  .portal-title { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700; color: white; }
+  .admin-badge { background: var(--yellow); color: var(--navy-d); font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 800; padding: 3px 10px; border-radius: 3px; letter-spacing: 0.06em; }
+
+  /* NAV TABS */
+  .nav-tabs { background: var(--white); border-bottom: 2px solid var(--border); padding: 0 32px; display: flex; gap: 0; overflow-x: auto; }
+  .nav-tab { padding: 13px 18px; background: none; border: none; border-bottom: 3px solid transparent; margin-bottom: -2px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 600; color: var(--grey-3); cursor: pointer; display: flex; align-items: center; gap: 7px; transition: color 0.2s; white-space: nowrap; }
+  .nav-tab svg { width: 15px; height: 15px; fill: currentColor; }
+  .nav-tab:hover { color: var(--navy); }
+  .nav-tab.active { color: var(--navy); border-bottom-color: var(--navy); }
+  .nav-tab .tab-count { background: var(--grey-1); color: var(--text-s); padding: 1px 7px; border-radius: 10px; font-size: 10px; }
+  .nav-tab.active .tab-count { background: var(--navy); color: white; }
+
+  /* MAIN */
+  .main-content { flex: 1; padding: 24px 32px 40px; max-width: 1200px; width: 100%; margin: 0 auto; }
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* STAT CARDS ROW */
+  .stat-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .stat-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 16px 18px; box-shadow: 0 1px 4px rgba(27,58,107,0.06); display: flex; align-items: center; gap: 14px; }
+  .stat-icon { width: 42px; height: 42px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .stat-icon svg { width: 22px; height: 22px; }
+  .stat-icon.navy  { background: #E3EAF5; } .stat-icon.navy svg  { fill: var(--navy); }
+  .stat-icon.green { background: var(--green-l); } .stat-icon.green svg { fill: var(--green-b); }
+  .stat-icon.amber { background: var(--amber-l); } .stat-icon.amber svg { fill: var(--amber); }
+  .stat-icon.red   { background: var(--red-l); }   .stat-icon.red svg   { fill: var(--red); }
+  .stat-icon.purple{ background: var(--purple-l); } .stat-icon.purple svg{ fill: var(--purple); }
+  .stat-val { font-family: 'Montserrat', sans-serif; font-size: 24px; font-weight: 800; color: var(--text); line-height: 1; }
+  .stat-lbl { font-size: 11px; color: var(--grey-3); margin-top: 3px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* FILTER ROW */
+  .filter-row { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; margin-bottom: 18px; display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; box-shadow: 0 1px 4px rgba(27,58,107,0.06); }
+  .flt-grp { display: flex; flex-direction: column; gap: 4px; }
+  .flt-grp label { font-size: 11px; font-weight: 700; color: var(--text-s); text-transform: uppercase; letter-spacing: 0.05em; }
+  .flt-sel, .flt-inp { padding: 8px 12px; border: 1.5px solid var(--grey-1); border-radius: 6px; font-family: 'Open Sans', sans-serif; font-size: 13px; color: var(--text); background: var(--grey-bg); outline: none; min-width: 150px; }
+  .flt-sel:focus, .flt-inp:focus { border-color: var(--navy); background: white; }
+  .btn-flt { padding: 8px 18px; background: var(--navy); color: white; border: none; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; align-self: flex-end; display: flex; align-items: center; gap: 5px; }
+  .btn-flt:hover { background: var(--navy-d); }
+  .btn-flt svg { width: 13px; height: 13px; fill: white; }
+
+  /* SECTION HEADING */
+  .sec-heading { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; color: var(--navy-d); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+  .sec-heading svg { width: 16px; height: 16px; fill: var(--navy); }
+
+  /* STATUS TABLE */
+  .table-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; box-shadow: 0 1px 6px rgba(27,58,107,0.07); margin-bottom: 24px; }
+  table { width: 100%; border-collapse: collapse; }
+  thead tr { background: var(--navy); }
+  thead th { padding: 10px 14px; text-align: left; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700; color: white; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--grey-1); transition: background 0.15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #F0F6FC; }
+  tbody td { padding: 10px 14px; font-size: 13px; color: var(--text); vertical-align: middle; }
+
+  /* BADGES */
+  .badge { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+  .b-submitted { background: var(--green-l);  color: var(--green);   border: 1px solid #A5D6A7; }
+  .b-draft     { background: var(--amber-l);  color: var(--amber);   border: 1px solid #FFCC80; }
+  .b-pending   { background: #E3F2FD;          color: var(--navy);    border: 1px solid #90CAF9; }
+  .b-extended  { background: var(--purple-l); color: var(--purple);  border: 1px solid #B39DDB; }
+  .b-locked    { background: var(--grey-1);   color: var(--grey-3);  border: 1px solid var(--border); }
+  .b-approved  { background: var(--green-l);  color: var(--green);   border: 1px solid #A5D6A7; }
+  .b-rejected  { background: var(--red-l);    color: var(--red);     border: 1px solid #FFCDD2; }
+
+  /* ACTION BTNS IN TABLE */
+  .tbl-btn { padding: 4px 10px; border-radius: 4px; border: 1.5px solid var(--border); background: white; font-size: 11px; font-weight: 600; color: var(--navy); cursor: pointer; display: inline-flex; align-items: center; gap: 4px; transition: background 0.15s; margin-right: 4px; }
+  .tbl-btn:hover { background: var(--grey-bg); }
+  .tbl-btn svg { width: 12px; height: 12px; fill: var(--navy); }
+  .tbl-btn.danger { color: var(--red); border-color: #FFCDD2; }
+  .tbl-btn.danger:hover { background: var(--red-l); }
+  .tbl-btn.success { color: var(--green); border-color: #A5D6A7; }
+  .tbl-btn.success:hover { background: var(--green-l); }
+
+  /* QUICK ACTION CARDS */
+  .quick-actions { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-bottom: 24px; }
+  .qa-card { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 18px; cursor: pointer; transition: box-shadow 0.2s, transform 0.15s; box-shadow: 0 1px 4px rgba(27,58,107,0.06); display: flex; flex-direction: column; gap: 10px; }
+  .qa-card:hover { box-shadow: 0 4px 14px rgba(27,58,107,0.13); transform: translateY(-2px); }
+  .qa-icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+  .qa-icon svg { width: 22px; height: 22px; }
+  .qa-icon.navy-bg  { background: #E3EAF5; } .qa-icon.navy-bg svg  { fill: var(--navy); }
+  .qa-icon.green-bg { background: var(--green-l); } .qa-icon.green-bg svg { fill: var(--green-b); }
+  .qa-icon.amber-bg { background: var(--amber-l); } .qa-icon.amber-bg svg { fill: var(--amber); }
+  .qa-icon.red-bg   { background: var(--red-l); }   .qa-icon.red-bg svg   { fill: var(--red); }
+  .qa-icon.purple-bg{ background: var(--purple-l); } .qa-icon.purple-bg svg{ fill: var(--purple); }
+  .qa-title { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: var(--text); }
+  .qa-desc  { font-size: 11.5px; color: var(--grey-3); line-height: 1.5; }
+
+  /* HOLIDAY SELECTOR */
+  .holiday-selector { background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; margin-bottom: 20px; box-shadow: 0 1px 4px rgba(27,58,107,0.06); display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .holiday-selector label { font-size: 12px; font-weight: 700; color: var(--text-s); text-transform: uppercase; letter-spacing: 0.05em; }
+  .holiday-selector select { padding: 9px 14px; border: 1.5px solid var(--grey-1); border-radius: 6px; font-family: 'Open Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--grey-bg); outline: none; flex: 1; min-width: 240px; }
+  .holiday-selector select:focus { border-color: var(--navy); background: white; }
+
+  /* PROGRESS BAR */
+  .progress-bar-wrap { margin-bottom: 18px; }
+  .progress-bar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-s); margin-bottom: 5px; }
+  .progress-bar-bg { height: 10px; background: var(--grey-1); border-radius: 5px; overflow: hidden; }
+  .progress-bar { height: 100%; border-radius: 5px; transition: width 0.5s; background: var(--green-b); }
+
+  /* SEARCH BOX */
+  .search-box { position: relative; flex: 1; min-width: 220px; }
+  .search-box svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 15px; height: 15px; fill: var(--grey-3); pointer-events: none; }
+  .search-box input { width: 100%; padding: 9px 12px 9px 32px; border: 1.5px solid var(--grey-1); border-radius: 6px; font-family: 'Open Sans', sans-serif; font-size: 13px; background: var(--grey-bg); outline: none; text-transform: uppercase; }
+  .search-box input:focus { border-color: var(--navy); background: white; }
+
+  /* EXTENSION MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 200; align-items: center; justify-content: center; padding: 16px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: white; border-radius: 8px; width: 100%; max-width: 480px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); overflow: hidden; animation: fadeUp 0.25s ease; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
+  .modal-header { background: linear-gradient(135deg, var(--navy-d), var(--navy)); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .modal-header h3 { font-family: 'Montserrat', sans-serif; font-size: 15px; font-weight: 700; color: white; }
+  .modal-close { background: rgba(255,255,255,0.15); border: none; border-radius: 50%; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; font-size: 16px; }
+  .modal-close:hover { background: rgba(255,255,255,0.25); }
+  .modal-body { padding: 20px; }
+  .modal-footer { padding: 14px 20px; border-top: 1px solid var(--grey-1); display: flex; gap: 10px; justify-content: flex-end; }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text-s); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 13px; border: 1.5px solid var(--grey-1); border-radius: 6px; font-family: 'Open Sans', sans-serif; font-size: 13px; color: var(--text); background: var(--grey-bg); outline: none; }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--navy); background: white; }
+  .btn-modal-cancel { padding: 9px 18px; background: white; color: var(--text-s); border: 1.5px solid var(--border); border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; transition: border-color 0.2s; }
+  .btn-modal-cancel:hover { border-color: var(--red); color: var(--red); }
+  .btn-modal-confirm { padding: 9px 22px; background: var(--navy); color: white; border: none; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+  .btn-modal-confirm:hover { background: var(--navy-d); }
+
+  /* ALERT */
+  .alert { padding: 10px 14px; border-radius: 6px; font-size: 12.5px; margin-bottom: 14px; display: flex; align-items: flex-start; gap: 8px; line-height: 1.5; }
+  .alert svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; }
+  .alert-success { background: var(--green-l); border: 1px solid #A5D6A7; color: var(--green); }
+  .alert-success svg { fill: var(--green-b); }
+  .alert-error { background: var(--red-l); border: 1px solid #FFCDD2; color: var(--red); }
+  .alert-error svg { fill: var(--red); }
+
+  /* EMPTY / LOADING */
+  .empty-cell { text-align: center; padding: 32px; color: var(--grey-3); font-size: 13px; }
+  .spin { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--grey-2); border-top-color: var(--navy); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--navy-d); color: white; padding: 10px 20px; border-radius: 6px; font-size: 13px; font-weight: 600; z-index: 500; opacity: 0; transition: opacity 0.3s; pointer-events: none; white-space: nowrap; }
+  .toast.show { opacity: 1; }
+
+  /* FOOTER */
+  .page-footer { text-align: center; font-size: 11px; color: var(--grey-3); padding: 14px; border-top: 1px solid var(--grey-1); background: var(--white); margin-top: auto; }
+
+  @media (max-width: 900px) {
+    .site-header { padding: 10px 16px; }
+    .portal-band { padding: 12px 16px; }
+    .main-content { padding: 16px 12px 32px; }
+    .nav-tabs { padding: 0 12px; }
+    .dept-label { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="site-header">
+  <div class="logo-area">
+    <svg class="rhc-cross" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="13,1 25,1 25,25 1,25 1,13 13,13" fill="#D32F2F"/>
+      <polygon points="29,1 41,1 41,13 53,13 53,25 29,25" fill="#F5A800"/>
+      <polygon points="1,29 25,29 25,53 13,53 13,41 1,41" fill="#1565C0"/>
+      <polygon points="29,29 53,29 53,41 41,41 41,53 29,53" fill="#2E7D32"/>
+    </svg>
+    <div>
+      <div class="logo-gmf">Grant Medical Foundation</div>
+      <div class="logo-rhc">Ruby Hall Clinic</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="dept-label">Department of HR &amp; ER<span>Attendance &amp; Leave Management</span></div>
+    <div class="admin-pill">
+      <div class="admin-avatar"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4l5 2.18V11c0 3.5-2.33 6.79-5 7.93-2.67-1.14-5-4.43-5-7.93V7.18L12 5z"/></svg></div>
+      <div><div class="admin-name" id="adminName">ADMIN</div><div class="admin-role">Attendance Manager</div></div>
+    </div>
+    <button class="logout-btn" id="logoutBtn">
+      <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+      Logout
+    </button>
+  </div>
+</div>
+
+<!-- PORTAL BAND -->
+<div class="portal-band">
+  <div class="portal-title">Approved Holiday Duty Confirmation Portal</div>
+  <div class="admin-badge">ADMIN PANEL</div>
+</div>
+
+<!-- NAV TABS -->
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="switchTab('dashTab',this)">
+    <svg viewBox="0 0 24 24"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+    Dashboard
+  </button>
+  <button class="nav-tab" onclick="switchTab('statusTab',this)">
+    <svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+    Submission Status
+    <span class="tab-count" id="pendingTabCount">0</span>
+  </button>
+  <button class="nav-tab" onclick="window.location.href='screen8_holidays.html'">
+    <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zm-7-7h5v5h-5z"/></svg>
+    Holiday Events
+  </button>
+  <button class="nav-tab" onclick="window.location.href='screen9_uploads.html'">
+    <svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg>
+    Upload Data
+  </button>
+  <button class="nav-tab" onclick="window.location.href='screen10_validation.html'">
+    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+    Validation Upload
+  </button>
+  <button class="nav-tab" onclick="window.location.href='screen11_report.html'">
+    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+    Reports
+  </button>
+  <button class="nav-tab" onclick="window.location.href='screen12_usermgmt.html'">
+    <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+    User Management
+  </button>
+</div>
+
+<!-- MAIN -->
+<div class="main-content">
+
+  <!-- ══════════ TAB: DASHBOARD ══════════ -->
+  <div class="tab-pane active" id="dashTab">
+
+    <!-- Global Alert -->
+    <div class="alert alert-success" id="dashAlert" style="display:none;">
+      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+      <span id="dashAlertMsg"></span>
+    </div>
+
+    <!-- Stat Cards -->
+    <div class="stat-cards" id="statCards">
+      <div class="stat-card"><div class="stat-icon navy"><svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg></div><div><div class="stat-val" id="statHolidays">—</div><div class="stat-lbl">Active Holidays</div></div></div>
+      <div class="stat-card"><div class="stat-icon green"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div><div><div class="stat-val" id="statSubmitted">—</div><div class="stat-lbl">Departments Submitted</div></div></div>
+      <div class="stat-card"><div class="stat-icon amber"><svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg></div><div><div class="stat-val" id="statPending">—</div><div class="stat-lbl">Departments Pending</div></div></div>
+      <div class="stat-card"><div class="stat-icon navy"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div><div><div class="stat-val" id="statTotalEmp">—</div><div class="stat-lbl">Employees Submitted</div></div></div>
+      <div class="stat-card"><div class="stat-icon purple"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div><div><div class="stat-val" id="statManual">—</div><div class="stat-lbl">Manual Entries</div></div></div>
+      <div class="stat-card"><div class="stat-icon red"><svg viewBox="0 0 24 24"><path d="M11.5 2C6.81 2 3 5.81 3 10.5S6.81 19 11.5 19h.5v3c4.86-2.34 8-7 8-11.5C20 5.81 16.19 2 11.5 2zm1 14.5h-2v-2h2v2zm0-4h-2v-6h2v6z"/></svg></div><div><div class="stat-val" id="statExtended">—</div><div class="stat-lbl">Access Extended</div></div></div>
+    </div>
+
+    <!-- Holiday selector -->
+    <div class="holiday-selector">
+      <label>Select Holiday to View:</label>
+      <select id="dashHolidaySelect" onchange="loadDashboardForHoliday()">
+        <option value="">— Select Holiday —</option>
+      </select>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-bar-wrap" id="progressWrap" style="display:none;">
+      <div class="progress-bar-label">
+        <span>Submission Progress</span>
+        <span id="progressLabel">0 / 0 departments submitted</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar" id="progressBar" style="width:0%;"></div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="sec-heading" style="margin-top:8px;">
+      <svg viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+      Quick Actions
+    </div>
+    <div class="quick-actions">
+      <div class="qa-card" onclick="window.location.href='screen8_holidays.html'">
+        <div class="qa-icon navy-bg"><svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zm-7-7h5v5h-5z"/></svg></div>
+        <div class="qa-title">Create Holiday Event</div>
+        <div class="qa-desc">Set up a new holiday, assign deadline and applicable locations.</div>
+      </div>
+      <div class="qa-card" onclick="window.location.href='screen9_uploads.html'">
+        <div class="qa-icon green-bg"><svg viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></svg></div>
+        <div class="qa-title">Upload Employee Master</div>
+        <div class="qa-desc">Add or replace the employee list including new joiners.</div>
+      </div>
+      <div class="qa-card" onclick="window.location.href='screen9_uploads.html'">
+        <div class="qa-icon amber-bg"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
+        <div class="qa-title">Upload Manager List</div>
+        <div class="qa-desc">Add department managers and auto-send login credentials.</div>
+      </div>
+      <div class="qa-card" onclick="window.location.href='screen10_validation.html'">
+        <div class="qa-icon navy-bg"><svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg></div>
+        <div class="qa-title">Upload Validation Status</div>
+        <div class="qa-desc">Upload attendance-verified status for submitted employees.</div>
+      </div>
+      <div class="qa-card" onclick="window.location.href='screen11_report.html'">
+        <div class="qa-icon green-bg"><svg viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg></div>
+        <div class="qa-title">Export Consolidated Report</div>
+        <div class="qa-desc">Download full holiday duty list with validation status.</div>
+      </div>
+      <div class="qa-card" onclick="window.location.href='screen12_usermgmt.html'">
+        <div class="qa-icon red-bg"><svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg></div>
+        <div class="qa-title">Reset Manager Password</div>
+        <div class="qa-desc">Directly reset any manager's password without OTP.</div>
+      </div>
+    </div>
+
+  </div><!-- /dashTab -->
+
+  <!-- ══════════ TAB: SUBMISSION STATUS ══════════ -->
+  <div class="tab-pane" id="statusTab">
+
+    <div class="filter-row">
+      <div class="flt-grp">
+        <label>Holiday</label>
+        <select class="flt-sel" id="statusHolidayFilter" onchange="loadStatusTable()">
+          <option value="">— Select Holiday —</option>
+        </select>
+      </div>
+      <div class="flt-grp">
+        <label>Location</label>
+        <select class="flt-sel" id="statusLocationFilter" onchange="loadStatusTable()">
+          <option value="">All Locations</option>
+        </select>
+      </div>
+      <div class="flt-grp">
+        <label>Status</label>
+        <select class="flt-sel" id="statusStatusFilter" onchange="loadStatusTable()">
+          <option value="">All</option>
+          <option value="SUBMITTED">Submitted</option>
+          <option value="DRAFT SAVED">Draft Saved</option>
+          <option value="PENDING">Pending</option>
+        </select>
+      </div>
+      <div class="flt-grp">
+        <label>Search Department</label>
+        <div class="search-box">
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" id="statusDeptSearch" placeholder="DEPARTMENT NAME..." oninput="loadStatusTable()"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Location</th>
+            <th>Department</th>
+            <th>Manager</th>
+            <th>Status</th>
+            <th>Submitted</th>
+            <th>Employees</th>
+            <th>Deadline / Extended</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="statusTableBody">
+          <tr><td colspan="9" class="empty-cell"><span class="spin"></span>Select a holiday to view status.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div><!-- /statusTab -->
+
+</div><!-- /main-content -->
+
+<!-- EXTENSION MODAL -->
+<div class="modal-overlay" id="extModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Extend Submission Deadline</h3>
+      <button class="modal-close" onclick="closeModal('extModal')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div id="extModalInfo" style="background:var(--grey-bg);border:1px solid var(--border);border-radius:6px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--text-s);line-height:1.6;"></div>
+      <div class="form-group">
+        <label>New Deadline Date &amp; Time <span style="color:var(--red);">*</span></label>
+        <input type="datetime-local" id="extNewDeadline"/>
+      </div>
+      <div class="form-group">
+        <label>Reason (Optional)</label>
+        <textarea id="extReason" rows="2" placeholder="Reason for extension..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal('extModal')">Cancel</button>
+      <button class="btn-modal-confirm" onclick="saveExtension()">Extend Access</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<div class="page-footer">
+  &copy; 2026 &nbsp;Grant Medical Foundation &nbsp;|&nbsp; Ruby Hall Clinic &nbsp;|&nbsp; Department of HR &amp; ER
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════
+const SUPABASE_URL  = 'sb_publishable_m9N8d07XWyZa0SWxN0f06w_t1TIiVL9';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwcWxxZ3l4Zm1jb3FxamNnY2hkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4MjU3MjMsImV4cCI6MjA5NjQwMTcyM30.tKoN4jw7a_YiyhxqCUQE5o5Ev8zFKvPXpOv56tMTSBU';
+
+// ═══════════════════════════════════════
+// SESSION CHECK
+// ═══════════════════════════════════════
+const authToken = sessionStorage.getItem('auth_token');
+const adminName = sessionStorage.getItem('manager_name') || 'ADMIN';
+const userRole  = sessionStorage.getItem('user_role');
+
+if (!authToken) window.location.href = 'index.html';
+document.getElementById('adminName').textContent = adminName;
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let holidays   = [];
+let locations  = [];
+let extTarget  = null; // { holiday_id, department_id, manager_id, dept_name, old_deadline }
+
+// ═══════════════════════════════════════
+// API
+// ═══════════════════════════════════════
+async function api(path) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${authToken}` }
+  });
+  if (!res.ok) throw new Error('API error');
+  return res.json();
+}
+
+async function apiPost(path, body) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`,'Prefer':'return=minimal' },
+    body: JSON.stringify(body)
+  });
+  if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.message||'Error'); }
+}
+
+// ═══════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════
+function fmtDate(d) { if(!d) return '—'; return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }
+function fmtDateTime(d) {
+  if(!d) return '—';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}) + ', ' +
+    dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true}).toUpperCase();
+}
+function isExpired(d) { return new Date(d).getTime() < Date.now(); }
+
+function showToast(msg, dur=2800) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), dur);
+}
+
+function switchTab(tabId, btn) {
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  btn.classList.add('active');
+  if (tabId === 'statusTab') loadStatusTable();
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ═══════════════════════════════════════
+// LOAD INIT DATA
+// ═══════════════════════════════════════
+async function init() {
+  try {
+    // Load holidays
+    holidays = await api(`holidays?order=holiday_date.desc&select=holiday_id,holiday_name,holiday_date,deadline_datetime,status`);
+
+    // Load locations
+    locations = await api(`locations?is_active=eq.true&order=location_name.asc&select=location_id,location_name`);
+
+    // Populate holiday selectors
+    ['dashHolidaySelect','statusHolidayFilter'].forEach(selId => {
+      const sel = document.getElementById(selId);
+      holidays.forEach(h => {
+        const opt = document.createElement('option');
+        opt.value = h.holiday_id;
+        opt.textContent = `${h.holiday_name} — ${fmtDate(h.holiday_date)} ${h.status === 'ACTIVE' ? '(Active)' : '(Closed)'}`;
+        sel.appendChild(opt);
+      });
+    });
+
+    // Populate location filter
+    const locSel = document.getElementById('statusLocationFilter');
+    locations.forEach(l => {
+      const opt = document.createElement('option');
+      opt.value = l.location_id; opt.textContent = l.location_name;
+      locSel.appendChild(opt);
+    });
+
+    // Load stats
+    await loadDashStats();
+
+    // Auto-select first active holiday
+    const active = holidays.find(h => h.status === 'ACTIVE');
+    if (active) {
+      document.getElementById('dashHolidaySelect').value  = active.holiday_id;
+      document.getElementById('statusHolidayFilter').value = active.holiday_id;
+      await loadDashboardForHoliday();
+    }
+
+  } catch(e) { console.error('Init error', e); }
+}
+
+// ═══════════════════════════════════════
+// LOAD DASHBOARD STATS
+// ═══════════════════════════════════════
+async function loadDashStats() {
+  try {
+    const activeHols = holidays.filter(h => h.status === 'ACTIVE');
+    document.getElementById('statHolidays').textContent = activeHols.length;
+
+    const subs    = await api(`submissions?status=eq.SUBMITTED&select=submission_id,is_manual_entry`);
+    const drafts  = await api(`submissions?status=eq.DRAFT&select=submission_id`);
+    const exts    = await api(`access_extensions?select=extension_id`);
+
+    document.getElementById('statTotalEmp').textContent  = subs.length;
+    document.getElementById('statManual').textContent    = subs.filter(s=>s.is_manual_entry).length;
+    document.getElementById('statExtended').textContent  = exts.length;
+
+    // Count distinct dept submissions
+    const subDepts = await api(`submissions?status=eq.SUBMITTED&select=department_id`);
+    const uniqueSubDepts = new Set(subDepts.map(s=>s.department_id)).size;
+    document.getElementById('statSubmitted').textContent = uniqueSubDepts;
+
+    // Pending count (approximation)
+    const totalDepts = await api(`departments?is_active=eq.true&select=department_id`);
+    document.getElementById('statPending').textContent = Math.max(0, totalDepts.length - uniqueSubDepts);
+    document.getElementById('pendingTabCount').textContent = Math.max(0, totalDepts.length - uniqueSubDepts);
+
+  } catch(e) { console.error('Stats error', e); }
+}
+
+// ═══════════════════════════════════════
+// LOAD DASHBOARD FOR HOLIDAY
+// ═══════════════════════════════════════
+async function loadDashboardForHoliday() {
+  const holidayId = document.getElementById('dashHolidaySelect').value;
+  if (!holidayId) { document.getElementById('progressWrap').style.display='none'; return; }
+
+  try {
+    const statusData = await api(
+      `vw_holiday_dept_status?holiday_id=eq.${holidayId}&select=department_name,submission_status,submitted_count`
+    );
+
+    const total     = statusData.length;
+    const submitted = statusData.filter(r => r.submission_status === 'SUBMITTED').length;
+    const pct       = total > 0 ? Math.round((submitted/total)*100) : 0;
+
+    document.getElementById('progressWrap').style.display = 'block';
+    document.getElementById('progressBar').style.width    = pct + '%';
+    document.getElementById('progressLabel').textContent  = `${submitted} / ${total} departments submitted (${pct}%)`;
+
+    const bar = document.getElementById('progressBar');
+    bar.style.background = pct < 40 ? '#E53935' : pct < 75 ? '#FB8C00' : '#43A047';
+
+  } catch(e) { console.error('Holiday load error', e); }
+}
+
+// ═══════════════════════════════════════
+// LOAD STATUS TABLE
+// ═══════════════════════════════════════
+async function loadStatusTable() {
+  const holidayId = document.getElementById('statusHolidayFilter').value;
+  const locId     = document.getElementById('statusLocationFilter').value;
+  const statusF   = document.getElementById('statusStatusFilter').value;
+  const deptSearch = document.getElementById('statusDeptSearch').value.toUpperCase().trim();
+  const tbody     = document.getElementById('statusTableBody');
+
+  if (!holidayId) {
+    tbody.innerHTML = `<tr><td colspan="9" class="empty-cell">Please select a holiday to view status.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = `<tr><td colspan="9" class="empty-cell"><span class="spin"></span>Loading...</td></tr>`;
+
+  try {
+    let query = `vw_holiday_dept_status?holiday_id=eq.${holidayId}&order=location_name.asc,department_name.asc`;
+    if (locId) query += `&location_id=eq.${locId}`;
+
+    let data = await api(query);
+
+    if (statusF) data = data.filter(r => r.submission_status === statusF);
+    if (deptSearch) data = data.filter(r => r.department_name?.toUpperCase().includes(deptSearch));
+
+    if (data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="9" class="empty-cell">No records match the selected filters.</td></tr>`;
+      return;
+    }
+
+    const holiday = holidays.find(h => h.holiday_id === holidayId);
+
+    tbody.innerHTML = data.map((r, i) => {
+      const statusBadge =
+        r.submission_status === 'SUBMITTED'  ? `<span class="badge b-submitted">✓ Submitted</span>` :
+        r.submission_status === 'DRAFT SAVED' ? `<span class="badge b-draft">● Draft</span>` :
+        `<span class="badge b-pending">○ Pending</span>`;
+
+      const deadline    = r.extended_deadline || holiday?.deadline_datetime;
+      const expired     = isExpired(deadline);
+      const deadlineStr = r.extended_deadline
+        ? `<span style="color:var(--purple);font-weight:600;">${fmtDateTime(r.extended_deadline)}<br/><span style="font-size:10px;">Extended</span></span>`
+        : fmtDateTime(holiday?.deadline_datetime);
+
+      const actions = r.submission_status === 'PENDING' || r.submission_status === 'DRAFT SAVED'
+        ? `<button class="tbl-btn" onclick="openExtModal('${holidayId}','${r.department_id}','${r.manager_id}','${r.department_name}','${deadline}')">
+            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+            Extend
+           </button>`
+        : `<button class="tbl-btn success" onclick="viewSubmission('${holidayId}','${r.department_id}')">
+            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            View
+           </button>
+           <button class="tbl-btn" onclick="openExtModal('${holidayId}','${r.department_id}','${r.manager_id}','${r.department_name}','${deadline}')">
+            <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+            Re-open
+           </button>`;
+
+      return `<tr>
+        <td>${i+1}</td>
+        <td>${r.location_name || '—'}</td>
+        <td><strong>${r.department_name}</strong></td>
+        <td style="font-size:12px;">${r.manager_name || '—'}<br/><span style="color:var(--grey-3);font-size:11px;">${r.manager_email || ''}</span></td>
+        <td>${statusBadge}</td>
+        <td style="font-size:12px;">${r.last_submitted_at ? fmtDateTime(r.last_submitted_at) : '—'}</td>
+        <td><strong>${r.submitted_count || 0}</strong></td>
+        <td style="font-size:12px;">${deadlineStr}</td>
+        <td>${actions}</td>
+      </tr>`;
+    }).join('');
+
+  } catch(e) {
+    tbody.innerHTML = `<tr><td colspan="9" class="empty-cell" style="color:var(--red);">Failed to load. Please refresh.</td></tr>`;
+  }
+}
+
+// ═══════════════════════════════════════
+// EXTENSION MODAL
+// ═══════════════════════════════════════
+function openExtModal(holidayId, deptId, managerId, deptName, oldDeadline) {
+  extTarget = { holiday_id: holidayId, department_id: deptId, manager_id: managerId, dept_name: deptName, old_deadline: oldDeadline };
+
+  document.getElementById('extModalInfo').innerHTML =
+    `<strong>Department:</strong> ${deptName}<br/>
+     <strong>Current Deadline:</strong> ${fmtDateTime(oldDeadline)}`;
+
+  // Set min datetime to now
+  const now = new Date();
+  now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+  document.getElementById('extNewDeadline').min = now.toISOString().slice(0,16);
+  document.getElementById('extNewDeadline').value = '';
+  document.getElementById('extReason').value = '';
+  document.getElementById('extModal').classList.add('open');
+}
+
+async function saveExtension() {
+  const newDeadline = document.getElementById('extNewDeadline').value;
+  const reason      = document.getElementById('extReason').value.trim().toUpperCase();
+
+  if (!newDeadline) { alert('Please set a new deadline date and time.'); return; }
+  if (!extTarget)   { closeModal('extModal'); return; }
+
+  try {
+    await apiPost('access_extensions', {
+      holiday_id:    extTarget.holiday_id,
+      department_id: extTarget.department_id,
+      manager_id:    extTarget.manager_id,
+      extended_by:   adminName,
+      old_deadline:  extTarget.old_deadline,
+      new_deadline:  new Date(newDeadline).toISOString(),
+      reason:        reason || null
+    });
+
+    closeModal('extModal');
+    showToast(`Access extended for ${extTarget.dept_name}`);
+    loadStatusTable();
+
+  } catch(e) {
+    alert('Failed to extend access. Please try again.');
+  }
+}
+
+// ═══════════════════════════════════════
+// VIEW SUBMISSION
+// ═══════════════════════════════════════
+function viewSubmission(holidayId, deptId) {
+  sessionStorage.setItem('current_holiday_id', holidayId);
+  sessionStorage.setItem('current_dept_id', deptId);
+  window.location.href = 'screen11_report.html';
+}
+
+// ═══════════════════════════════════════
+// LOGOUT
+// ═══════════════════════════════════════
+document.getElementById('logoutBtn').addEventListener('click', async function() {
+  if (!confirm('Logout from Admin Panel?')) return;
+  try {
+    await fetch(`${SUPABASE_URL}/auth/v1/logout`, {
+      method:'POST', headers:{'apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`}
+    });
+  } catch(e) {}
+  sessionStorage.clear();
+  window.location.href = 'index.html';
+});
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Acknowledgement — Approved Holiday Duty Confirmation Portal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Montserrat:wght@500;600;700;800&display=swap');
+
+  :root {
+    --navy:      #1B3A6B;
+    --navy-d:    #122850;
+    --navy-l:    #2A5298;
+    --red:       #D32F2F;
+    --yellow:    #F5A800;
+    --blue-bg:   #EAF4FB;
+    --white:     #FFFFFF;
+    --grey-bg:   #F5F7FA;
+    --grey-1:    #E8ECF0;
+    --grey-2:    #C5CDD6;
+    --grey-3:    #7F8C9A;
+    --text:      #1A2332;
+    --text-s:    #4A5568;
+    --border:    #D0D8E0;
+    --green:     #1B5E20;
+    --green-l:   #E8F5E9;
+    --green-b:   #43A047;
+    --amber:     #E65100;
+    --amber-l:   #FFF3E0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; text-decoration: none !important; }
+
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background: var(--blue-bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── SITE HEADER ── */
+  .site-header {
+    width: 100%;
+    background: var(--white);
+    border-bottom: 3px solid var(--red);
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(27,58,107,0.10);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo-area { display: flex; align-items: center; gap: 12px; }
+  .rhc-cross { width: 48px; height: 48px; flex-shrink: 0; }
+  .logo-text-wrap { display: flex; flex-direction: column; line-height: 1.2; }
+  .logo-gmf { font-size: 11px; font-weight: 400; color: var(--navy); }
+  .logo-rhc { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700; color: var(--navy); }
+
+  .header-right { display: flex; align-items: center; gap: 16px; }
+
+  .dept-label {
+    font-size: 12px; font-weight: 600; color: var(--navy);
+    text-align: right; line-height: 1.5;
+  }
+  .dept-label span { display: block; font-size: 11px; font-weight: 400; color: var(--grey-3); }
+
+  .user-pill {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--grey-bg); border: 1px solid var(--border);
+    border-radius: 24px; padding: 6px 14px 6px 8px;
+  }
+  .user-avatar { width: 30px; height: 30px; background: var(--navy); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .user-avatar svg { width: 17px; height: 17px; fill: white; }
+  .user-name { font-size: 12px; font-weight: 700; color: var(--text); }
+  .user-dept { font-size: 11px; color: var(--grey-3); }
+
+  .back-btn {
+    background: none; border: 1.5px solid var(--border);
+    border-radius: 6px; padding: 6px 14px;
+    font-size: 12px; font-weight: 600; color: var(--text-s);
+    cursor: pointer; display: flex; align-items: center; gap: 6px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .back-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .back-btn svg { width: 14px; height: 14px; fill: currentColor; }
+
+  /* ── PORTAL BAND ── */
+  .portal-band {
+    width: 100%;
+    background: linear-gradient(135deg, var(--navy-d) 0%, var(--navy) 60%, var(--navy-l) 100%);
+    padding: 14px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .portal-title { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 700; color: white; }
+  .portal-breadcrumb { font-size: 12px; color: rgba(255,255,255,0.65); }
+
+  /* ── PROGRESS STEPS ── */
+  .progress-wrap {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 32px;
+  }
+
+  .steps {
+    display: flex;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+    position: relative;
+  }
+
+  .step-circle {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px; font-weight: 700;
+    border: 2px solid var(--grey-2);
+    background: var(--white);
+    color: var(--grey-3);
+    position: relative;
+    z-index: 2;
+    transition: all 0.3s;
+  }
+
+  .step.active .step-circle {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: white;
+  }
+
+  .step.done .step-circle {
+    background: var(--green-b);
+    border-color: var(--green-b);
+    color: white;
+  }
+
+  .step-label {
+    font-size: 10px; font-weight: 600;
+    color: var(--grey-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .step.active .step-label { color: var(--navy); }
+  .step.done .step-label   { color: var(--green-b); }
+
+  .step-line {
+    flex: 1;
+    height: 2px;
+    background: var(--grey-2);
+    margin: 0 4px;
+    margin-bottom: 18px;
+    transition: background 0.3s;
+  }
+
+  .step-line.done { background: var(--green-b); }
+
+  /* ── MAIN ── */
+  .main-content {
+    flex: 1;
+    padding: 32px;
+    max-width: 760px;
+    width: 100%;
+    margin: 0 auto;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── HOLIDAY INFO CARD ── */
+  .holiday-info-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 6px rgba(27,58,107,0.07);
+  }
+
+  .holiday-info-header {
+    background: linear-gradient(135deg, var(--navy-d), var(--navy));
+    padding: 16px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .holiday-info-header h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 17px; font-weight: 700; color: white;
+  }
+
+  .holiday-date-chip {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 4px;
+    padding: 4px 12px;
+    font-size: 12px; font-weight: 600; color: white;
+  }
+
+  .holiday-info-body {
+    padding: 16px 22px;
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .info-item { display: flex; flex-direction: column; gap: 3px; }
+  .info-label { font-size: 10px; font-weight: 600; color: var(--grey-3); text-transform: uppercase; letter-spacing: 0.07em; }
+  .info-value { font-size: 13px; font-weight: 600; color: var(--text); }
+
+  .deadline-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 4px;
+    font-size: 12px; font-weight: 600;
+  }
+
+  .deadline-chip.safe   { background: var(--green-l); color: var(--green); }
+  .deadline-chip.warn   { background: var(--amber-l); color: var(--amber); }
+  .deadline-chip.danger { background: #FFEBEE; color: var(--red); }
+
+  /* ── DEPT SELECTOR (multi-dept managers) ── */
+  .dept-selector-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px 22px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 6px rgba(27,58,107,0.07);
+    display: none;
+  }
+
+  .dept-selector-card.visible { display: block; }
+
+  .dept-selector-card label {
+    display: block;
+    font-size: 12px; font-weight: 600;
+    color: var(--text-s); margin-bottom: 8px;
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+
+  .dept-selector-card select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--grey-1);
+    border-radius: 6px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px; color: var(--text);
+    background: var(--grey-bg); outline: none;
+    cursor: pointer;
+  }
+
+  .dept-selector-card select:focus { border-color: var(--navy); }
+
+  /* ── ACKNOWLEDGEMENT CARD ── */
+  .ack-card {
+    background: var(--white);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 6px rgba(27,58,107,0.07);
+    margin-bottom: 24px;
+    transition: border-color 0.3s;
+  }
+
+  .ack-card.accepted { border-color: var(--green-b); }
+
+  .ack-card-header {
+    background: var(--amber-l);
+    border-bottom: 1px solid #FFD180;
+    padding: 14px 22px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .ack-card-header svg { width: 20px; height: 20px; fill: var(--amber); flex-shrink: 0; }
+
+  .ack-card-header h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px; font-weight: 700; color: var(--amber);
+  }
+
+  .ack-card.accepted .ack-card-header {
+    background: var(--green-l);
+    border-bottom-color: #A5D6A7;
+  }
+
+  .ack-card.accepted .ack-card-header svg { fill: var(--green-b); }
+  .ack-card.accepted .ack-card-header h3  { color: var(--green); }
+
+  .ack-card-body { padding: 22px; }
+
+  /* Declaration text box */
+  .declaration-box {
+    background: var(--grey-bg);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--navy);
+    border-radius: 6px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+    line-height: 1.8;
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .declaration-box p { margin-bottom: 12px; }
+  .declaration-box p:last-child { margin-bottom: 0; }
+
+  .declaration-box strong { color: var(--navy-d); font-weight: 700; }
+
+  .declaration-box ul {
+    padding-left: 20px;
+    margin: 10px 0;
+  }
+
+  .declaration-box ul li {
+    margin-bottom: 8px;
+    color: var(--text-s);
+    font-size: 13.5px;
+  }
+
+  /* Checkbox row */
+  .checkbox-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px;
+    background: var(--grey-bg);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    margin-bottom: 8px;
+  }
+
+  .checkbox-row:hover { border-color: var(--navy-l); background: #EFF4FB; }
+  .checkbox-row.checked { border-color: var(--green-b); background: var(--green-l); }
+
+  .custom-checkbox {
+    width: 22px; height: 22px;
+    border: 2px solid var(--grey-2);
+    border-radius: 4px;
+    background: white;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+    transition: all 0.2s;
+  }
+
+  .custom-checkbox svg { width: 14px; height: 14px; fill: white; display: none; }
+  .checkbox-row.checked .custom-checkbox { background: var(--green-b); border-color: var(--green-b); }
+  .checkbox-row.checked .custom-checkbox svg { display: block; }
+
+  .checkbox-text {
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.6;
+    font-weight: 600;
+  }
+
+  .checkbox-text span { color: var(--red); font-weight: 700; }
+
+  /* Warning points */
+  .warning-points {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .warning-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .warning-point svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+
+  .wp-red    { background: #FFEBEE; color: var(--red); border: 1px solid #FFCDD2; }
+  .wp-red svg { fill: var(--red); }
+  .wp-amber  { background: var(--amber-l); color: var(--amber); border: 1px solid #FFCC80; }
+  .wp-amber svg { fill: var(--amber); }
+  .wp-navy   { background: #E3F2FD; color: var(--navy); border: 1px solid #90CAF9; }
+  .wp-navy svg { fill: var(--navy); }
+
+  /* ── PROCEED BUTTON ── */
+  .action-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-proceed {
+    flex: 1;
+    min-width: 200px;
+    padding: 14px 24px;
+    background: var(--grey-2);
+    color: var(--grey-3);
+    border: none;
+    border-radius: 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px; font-weight: 700;
+    cursor: not-allowed;
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px;
+    transition: all 0.3s;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .btn-proceed.enabled {
+    background: var(--navy);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 3px 12px rgba(27,58,107,0.28);
+  }
+
+  .btn-proceed.enabled:hover {
+    background: var(--navy-d);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 18px rgba(27,58,107,0.36);
+  }
+
+  .btn-proceed svg { width: 18px; height: 18px; fill: currentColor; }
+
+  .btn-cancel {
+    padding: 13px 20px;
+    background: white;
+    color: var(--text-s);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px; font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .btn-cancel:hover { border-color: var(--red); color: var(--red); }
+
+  /* Locked message */
+  .locked-msg {
+    background: #EDE7F6;
+    border: 1px solid #B39DDB;
+    border-radius: 8px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    color: #4527A0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    display: none;
+  }
+
+  .locked-msg svg { width: 20px; height: 20px; fill: #7E57C2; flex-shrink: 0; margin-top: 2px; }
+
+  /* ── FOOTER ── */
+  .page-footer {
+    text-align: center; font-size: 11px; color: var(--grey-3);
+    padding: 16px; border-top: 1px solid var(--grey-1);
+    background: var(--white); margin-top: auto;
+  }
+
+  @media (max-width: 768px) {
+    .site-header { padding: 10px 16px; }
+    .portal-band { padding: 12px 16px; }
+    .main-content { padding: 18px 16px 32px; }
+    .progress-wrap { padding: 14px 16px; }
+    .dept-label { display: none; }
+    .holiday-info-body { gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── SITE HEADER ── -->
+<div class="site-header">
+  <div class="logo-area">
+    <svg class="rhc-cross" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="13,1 25,1 25,25 1,25 1,13 13,13" fill="#D32F2F"/>
+      <polygon points="29,1 41,1 41,13 53,13 53,25 29,25" fill="#F5A800"/>
+      <polygon points="1,29 25,29 25,53 13,53 13,41 1,41" fill="#1565C0"/>
+      <polygon points="29,29 53,29 53,41 41,41 41,53 29,53" fill="#2E7D32"/>
+    </svg>
+    <div class="logo-text-wrap">
+      <span class="logo-gmf">Grant Medical Foundation</span>
+      <span class="logo-rhc">Ruby Hall Clinic</span>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="dept-label">
+      Department of HR &amp; ER
+      <span>Human Resources &amp; Employee Relations</span>
+    </div>
+    <div class="user-pill">
+      <div class="user-avatar">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+      </div>
+      <div>
+        <div class="user-name" id="headerManagerName">MANAGER</div>
+        <div class="user-dept" id="headerDeptName">Department</div>
+      </div>
+    </div>
+    <button class="back-btn" onclick="window.location.href='screen2_manager_dashboard.html'">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      Back
+    </button>
+  </div>
+</div>
+
+<!-- ── PORTAL BAND ── -->
+<div class="portal-band">
+  <div class="portal-title">Approved Holiday Duty Confirmation Portal</div>
+  <div class="portal-breadcrumb">Dashboard &rsaquo; Acknowledgement</div>
+</div>
+
+<!-- ── PROGRESS STEPS ── -->
+<div class="progress-wrap">
+  <div class="steps">
+    <div class="step active">
+      <div class="step-circle">1</div>
+      <div class="step-label">Acknowledge</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="step-circle">2</div>
+      <div class="step-label">Select Staff</div>
+    </div>
+    <div class="step-line"></div>
+    <div class="step">
+      <div class="step-circle">3</div>
+      <div class="step-label">Submit</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div class="main-content">
+
+  <!-- Holiday Info -->
+  <div class="holiday-info-card">
+    <div class="holiday-info-header">
+      <h2 id="holidayName">Loading...</h2>
+      <div class="holiday-date-chip" id="holidayDateChip">—</div>
+    </div>
+    <div class="holiday-info-body">
+      <div class="info-item">
+        <span class="info-label">Holiday Date</span>
+        <span class="info-value" id="holidayDateVal">—</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Submission Deadline</span>
+        <span class="info-value" id="deadlineVal">—</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Time Remaining</span>
+        <span class="info-value" id="timeRemainingVal">—</span>
+      </div>
+      <div class="info-item">
+        <span class="info-label">Location</span>
+        <span class="info-value" id="locationVal">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dept selector — shown only for multi-dept managers -->
+  <div class="dept-selector-card" id="deptSelectorCard">
+    <label for="deptSelect">Select Department to Submit For</label>
+    <select id="deptSelect" onchange="onDeptChange()">
+      <option value="">— Select Department —</option>
+    </select>
+  </div>
+
+  <!-- Locked message -->
+  <div class="locked-msg" id="lockedMsg">
+    <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
+    <div>
+      <strong>Submission Deadline Has Passed</strong><br/>
+      The deadline for this holiday has passed. You can no longer submit or modify the list.
+      If you have a genuine case, please contact <strong>Ms. Meenal Mirpagar / Mr. Prakash Satpute</strong>
+      (Attendance and Leave Management) to request an extension.
+    </div>
+  </div>
+
+  <!-- Acknowledgement Card -->
+  <div class="ack-card" id="ackCard">
+    <div class="ack-card-header">
+      <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+      <h3 id="ackHeaderTitle">Mandatory Declaration — Read Carefully Before Proceeding</h3>
+    </div>
+    <div class="ack-card-body">
+
+      <!-- Declaration text -->
+      <div class="declaration-box">
+        <p>I, <strong id="declarationManagerName">___________</strong>, Department Manager of
+          <strong id="declarationDeptName">___________</strong>, hereby declare and confirm the following:</p>
+
+        <ul>
+          <li>All employees listed in this submission were <strong>officially assigned and approved</strong>
+              to work on the declared paid holiday.</li>
+          <li>Each listed employee has <strong>completed their entire assigned duty</strong> without
+              any partial attendance, early departure, or late arrival beyond permissible limits.</li>
+          <li>Employees with <strong>partial duty or incomplete attendance</strong> have NOT been
+              included in this list.</li>
+          <li>This submission is made in good faith and I take <strong>full responsibility</strong>
+              for the accuracy and completeness of this list.</li>
+          <li>I understand that any <strong>incorrect or fraudulent submission</strong> may lead to
+              disciplinary action as per hospital policy.</li>
+        </ul>
+
+        <p>This declaration is submitted to the <strong>Department of HR &amp; ER</strong> for
+           processing of <strong>Holiday Extra Pay</strong> for the listed employees.</p>
+      </div>
+
+      <!-- Warning points -->
+      <div class="warning-points">
+        <div class="warning-point wp-red">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+          Do NOT include employees who completed partial duty. Their attendance logs will be verified by HR &amp; ER.
+        </div>
+        <div class="warning-point wp-amber">
+          <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+          Submission is final once submitted. You may modify the list until the deadline passes.
+        </div>
+        <div class="warning-point wp-navy">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+          If an employee is not in the system, you may add them manually. Manual entries will be flagged for HR verification.
+        </div>
+      </div>
+
+      <!-- Checkbox -->
+      <div style="margin-top: 22px;">
+        <div class="checkbox-row" id="ackCheckboxRow" onclick="toggleAck()">
+          <div class="custom-checkbox" id="ackCheckbox">
+            <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+          </div>
+          <div class="checkbox-text">
+            I have read and understood the above declaration. I confirm that all employees I will
+            select in the next step have completed their <span>entire assigned duty</span> on this holiday.
+            I take full responsibility for this submission.
+          </div>
+        </div>
+        <p style="font-size:11.5px; color:var(--grey-3); margin-top:6px; padding-left:4px;">
+          You must tick this box before proceeding to employee selection.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Action Row -->
+  <div class="action-row">
+    <button class="btn-cancel" onclick="window.location.href='screen2_manager_dashboard.html'">
+      Cancel
+    </button>
+    <button class="btn-proceed" id="proceedBtn" disabled onclick="proceedToSelection()">
+      <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+      I Agree &amp; Proceed to Employee Selection
+    </button>
+  </div>
+
+</div><!-- /main-content -->
+
+<div class="page-footer">
+  &copy; 2026 &nbsp;Grant Medical Foundation &nbsp;|&nbsp; Ruby Hall Clinic &nbsp;|&nbsp; Department of HR &amp; ER
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// CONFIG
+// ═══════════════════════════════════════════
+const SUPABASE_URL  = 'sb_publishable_m9N8d07XWyZa0SWxN0f06w_t1TIiVL9';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwcWxxZ3l4Zm1jb3FxamNnY2hkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4MjU3MjMsImV4cCI6MjA5NjQwMTcyM30.tKoN4jw7a_YiyhxqCUQE5o5Ev8zFKvPXpOv56tMTSBU';
+
+// ═══════════════════════════════════════════
+// SESSION
+// ═══════════════════════════════════════════
+const managerId   = sessionStorage.getItem('manager_id');
+const managerName = sessionStorage.getItem('manager_name') || 'MANAGER';
+const authToken   = sessionStorage.getItem('auth_token');
+const holidayId   = sessionStorage.getItem('current_holiday_id');
+
+if (!managerId || !authToken) window.location.href = 'index.html';
+if (!holidayId) window.location.href = 'screen2_manager_dashboard.html';
+
+document.getElementById('headerManagerName').textContent = managerName;
+document.getElementById('declarationManagerName').textContent = managerName;
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let ackChecked     = false;
+let isDeadlinePast = false;
+let myDepartments  = [];
+let selectedDeptId = null;
+
+// ═══════════════════════════════════════════
+// API
+// ═══════════════════════════════════════════
+async function api(path) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+    headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${authToken}` }
+  });
+  if (!res.ok) throw new Error('API error');
+  return res.json();
+}
+
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+function fmtDate(d) {
+  if (!d) return '—';
+  return new Date(d).toLocaleDateString('en-IN', { day:'2-digit', month:'long', year:'numeric' });
+}
+
+function fmtDateTime(d) {
+  if (!d) return '—';
+  const dt = new Date(d);
+  return dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }) +
+    ', ' + dt.toLocaleTimeString('en-IN', { hour:'2-digit', minute:'2-digit', hour12:true });
+}
+
+function timeLeft(deadline) {
+  const diff = new Date(deadline).getTime() - Date.now();
+  if (diff <= 0) return 'DEADLINE PASSED';
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  if (d > 0) return `${d} day${d>1?'s':''} ${h}h remaining`;
+  if (h > 0) return `${h}h ${m}m remaining`;
+  return `${m} minute${m>1?'s':''} remaining`;
+}
+
+// ═══════════════════════════════════════════
+// LOAD HOLIDAY
+// ═══════════════════════════════════════════
+async function loadHoliday() {
+  try {
+    const data = await api(
+      `holidays?holiday_id=eq.${holidayId}&select=holiday_id,holiday_name,holiday_date,deadline_datetime,status`
+    );
+
+    if (!data || data.length === 0) {
+      window.location.href = 'screen2_manager_dashboard.html';
+      return;
+    }
+
+    const h = data[0];
+    isDeadlinePast = new Date(h.deadline_datetime).getTime() < Date.now();
+
+    // Populate holiday info
+    document.getElementById('holidayName').textContent     = h.holiday_name;
+    document.getElementById('holidayDateChip').textContent = fmtDate(h.holiday_date);
+    document.getElementById('holidayDateVal').textContent  = fmtDate(h.holiday_date);
+    document.getElementById('deadlineVal').textContent     = fmtDateTime(h.deadline_datetime);
+
+    const tl = timeLeft(h.deadline_datetime);
+    const tlEl = document.getElementById('timeRemainingVal');
+    tlEl.textContent = tl;
+    if (isDeadlinePast) {
+      tlEl.style.color = 'var(--red)';
+      tlEl.style.fontWeight = '700';
+    } else if (tl.includes('minute') || (tl.includes('h') && !tl.includes('day'))) {
+      tlEl.style.color = 'var(--amber)';
+    } else {
+      tlEl.style.color = 'var(--green-b)';
+    }
+
+    // If deadline passed — show locked message, hide ack
+    if (isDeadlinePast && h.status !== 'ACTIVE') {
+      document.getElementById('lockedMsg').style.display = 'flex';
+      document.getElementById('ackCard').style.display = 'none';
+      document.querySelector('.action-row').style.display = 'none';
+    }
+
+  } catch(e) {
+    console.error('Holiday load error', e);
+  }
+}
+
+// ═══════════════════════════════════════════
+// LOAD MANAGER DEPTS
+// ═══════════════════════════════════════════
+async function loadDepts() {
+  try {
+    const data = await api(
+      `manager_departments?manager_id=eq.${managerId}&select=department_id,departments(department_id,department_name,locations(location_name))`
+    );
+
+    myDepartments = data.map(d => ({
+      id:   d.departments.department_id,
+      name: d.departments.department_name,
+      loc:  d.departments.locations?.location_name || ''
+    }));
+
+    if (myDepartments.length === 0) return;
+
+    // Single dept — auto-select
+    if (myDepartments.length === 1) {
+      selectedDeptId = myDepartments[0].id;
+      document.getElementById('headerDeptName').textContent       = myDepartments[0].name;
+      document.getElementById('declarationDeptName').textContent  = myDepartments[0].name;
+      document.getElementById('locationVal').textContent          = myDepartments[0].loc;
+    } else {
+      // Multi-dept — show selector
+      const card = document.getElementById('deptSelectorCard');
+      card.classList.add('visible');
+      const sel = document.getElementById('deptSelect');
+      myDepartments.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        opt.textContent = `${d.name} — ${d.loc}`;
+        sel.appendChild(opt);
+      });
+      document.getElementById('headerDeptName').textContent = `${myDepartments.length} Departments`;
+      document.getElementById('declarationDeptName').textContent = '(Select Department Above)';
+    }
+
+  } catch(e) {
+    console.error('Dept load error', e);
+  }
+}
+
+// ═══════════════════════════════════════════
+// DEPT CHANGE (multi-dept managers)
+// ═══════════════════════════════════════════
+function onDeptChange() {
+  const val = document.getElementById('deptSelect').value;
+  selectedDeptId = val || null;
+
+  if (val) {
+    const dept = myDepartments.find(d => d.id === val);
+    if (dept) {
+      document.getElementById('declarationDeptName').textContent = dept.name;
+      document.getElementById('locationVal').textContent = dept.loc;
+    }
+  } else {
+    document.getElementById('declarationDeptName').textContent = '(Select Department Above)';
+  }
+
+  // Re-evaluate proceed button
+  updateProceedBtn();
+}
+
+// ═══════════════════════════════════════════
+// ACKNOWLEDGEMENT TOGGLE
+// ═══════════════════════════════════════════
+function toggleAck() {
+  if (isDeadlinePast) return;
+  ackChecked = !ackChecked;
+
+  const row = document.getElementById('ackCheckboxRow');
+  const card = document.getElementById('ackCard');
+
+  if (ackChecked) {
+    row.classList.add('checked');
+    card.classList.add('accepted');
+    document.getElementById('ackHeaderTitle').textContent = '✓ Declaration Accepted';
+    document.querySelector('.ack-card-header').querySelector('h3').textContent = '✓ Declaration Accepted — You May Proceed';
+  } else {
+    row.classList.remove('checked');
+    card.classList.remove('accepted');
+    document.getElementById('ackHeaderTitle').textContent = 'Mandatory Declaration — Read Carefully Before Proceeding';
+  }
+
+  updateProceedBtn();
+}
+
+function updateProceedBtn() {
+  const btn = document.getElementById('proceedBtn');
+  const deptOk = myDepartments.length <= 1 || selectedDeptId !== null;
+  const ready  = ackChecked && deptOk && !isDeadlinePast;
+
+  btn.disabled = !ready;
+  btn.classList.toggle('enabled', ready);
+}
+
+// ═══════════════════════════════════════════
+// PROCEED
+// ═══════════════════════════════════════════
+function proceedToSelection() {
+  if (!ackChecked) return;
+  if (myDepartments.length > 1 && !selectedDeptId) {
+    alert('Please select a department first.');
+    return;
+  }
+
+  // Store selected dept for next screen
+  if (selectedDeptId) {
+    sessionStorage.setItem('current_dept_id', selectedDeptId);
+    const dept = myDepartments.find(d => d.id === selectedDeptId);
+    if (dept) sessionStorage.setItem('current_dept_name', dept.name);
+  } else if (myDepartments.length === 1) {
+    sessionStorage.setItem('current_dept_id',   myDepartments[0].id);
+    sessionStorage.setItem('current_dept_name', myDepartments[0].name);
+  }
+
+  sessionStorage.setItem('ack_given', 'true');
+  sessionStorage.setItem('ack_timestamp', new Date().toISOString());
+
+  window.location.href = 'screen4_employee_selection.html';
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+async function init() {
+  await loadHoliday();
+  await loadDepts();
+}
+
+init();
+</script>
+</body>
+</html>

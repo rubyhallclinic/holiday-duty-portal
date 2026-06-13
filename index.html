@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Login — Approved Holiday Duty Confirmation Portal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Montserrat:wght@500;600;700;800&display=swap');
+
+  :root {
+    --navy:      #1B3A6B;
+    --navy-d:    #122850;
+    --navy-l:    #2A5298;
+    --red:       #D32F2F;
+    --red-d:     #B71C1C;
+    --red-l:     #E53935;
+    --yellow:    #F5A800;
+    --yellow-l:  #FFD54F;
+    --blue-bg:   #EAF4FB;
+    --blue-mid:  #B3D4ED;
+    --white:     #FFFFFF;
+    --grey-bg:   #F5F7FA;
+    --grey-1:    #E8ECF0;
+    --grey-2:    #C5CDD6;
+    --grey-3:    #7F8C9A;
+    --text:      #1A2332;
+    --text-s:    #4A5568;
+    --error:     #C62828;
+    --success:   #1B5E20;
+    --border:    #D0D8E0;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Open Sans', sans-serif;
+    background: var(--blue-bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0 40px 0;
+  }
+
+  /* ── TOP HEADER STRIP ── */
+  .site-header {
+    width: 100%;
+    background: var(--white);
+    border-bottom: 3px solid var(--red);
+    padding: 14px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(27,58,107,0.10);
+  }
+
+  /* Logo area — SVG cross matching Ruby Hall style */
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .rhc-cross {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+  }
+
+  .logo-text-wrap {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+
+  .logo-gmf {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 11.5px;
+    font-weight: 400;
+    color: var(--navy);
+    letter-spacing: 0.01em;
+  }
+
+  .logo-rhc {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.01em;
+  }
+
+  /* Department badge — right side of header */
+  .dept-label {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--navy);
+    text-align: right;
+    line-height: 1.4;
+  }
+
+  .dept-label span {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--grey-3);
+    letter-spacing: 0.03em;
+  }
+
+  /* ── PORTAL TITLE BAND ── */
+  .portal-band {
+    width: 100%;
+    background: linear-gradient(135deg, var(--navy-d) 0%, var(--navy) 60%, var(--navy-l) 100%);
+    padding: 18px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .portal-band::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 60px,
+      rgba(255,255,255,0.03) 60px,
+      rgba(255,255,255,0.03) 61px
+    );
+  }
+
+  .portal-title {
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: 0.02em;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .page-content {
+    width: 100%;
+    max-width: 480px;
+    margin-top: 36px;
+    padding: 0 16px;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--white);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 16px rgba(27,58,107,0.10);
+    overflow: hidden;
+  }
+
+  .card-header {
+    background: linear-gradient(135deg, var(--navy-d) 0%, var(--navy) 100%);
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .card-header-icon {
+    width: 36px; height: 36px;
+    background: rgba(245,168,0,0.18);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .card-header-icon svg { width: 20px; height: 20px; fill: var(--yellow); }
+
+  .card-header h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .card-header p {
+    font-size: 12px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 2px;
+  }
+
+  .card-body { padding: 26px 24px 22px; }
+
+  /* ── FORM ── */
+  .form-group { margin-bottom: 18px; }
+
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-s);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .input-wrap { position: relative; }
+
+  .input-wrap .field-icon {
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    width: 16px; height: 16px;
+    fill: var(--grey-3);
+    pointer-events: none;
+    transition: fill 0.2s;
+  }
+
+  input[type="email"],
+  input[type="password"],
+  input[type="text"] {
+    width: 100%;
+    padding: 10px 14px 10px 38px;
+    border: 1.5px solid var(--grey-1);
+    border-radius: 6px;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--grey-bg);
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    outline: none;
+  }
+
+  input[type="email"]    { text-transform: none; }
+  input[type="password"] { text-transform: none; }
+  input[type="text"]  { text-transform: uppercase; }
+
+  input:focus {
+    border-color: var(--navy);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(27,58,107,0.10);
+  }
+
+  input:focus ~ .field-icon { fill: var(--navy); }
+
+  .pwd-toggle {
+    position: absolute;
+    right: 12px; top: 50%;
+    transform: translateY(-50%);
+    background: none; border: none;
+    cursor: pointer; padding: 0;
+    display: flex; align-items: center;
+  }
+
+  .pwd-toggle svg { width: 17px; height: 17px; fill: var(--grey-3); transition: fill 0.2s; }
+  .pwd-toggle:hover svg { fill: var(--navy); }
+
+  /* Default password hint */
+  .pwd-hint {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background: #FFF8E1;
+    border: 1px solid #FFD54F;
+    border-radius: 5px;
+    font-size: 12px;
+    color: #5D4037;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .pwd-hint svg { width: 14px; height: 14px; fill: var(--yellow); flex-shrink: 0; }
+  .pwd-hint strong { color: var(--red-d); font-weight: 700; }
+
+  .forgot-link {
+    display: block;
+    text-align: right;
+    font-size: 12px;
+    color: var(--navy);
+    text-decoration: none;
+    font-weight: 600;
+    margin-top: -10px;
+    margin-bottom: 20px;
+    transition: color 0.2s;
+  }
+
+  .forgot-link:hover { color: var(--red); text-decoration: underline; }
+
+  /* Login button */
+  .btn-primary {
+    width: 100%;
+    padding: 12px;
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 3px 10px rgba(27,58,107,0.30);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-primary:hover {
+    background: var(--navy-d);
+    transform: translateY(-1px);
+    box-shadow: 0 5px 16px rgba(27,58,107,0.38);
+  }
+
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary svg { width: 17px; height: 17px; fill: white; }
+
+  .btn-secondary {
+    width: 100%;
+    padding: 10px;
+    background: transparent;
+    color: var(--navy);
+    border: 1.5px solid var(--navy);
+    border-radius: 6px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    margin-top: 10px;
+  }
+
+  .btn-secondary:hover { background: var(--navy); color: white; }
+  .btn-secondary:disabled { opacity: 0.45; cursor: not-allowed; }
+
+  /* Spinner */
+  .spinner {
+    width: 17px; height: 17px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    display: none;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Alerts */
+  .alert {
+    padding: 10px 13px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    margin-bottom: 16px;
+    display: none;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
+  }
+
+  .alert svg { width: 15px; height: 15px; flex-shrink: 0; margin-top: 1px; }
+
+  .alert-error {
+    background: #FFEBEE;
+    border: 1px solid #FFCDD2;
+    color: var(--error);
+  }
+
+  .alert-error svg { fill: var(--error); }
+
+  .alert-success {
+    background: #E8F5E9;
+    border: 1px solid #A5D6A7;
+    color: var(--success);
+  }
+
+  .alert-success svg { fill: var(--success); }
+
+  .alert-info {
+    background: #E3F2FD;
+    border: 1px solid #90CAF9;
+    color: var(--navy);
+    display: flex;
+  }
+
+  .alert-info svg { fill: var(--navy); }
+
+  /* Card footer */
+  .card-footer {
+    padding: 13px 24px 16px;
+    border-top: 1px solid var(--grey-1);
+    font-size: 12px;
+    color: var(--grey-3);
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .card-footer strong { color: var(--text-s); font-weight: 600; }
+
+  /* OTP inputs */
+  .otp-inputs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin: 16px 0 8px;
+  }
+
+  .otp-digit {
+    width: 44px !important;
+    height: 50px !important;
+    text-align: center;
+    font-size: 20px !important;
+    font-weight: 700 !important;
+    padding: 0 !important;
+    padding-left: 0 !important;
+    border-radius: 6px;
+    text-transform: none !important;
+    color: var(--navy) !important;
+    border: 2px solid var(--grey-1) !important;
+  }
+
+  .otp-digit:focus {
+    border-color: var(--navy) !important;
+    background: white !important;
+  }
+
+  .otp-timer {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-s);
+    margin-bottom: 6px;
+  }
+
+  .otp-timer span { color: var(--red); font-weight: 700; }
+
+  .back-link {
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    color: var(--grey-3);
+    cursor: pointer;
+    margin-top: 14px;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--navy); }
+
+  /* Force change banner */
+  .force-banner {
+    background: #FFF3E0;
+    border: 1px solid #FFB74D;
+    border-radius: 6px;
+    padding: 10px 13px;
+    font-size: 12.5px;
+    color: #E65100;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    line-height: 1.5;
+  }
+
+  .force-banner svg { width: 15px; height: 15px; fill: #FB8C00; flex-shrink: 0; margin-top: 1px; }
+
+  /* Strength bar */
+  .strength-wrap { margin-bottom: 16px; }
+  .strength-bar-bg { height: 4px; background: var(--grey-1); border-radius: 2px; overflow: hidden; }
+  .strength-bar { height: 100%; width: 0; transition: width 0.3s, background 0.3s; border-radius: 2px; }
+  .strength-label { font-size: 11px; color: var(--grey-3); margin-top: 4px; }
+
+  /* Page footer */
+  .page-footer {
+    margin-top: 24px;
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--grey-3);
+  }
+
+  /* OTP / Reset panel hidden by default */
+  #otpCard, #resetCard { display: none; }
+
+  @media (max-width: 500px) {
+    .site-header { padding: 12px 16px; }
+    .portal-band { padding: 14px 16px; }
+    .portal-title { font-size: 16px; }
+    .card-body { padding: 20px 16px 16px; }
+    .card-footer { padding: 12px 16px 14px; }
+  }
+  .portal-band a, .portal-band * { text-decoration: none; }
+  a { text-decoration: none !important; } * { text-decoration: none !important; }
+  /* Remove all underlines globally */
+  *, *::before, *::after { text-decoration: none !important; }
+  a { text-decoration: none !important; }
+  .portal-title { text-decoration: none !important; }
+  /* Password fields must NEVER be uppercase */
+  input[type="password"] { text-transform: none !important; letter-spacing: 0.05em; }
+  #newPwd, #confirmPwd, #passwordInput { text-transform: none !important; }
+</style>
+</head>
+<body>
+
+<!-- ── SITE HEADER ── -->
+<div class="site-header">
+  <!-- Logo: SVG cross matching Ruby Hall style + text -->
+  <div class="logo-area">
+    <svg class="rhc-cross" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+      <!-- TOP-LEFT: Red L — notch at top-left outer corner, opens outward top-left -->
+      <polygon points="13,1 25,1 25,25 1,25 1,13 13,13" fill="#D32F2F"/>
+      <!-- TOP-RIGHT: Yellow L — notch at top-right outer corner, opens outward top-right -->
+      <polygon points="29,1 41,1 41,13 53,13 53,25 29,25" fill="#F5A800"/>
+      <!-- BOTTOM-LEFT: Blue L — notch at bottom-left outer corner, opens outward bottom-left -->
+      <polygon points="1,29 25,29 25,53 13,53 13,41 1,41" fill="#1565C0"/>
+      <!-- BOTTOM-RIGHT: Green L — notch at bottom-right outer corner, opens outward bottom-right -->
+      <polygon points="29,29 53,29 53,41 41,41 41,53 29,53" fill="#2E7D32"/>
+    </svg>
+    <div class="logo-text-wrap">
+      <span class="logo-gmf">Grant Medical Foundation</span>
+      <span class="logo-rhc">Ruby Hall Clinic</span>
+    </div>
+  </div>
+
+  <!-- Department label -->
+  <div class="dept-label">
+    Department of HR &amp; ER
+    <span>Human Resources &amp; Employee Relations</span>
+  </div>
+</div>
+
+<!-- ── PORTAL TITLE BAND ── -->
+<div class="portal-band">
+  <div class="portal-title">Approved Holiday Duty Confirmation Portal</div>
+</div>
+
+<!-- ── MAIN CONTENT ── -->
+<div class="page-content">
+
+  <!-- ════════ LOGIN CARD ════════ -->
+  <div class="card" id="loginCard">
+    <!-- ROLE SELECTOR -->
+    <div style="display:flex;gap:0;border-bottom:2px solid var(--grey-1);">
+      <button type="button" id="roleManager" onclick="selectRole('MANAGER')"
+        style="flex:1;padding:13px;border:none;background:var(--navy);color:white;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border-radius:0;display:flex;align-items:center;justify-content:center;gap:7px;transition:background 0.2s;">
+        <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:white;"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+        Department Manager
+      </button>
+      <button type="button" id="roleAdmin" onclick="selectRole('ADMIN')"
+        style="flex:1;padding:13px;border:none;background:var(--grey-1);color:var(--grey-3);font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border-radius:0;display:flex;align-items:center;justify-content:center;gap:7px;transition:background 0.2s;">
+        <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor;"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+        Attendance Manager
+      </button>
+    </div>
+
+    <div class="card-header" id="loginCardHeader">
+      <div class="card-header-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
+      </div>
+      <div>
+        <h2 id="loginCardTitle">Department Manager Login</h2>
+        <p id="loginCardSubtitle">Enter your credentials to access the portal</p>
+      </div>
+    </div>
+
+    <div class="card-body">
+
+      <div class="alert alert-error" id="loginAlert">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="loginAlertMsg">Invalid email or password.</span>
+      </div>
+
+      <div class="force-banner" id="forceChangeBanner" style="display:none;">
+        <svg viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+        You are logging in for the first time. Please set a new password to continue.
+      </div>
+
+      <form id="loginForm" autocomplete="off">
+        <div class="form-group">
+          <label for="emailInput">Email Address</label>
+          <div class="input-wrap">
+            <input type="email" id="emailInput" placeholder="your.email@rubyhall.com" autocomplete="username" required/>
+            <svg class="field-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="passwordInput">Password</label>
+          <div class="input-wrap">
+            <input type="password" id="passwordInput" placeholder="Enter your password" autocomplete="current-password" required/>
+            <svg class="field-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
+            <button type="button" class="pwd-toggle" id="pwdToggle" tabindex="-1">
+              <svg viewBox="0 0 24 24" id="eyeIcon"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+            </button>
+          </div>
+          <div class="pwd-hint">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+            First time login? Use default password: <strong>&nbsp;ruby@123</strong>
+          </div>
+        </div>
+
+        <a href="#" class="forgot-link" id="forgotLink">Forgot Password?</a>
+
+        <button type="submit" class="btn-primary" id="loginBtn">
+          <div class="spinner" id="loginSpinner"></div>
+          <svg viewBox="0 0 24 24" id="loginBtnIcon"><path d="M11 7L9.6 8.4l2.6 2.6H2v2h10.2l-2.6 2.6L11 17l5-5-5-5zm9 12h-8v2h8c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-8v2h8v14z"/></svg>
+          Sign In
+        </button>
+      </form>
+    </div>
+
+    <div class="card-footer">
+      For access issues, contact:<br/>
+      <strong>Ms. Meenal Mirpagar / Mr. Prakash Satpute</strong><br/>
+      Attendance and Leave Management
+    </div>
+  </div>
+
+  <!-- ════════ OTP CARD ════════ -->
+  <div class="card" id="otpCard">
+    <div class="card-header">
+      <div class="card-header-icon">
+        <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 9h-2V5h2v6zm0 4h-2v-2h2v2z"/></svg>
+      </div>
+      <div>
+        <h2>OTP Verification</h2>
+        <p>Enter the 6-digit code sent to your email</p>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="alert alert-error" id="otpAlert" style="display:none;">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="otpAlertMsg">Incorrect OTP. Please try again.</span>
+      </div>
+
+      <div class="alert-info" style="border-radius:6px; padding:10px 13px; margin-bottom:14px; font-size:12.5px; line-height:1.5;">
+        <svg viewBox="0 0 24 24" style="width:15px;height:15px;fill:var(--navy);flex-shrink:0;margin-top:1px;margin-right:8px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        OTP sent to <strong id="otpEmailDisplay" style="color:var(--navy-d)"></strong>. Valid for <strong>10 minutes</strong> only.
+      </div>
+
+      <div class="otp-inputs">
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+        <input type="text" maxlength="1" class="otp-digit" inputmode="numeric"/>
+      </div>
+
+      <div class="otp-timer">Time remaining: <span id="otpTimer">10:00</span></div>
+
+      <button class="btn-primary" id="verifyOtpBtn" style="margin-top:16px;">
+        <div class="spinner" id="otpSpinner"></div>
+        <svg viewBox="0 0 24 24" id="otpBtnIcon"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+        Verify OTP
+      </button>
+
+      <button class="btn-secondary" id="resendOtpBtn" disabled>Resend OTP</button>
+      <span class="back-link" id="backToLogin">← Back to Login</span>
+    </div>
+  </div>
+
+  <!-- ════════ RESET PASSWORD CARD ════════ -->
+  <div class="card" id="resetCard">
+    <div class="card-header">
+      <div class="card-header-icon">
+        <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
+      </div>
+      <div>
+        <h2>Set New Password</h2>
+        <p id="resetSubtitle">OTP verified. Create your new password below.</p>
+      </div>
+    </div>
+
+    <div class="card-body">
+      <div class="alert alert-error" id="resetAlert" style="display:none;">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="resetAlertMsg">Passwords do not match.</span>
+      </div>
+
+      <form id="resetForm">
+        <div class="form-group">
+          <label for="newPwd">New Password</label>
+          <div class="input-wrap">
+            <input type="password" id="newPwd" placeholder="Minimum 8 characters" required/>
+            <svg class="field-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPwd">Confirm New Password</label>
+          <div class="input-wrap">
+            <input type="password" id="confirmPwd" placeholder="Re-enter new password" required/>
+            <svg class="field-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
+          </div>
+        </div>
+
+        <div class="strength-wrap">
+          <div class="strength-bar-bg"><div class="strength-bar" id="strengthBar"></div></div>
+          <div class="strength-label" id="strengthLabel"></div>
+        </div>
+
+        <button type="submit" class="btn-primary" id="resetBtn">
+          <div class="spinner" id="resetSpinner"></div>
+          <svg viewBox="0 0 24 24" id="resetBtnIcon"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+          Set New Password
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    &copy; 2026 &nbsp;Grant Medical Foundation &nbsp;|&nbsp; Ruby Hall Clinic &nbsp;|&nbsp; Department of HR &amp; ER
+  </div>
+
+</div><!-- /page-content -->
+
+<script>
+// ══════════════════════════════════════════════
+// CONFIGURATION — replace with your Supabase keys
+// ══════════════════════════════════════════════
+const SUPABASE_URL  = 'sb_publishable_m9N8d07XWyZa0SWxN0f06w_t1TIiVL9';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwcWxxZ3l4Zm1jb3FxamNnY2hkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4MjU3MjMsImV4cCI6MjA5NjQwMTcyM30.tKoN4jw7a_YiyhxqCUQE5o5Ev8zFKvPXpOv56tMTSBU';
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let forgotEmail      = '';
+let otpTimerInterval = null;
+let otpSecondsLeft   = 600;
+let isFirstLogin     = false;
+
+// ══════════════════════════════════════════════
+// PANEL SWITCHER
+// ══════════════════════════════════════════════
+function showPanel(id) {
+  ['loginCard','otpCard','resetCard'].forEach(c => {
+    document.getElementById(c).style.display = 'none';
+  });
+  document.getElementById(id).style.display = 'block';
+}
+
+// ══════════════════════════════════════════════
+// ALERT HELPERS
+// ══════════════════════════════════════════════
+function showError(alertId, msgId, msg) {
+  const el = document.getElementById(alertId);
+  if (msgId) document.getElementById(msgId).textContent = msg;
+  el.style.display = 'flex';
+}
+
+function hideError(alertId) {
+  document.getElementById(alertId).style.display = 'none';
+}
+
+// ══════════════════════════════════════════════
+// BUTTON LOADING STATE
+// ══════════════════════════════════════════════
+function setLoading(btnId, spinnerId, iconId, state) {
+  document.getElementById(btnId).disabled = state;
+  document.getElementById(spinnerId).style.display = state ? 'block' : 'none';
+  if (iconId) document.getElementById(iconId).style.display = state ? 'none' : 'inline-block';
+}
+
+// ══════════════════════════════════════════════
+// PASSWORD TOGGLE
+// ══════════════════════════════════════════════
+document.getElementById('pwdToggle').addEventListener('click', function() {
+  const inp = document.getElementById('passwordInput');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+});
+
+// ══════════════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════════════
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  hideError('loginAlert');
+
+  const email    = document.getElementById('emailInput').value.trim().toLowerCase();
+  const password = document.getElementById('passwordInput').value;
+
+  if (!email || !password) {
+    showError('loginAlert','loginAlertMsg','Please enter both email and password.');
+    return;
+  }
+
+  setLoading('loginBtn','loginSpinner','loginBtnIcon', true);
+
+  try {
+    const authRes = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'apikey': SUPABASE_ANON },
+      body: JSON.stringify({ email, password })
+    });
+
+    if (!authRes.ok) throw new Error('INVALID_CREDENTIALS');
+
+    const authData    = await authRes.json();
+    const accessToken = authData.access_token;
+
+    // Store token
+    sessionStorage.setItem('auth_token', accessToken);
+    sessionStorage.setItem('user_email', email);
+
+    // If Admin tab selected — bypass manager check, go direct to Admin Dashboard
+    if (selectedRole === 'ADMIN') {
+      sessionStorage.setItem('user_role',    'ADMIN');
+      sessionStorage.setItem('manager_name', email.split('@')[0].toUpperCase());
+      window.location.href = 'screen7_admin_dashboard.html';
+      return;
+    }
+
+    // Manager tab — check managers table
+    const mgrRes = await fetch(
+      `${SUPABASE_URL}/rest/v1/managers?email=eq.${encodeURIComponent(email)}&is_active=eq.true&select=manager_id,manager_name,is_first_login,location_id`,
+      { headers: { 'apikey': SUPABASE_ANON, 'Authorization': `Bearer ${accessToken}` } }
+    );
+    const mgrData = await mgrRes.json();
+
+    if (!mgrData || mgrData.length === 0) {
+      // Could be admin — redirect
+      if (selectedRole === 'ADMIN') {
+        sessionStorage.setItem('user_role', 'ADMIN');
+        sessionStorage.setItem('manager_name', email.split('@')[0].toUpperCase());
+        window.location.href = 'screen7_admin_dashboard.html';
+      } else {
+        sessionStorage.clear();
+        showError('loginAlert','loginAlertMsg','Your account was not found. Please contact HR Admin.');
+      }
+      return;
+    }
+
+    const mgr = mgrData[0];
+    sessionStorage.setItem('auth_token',    accessToken);
+    sessionStorage.setItem('manager_id',    mgr.manager_id);
+    sessionStorage.setItem('manager_name',  mgr.manager_name);
+    sessionStorage.setItem('location_id',   mgr.location_id);
+    sessionStorage.setItem('user_role',     'MANAGER');
+
+    if (mgr.is_first_login) {
+      isFirstLogin = true;
+      document.getElementById('forceChangeBanner').style.display = 'flex';
+      document.getElementById('resetSubtitle').textContent =
+        'First login detected. Please set your new password to continue.';
+      showPanel('resetCard');
+      return;
+    }
+
+    window.location.href = 'screen2_manager_dashboard.html';
+
+  } catch(err) {
+    const msg = err.message === 'INVALID_CREDENTIALS'
+      ? 'Invalid email or password. Please try again.'
+      : 'Login failed. Please contact HR Admin.';
+    showError('loginAlert','loginAlertMsg', msg);
+  } finally {
+    setLoading('loginBtn','loginSpinner','loginBtnIcon', false);
+  }
+});
+
+// ══════════════════════════════════════════════
+// FORGOT PASSWORD — SEND OTP
+// ══════════════════════════════════════════════
+document.getElementById('forgotLink').addEventListener('click', async function(e) {
+  e.preventDefault();
+  hideError('loginAlert');
+
+  const email = document.getElementById('emailInput').value.trim().toLowerCase();
+  if (!email) {
+    showError('loginAlert','loginAlertMsg',
+      'Please enter your registered email address first, then click Forgot Password.');
+    return;
+  }
+
+  forgotEmail = email;
+
+  try {
+    const otp       = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+
+    await fetch(`${SUPABASE_URL}/rest/v1/otp_requests`, {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/json',
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${SUPABASE_ANON}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ email: forgotEmail, otp_code: otp, is_used: false, expires_at: expiresAt })
+    });
+
+    // TEMPORARY: Show OTP until email automation is ready
+    alert(`Your OTP is: ${otp}\n\nThis is temporary. OTP will be emailed once Make.com is configured.`);
+
+    document.getElementById('otpEmailDisplay').textContent = email;
+    showPanel('otpCard');
+    startOtpTimer();
+    document.querySelector('.otp-digit').focus();
+
+  } catch(err) {
+    showError('loginAlert','loginAlertMsg',
+      'Could not send OTP. Please contact HR Admin to reset your password.');
+  }
+});
+
+// ══════════════════════════════════════════════
+// OTP DIGIT INPUTS
+// ══════════════════════════════════════════════
+const otpDigits = document.querySelectorAll('.otp-digit');
+
+otpDigits.forEach((inp, i) => {
+  inp.addEventListener('input', function() {
+    this.value = this.value.replace(/[^0-9]/g,'');
+    if (this.value && i < otpDigits.length - 1) otpDigits[i+1].focus();
+  });
+  inp.addEventListener('keydown', function(e) {
+    if (e.key === 'Backspace' && !this.value && i > 0) otpDigits[i-1].focus();
+  });
+  inp.addEventListener('paste', function(e) {
+    e.preventDefault();
+    const paste = (e.clipboardData||window.clipboardData).getData('text')
+      .replace(/[^0-9]/g,'').slice(0,6);
+    paste.split('').forEach((ch,j) => { if (otpDigits[j]) otpDigits[j].value = ch; });
+    const next = [...otpDigits].findIndex(d => !d.value);
+    (next !== -1 ? otpDigits[next] : otpDigits[5]).focus();
+  });
+});
+
+// OTP Timer
+function startOtpTimer() {
+  otpSecondsLeft = 600;
+  clearInterval(otpTimerInterval);
+  tick();
+  otpTimerInterval = setInterval(tick, 1000);
+}
+
+function tick() {
+  const m = Math.floor(otpSecondsLeft/60).toString().padStart(2,'0');
+  const s = (otpSecondsLeft%60).toString().padStart(2,'0');
+  document.getElementById('otpTimer').textContent = `${m}:${s}`;
+  if (otpSecondsLeft <= 0) {
+    clearInterval(otpTimerInterval);
+    document.getElementById('otpTimer').textContent = 'EXPIRED';
+    document.getElementById('resendOtpBtn').disabled = false;
+  }
+  otpSecondsLeft--;
+}
+
+// ══════════════════════════════════════════════
+// VERIFY OTP
+// ══════════════════════════════════════════════
+document.getElementById('verifyOtpBtn').addEventListener('click', async function() {
+  const entered = [...otpDigits].map(d => d.value).join('');
+  hideError('otpAlert');
+
+  if (entered.length < 6) {
+    showError('otpAlert','otpAlertMsg','Please enter all 6 digits.');
+    return;
+  }
+
+  if (otpSecondsLeft <= 0) {
+    showError('otpAlert','otpAlertMsg','OTP has expired. Please request a new one.');
+    return;
+  }
+
+  setLoading('verifyOtpBtn','otpSpinner','otpBtnIcon', true);
+
+  try {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/otp_requests?email=eq.${encodeURIComponent(forgotEmail)}&otp_code=eq.${entered}&is_used=eq.false&select=otp_id,expires_at`,
+      { headers:{ 'apikey': SUPABASE_ANON, 'Authorization':`Bearer ${SUPABASE_ANON}` } }
+    );
+    const data = await res.json();
+
+    if (!data || data.length === 0) {
+      showError('otpAlert','otpAlertMsg','Incorrect OTP. Please check and try again.');
+      return;
+    }
+
+    if (new Date(data[0].expires_at) < new Date()) {
+      showError('otpAlert','otpAlertMsg','OTP has expired. Please request a new one.');
+      return;
+    }
+
+    // Mark OTP used
+    await fetch(`${SUPABASE_URL}/rest/v1/otp_requests?otp_id=eq.${data[0].otp_id}`, {
+      method: 'PATCH',
+      headers:{
+        'Content-Type':'application/json',
+        'apikey': SUPABASE_ANON,
+        'Authorization':`Bearer ${SUPABASE_ANON}`
+      },
+      body: JSON.stringify({ is_used: true })
+    });
+
+    clearInterval(otpTimerInterval);
+    showPanel('resetCard');
+
+  } catch(err) {
+    showError('otpAlert','otpAlertMsg','Verification failed. Please try again.');
+  } finally {
+    setLoading('verifyOtpBtn','otpSpinner','otpBtnIcon', false);
+  }
+});
+
+// Resend OTP
+document.getElementById('resendOtpBtn').addEventListener('click', async function() {
+  this.disabled = true;
+  otpDigits.forEach(d => d.value = '');
+  hideError('otpAlert');
+
+  try {
+    const otp       = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+    await fetch(`${SUPABASE_URL}/rest/v1/otp_requests`, {
+      method: 'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'apikey': SUPABASE_ANON,
+        'Authorization':`Bearer ${SUPABASE_ANON}`,
+        'Prefer':'return=minimal'
+      },
+      body: JSON.stringify({ email: forgotEmail, otp_code: otp, is_used: false, expires_at: expiresAt })
+    });
+    document.getElementById('otpTimer').style.color = '';
+    startOtpTimer();
+    otpDigits[0].focus();
+  } catch(err) {
+    showError('otpAlert','otpAlertMsg','Could not resend OTP. Contact HR Admin.');
+  }
+});
+
+document.getElementById('backToLogin').addEventListener('click', function() {
+  clearInterval(otpTimerInterval);
+  showPanel('loginCard');
+});
+
+// ══════════════════════════════════════════════
+// PASSWORD STRENGTH
+// ══════════════════════════════════════════════
+document.getElementById('newPwd').addEventListener('input', function() {
+  const v = this.value;
+  let s = 0;
+  if (v.length >= 8) s++;
+  if (/[A-Z]/.test(v)) s++;
+  if (/[0-9]/.test(v)) s++;
+  if (/[^A-Za-z0-9]/.test(v)) s++;
+  const levels = [
+    {w:'25%',c:'#E53935',t:'Weak'},
+    {w:'50%',c:'#FB8C00',t:'Fair'},
+    {w:'75%',c:'#FDD835',t:'Good'},
+    {w:'100%',c:'#43A047',t:'Strong'}
+  ];
+  const bar   = document.getElementById('strengthBar');
+  const label = document.getElementById('strengthLabel');
+  if (!v) { bar.style.width='0'; label.textContent=''; return; }
+  const l = levels[s-1] || levels[0];
+  bar.style.width = l.w; bar.style.background = l.c;
+  label.textContent = `Password strength: ${l.t}`; label.style.color = l.c;
+});
+
+// ══════════════════════════════════════════════
+// RESET PASSWORD
+// ══════════════════════════════════════════════
+document.getElementById('resetForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  hideError('resetAlert');
+
+  const np = document.getElementById('newPwd').value;
+  const cp = document.getElementById('confirmPwd').value;
+
+  if (np.length < 8) {
+    showError('resetAlert','resetAlertMsg','Password must be at least 8 characters long.');
+    return;
+  }
+
+  if (np !== cp) {
+    showError('resetAlert','resetAlertMsg','Passwords do not match. Please re-enter.');
+    return;
+  }
+
+  setLoading('resetBtn','resetSpinner','resetBtnIcon', true);
+
+  try {
+    const token = sessionStorage.getItem('auth_token') || '';
+    const res = await fetch(`${SUPABASE_URL}/auth/v1/user`, {
+      method: 'PUT',
+      headers:{
+        'Content-Type':'application/json',
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ password: np })
+    });
+
+    if (!res.ok) throw new Error('Update failed');
+
+    if (isFirstLogin && sessionStorage.getItem('manager_id')) {
+      await fetch(
+        `${SUPABASE_URL}/rest/v1/managers?manager_id=eq.${sessionStorage.getItem('manager_id')}`,
+        {
+          method:'PATCH',
+          headers:{
+            'Content-Type':'application/json',
+            'apikey': SUPABASE_ANON,
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ is_first_login: false })
+        }
+      );
+    }
+
+    alert('Password set successfully. Please login with your new password.');
+    sessionStorage.clear();
+    showPanel('loginCard');
+
+  } catch(err) {
+    showError('resetAlert','resetAlertMsg',
+      'Failed to update password. Please contact HR Admin.');
+  } finally {
+    setLoading('resetBtn','resetSpinner','resetBtnIcon', false);
+  }
+});
+
+// ══════════════════════════════════════
+// ROLE SELECTOR
+// ══════════════════════════════════════
+let selectedRole = 'MANAGER';
+
+function selectRole(role) {
+  selectedRole = role;
+  const mgrBtn   = document.getElementById('roleManager');
+  const adminBtn = document.getElementById('roleAdmin');
+  const title    = document.getElementById('loginCardTitle');
+  const subtitle = document.getElementById('loginCardSubtitle');
+  const hdrIcon  = document.getElementById('loginCardHeader').querySelector('svg path');
+  const pwdHint  = document.querySelector('.pwd-hint');
+
+  if (role === 'ADMIN') {
+    mgrBtn.style.background   = 'var(--grey-1)';
+    mgrBtn.style.color        = 'var(--grey-3)';
+    adminBtn.style.background = 'var(--navy)';
+    adminBtn.style.color      = 'white';
+    adminBtn.querySelector('svg').style.fill = 'white';
+    mgrBtn.querySelector('svg').style.fill   = 'var(--grey-3)';
+    title.textContent    = 'Attendance Manager Login';
+    subtitle.textContent = 'HR & ER Admin access — Department of HR & ER';
+    if (pwdHint) pwdHint.style.display = 'none';
+  } else {
+    mgrBtn.style.background   = 'var(--navy)';
+    mgrBtn.style.color        = 'white';
+    adminBtn.style.background = 'var(--grey-1)';
+    adminBtn.style.color      = 'var(--grey-3)';
+    mgrBtn.querySelector('svg').style.fill   = 'white';
+    adminBtn.querySelector('svg').style.fill = 'var(--grey-3)';
+    title.textContent    = 'Department Manager Login';
+    subtitle.textContent = 'Enter your credentials to access the portal';
+    if (pwdHint) pwdHint.style.display = 'flex';
+  }
+}
+
+// Init
+showPanel('loginCard');
+</script>
+</body>
+</html>

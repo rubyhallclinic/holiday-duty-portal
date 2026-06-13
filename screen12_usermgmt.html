@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>User Management — Approved Holiday Duty Confirmation Portal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Montserrat:wght@500;600;700;800&display=swap');
+  :root{--navy:#1B3A6B;--navy-d:#122850;--navy-l:#2A5298;--red:#D32F2F;--yellow:#F5A800;--blue-bg:#EAF4FB;--white:#FFFFFF;--grey-bg:#F5F7FA;--grey-1:#E8ECF0;--grey-2:#C5CDD6;--grey-3:#7F8C9A;--text:#1A2332;--text-s:#4A5568;--border:#D0D8E0;--green:#1B5E20;--green-l:#E8F5E9;--green-b:#43A047;--amber:#E65100;--amber-l:#FFF3E0;--red-l:#FFEBEE;--purple:#4527A0;--purple-l:#EDE7F6;}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;text-decoration:none !important;}
+  body{font-family:'Open Sans',sans-serif;background:var(--blue-bg);min-height:100vh;display:flex;flex-direction:column;}
+  .site-header{width:100%;background:var(--white);border-bottom:3px solid var(--red);padding:12px 32px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(27,58,107,0.10);position:sticky;top:0;z-index:100;}
+  .logo-area{display:flex;align-items:center;gap:12px;}
+  .rhc-cross{width:48px;height:48px;flex-shrink:0;}
+  .logo-gmf{font-size:11px;color:var(--navy);}
+  .logo-rhc{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:700;color:var(--navy);}
+  .header-right{display:flex;align-items:center;gap:16px;}
+  .dept-label{font-size:12px;font-weight:600;color:var(--navy);text-align:right;line-height:1.5;}
+  .dept-label span{display:block;font-size:11px;font-weight:400;color:var(--grey-3);}
+  .admin-pill{display:flex;align-items:center;gap:8px;background:var(--navy);border-radius:24px;padding:6px 14px 6px 8px;}
+  .admin-avatar{width:30px;height:30px;background:var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+  .admin-avatar svg{width:17px;height:17px;fill:var(--navy);}
+  .admin-name{font-size:12px;font-weight:700;color:white;}
+  .admin-role{font-size:11px;color:rgba(255,255,255,0.65);}
+  .back-btn{background:none;border:1.5px solid var(--border);border-radius:6px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--text-s);cursor:pointer;display:flex;align-items:center;gap:6px;transition:border-color 0.2s,color 0.2s;}
+  .back-btn:hover{border-color:var(--navy);color:var(--navy);}
+  .back-btn svg{width:14px;height:14px;fill:currentColor;}
+  .portal-band{width:100%;background:linear-gradient(135deg,var(--navy-d) 0%,var(--navy) 60%,var(--navy-l) 100%);padding:14px 32px;display:flex;align-items:center;justify-content:space-between;}
+  .portal-title{font-family:'Montserrat',sans-serif;font-size:18px;font-weight:700;color:white;}
+  .admin-badge{background:var(--yellow);color:var(--navy-d);font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;padding:3px 10px;border-radius:3px;letter-spacing:0.06em;}
+  /* TABS */
+  .nav-tabs{background:var(--white);border-bottom:2px solid var(--border);padding:0 32px;display:flex;gap:0;overflow-x:auto;}
+  .nav-tab{padding:13px 18px;background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-2px;font-family:'Montserrat',sans-serif;font-size:12px;font-weight:600;color:var(--grey-3);cursor:pointer;display:flex;align-items:center;gap:7px;transition:color 0.2s;white-space:nowrap;}
+  .nav-tab svg{width:15px;height:15px;fill:currentColor;}
+  .nav-tab:hover{color:var(--navy);}
+  .nav-tab.active{color:var(--navy);border-bottom-color:var(--navy);}
+  /* MAIN */
+  .main-content{flex:1;padding:24px 32px 40px;max-width:1100px;width:100%;margin:0 auto;}
+  .tab-pane{display:none;}
+  .tab-pane.active{display:block;}
+  /* FILTER BAR */
+  .filter-bar{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:14px 18px;margin-bottom:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;box-shadow:0 1px 4px rgba(27,58,107,0.06);}
+  .flt-grp{display:flex;flex-direction:column;gap:4px;}
+  .flt-grp label{font-size:11px;font-weight:700;color:var(--text-s);text-transform:uppercase;letter-spacing:0.05em;}
+  .flt-sel,.flt-inp{padding:8px 12px;border:1.5px solid var(--grey-1);border-radius:6px;font-family:'Open Sans',sans-serif;font-size:13px;color:var(--text);background:var(--grey-bg);outline:none;min-width:150px;}
+  .flt-sel:focus,.flt-inp:focus{border-color:var(--navy);background:white;}
+  .search-box{position:relative;flex:1;min-width:200px;}
+  .search-box svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;fill:var(--grey-3);pointer-events:none;}
+  .search-box input{width:100%;padding:8px 12px 8px 30px;border:1.5px solid var(--grey-1);border-radius:6px;font-family:'Open Sans',sans-serif;font-size:13px;background:var(--grey-bg);outline:none;text-transform:uppercase;}
+  .search-box input:focus{border-color:var(--navy);background:white;}
+  /* TABLE */
+  .table-card{background:var(--white);border:1px solid var(--border);border-radius:8px;overflow:hidden;box-shadow:0 1px 6px rgba(27,58,107,0.07);margin-bottom:20px;}
+  .table-wrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  thead tr{background:var(--navy);}
+  thead th{padding:10px 13px;text-align:left;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;color:white;letter-spacing:0.06em;text-transform:uppercase;white-space:nowrap;}
+  tbody tr{border-bottom:1px solid var(--grey-1);transition:background 0.15s;}
+  tbody tr:last-child{border-bottom:none;}
+  tbody tr:hover{background:#F0F6FC;}
+  tbody td{padding:10px 13px;color:var(--text);vertical-align:middle;font-size:13px;}
+  .badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap;}
+  .b-active{background:var(--green-l);color:var(--green);border:1px solid #A5D6A7;}
+  .b-inactive{background:var(--grey-1);color:var(--grey-3);border:1px solid var(--border);}
+  .b-first{background:#FFF3E0;color:var(--amber);border:1px solid #FFD54F;}
+  .empty-cell{text-align:center;padding:32px;color:var(--grey-3);font-size:13px;}
+  .spin{display:inline-block;width:16px;height:16px;border:2px solid var(--grey-2);border-top-color:var(--navy);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:middle;margin-right:6px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  /* ACTION BTNS */
+  .tbl-btn{padding:4px 10px;border-radius:4px;border:1.5px solid var(--border);background:white;font-size:11px;font-weight:600;color:var(--navy);cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:background 0.15s;margin-right:4px;}
+  .tbl-btn:hover{background:var(--grey-bg);}
+  .tbl-btn svg{width:12px;height:12px;fill:currentColor;}
+  .tbl-btn.danger{color:var(--red);border-color:#FFCDD2;}
+  .tbl-btn.danger:hover{background:var(--red-l);}
+  .tbl-btn.success{color:var(--green);border-color:#A5D6A7;}
+  .tbl-btn.success:hover{background:var(--green-l);}
+  /* MODAL */
+  .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:200;align-items:center;justify-content:center;padding:16px;}
+  .modal-overlay.open{display:flex;}
+  .modal{background:white;border-radius:8px;width:100%;max-width:460px;box-shadow:0 8px 32px rgba(0,0,0,0.2);overflow:hidden;animation:fadeUp 0.25s ease;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+  .modal-header{background:linear-gradient(135deg,var(--navy-d),var(--navy));padding:16px 20px;display:flex;align-items:center;justify-content:space-between;}
+  .modal-header h3{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;color:white;}
+  .modal-close{background:rgba(255,255,255,0.15);border:none;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:white;font-size:16px;}
+  .modal-close:hover{background:rgba(255,255,255,0.25);}
+  .modal-body{padding:20px;}
+  .modal-footer{padding:14px 20px;border-top:1px solid var(--grey-1);display:flex;gap:10px;justify-content:flex-end;}
+  .form-group{margin-bottom:16px;}
+  .form-group label{display:block;font-size:11px;font-weight:700;color:var(--text-s);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.06em;}
+  .form-group input,.form-group select{width:100%;padding:10px 13px;border:1.5px solid var(--grey-1);border-radius:6px;font-family:'Open Sans',sans-serif;font-size:13px;color:var(--text);background:var(--grey-bg);outline:none;}
+  .form-group input:focus,.form-group select:focus{border-color:var(--navy);background:white;}
+  .form-group .field-note{font-size:11px;color:var(--grey-3);margin-top:4px;}
+  .info-box{background:var(--grey-bg);border:1px solid var(--border);border-radius:6px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:var(--text-s);line-height:1.6;}
+  .info-box strong{color:var(--text);}
+  .btn-modal-cancel{padding:9px 18px;background:white;color:var(--text-s);border:1.5px solid var(--border);border-radius:6px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
+  .btn-modal-cancel:hover{border-color:var(--red);color:var(--red);}
+  .btn-modal-confirm{padding:9px 22px;background:var(--navy);color:white;border:none;border-radius:6px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;}
+  .btn-modal-confirm:hover{background:var(--navy-d);}
+  .btn-modal-danger{padding:9px 22px;background:var(--red);color:white;border:none;border-radius:6px;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;cursor:pointer;}
+  .btn-modal-danger:hover{background:var(--red-d,#B71C1C);}
+  /* ALERT */
+  .alert{padding:10px 14px;border-radius:6px;font-size:12.5px;margin-bottom:14px;display:flex;align-items:flex-start;gap:8px;line-height:1.5;}
+  .alert svg{width:15px;height:15px;flex-shrink:0;margin-top:1px;}
+  .alert-success{background:var(--green-l);border:1px solid #A5D6A7;color:var(--green);}
+  .alert-success svg{fill:var(--green-b);}
+  .alert-error{background:var(--red-l);border:1px solid #FFCDD2;color:var(--red);}
+  .alert-error svg{fill:var(--red);}
+  /* AUDIT LOG */
+  .audit-action-chip{display:inline-flex;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;background:var(--grey-1);color:var(--text-s);}
+  .audit-admin{background:#E3EAF5;color:var(--navy);}
+  .audit-submit{background:var(--green-l);color:var(--green);}
+  .audit-reset{background:var(--purple-l);color:var(--purple);}
+  .audit-ext{background:var(--amber-l);color:var(--amber);}
+  .audit-login{background:#E3F2FD;color:var(--navy-l);}
+  /* STRENGTH BAR */
+  .strength-wrap{margin-top:6px;}
+  .strength-bg{height:4px;background:var(--grey-1);border-radius:2px;overflow:hidden;}
+  .strength-bar{height:100%;width:0;transition:width 0.3s,background 0.3s;border-radius:2px;}
+  .strength-lbl{font-size:11px;margin-top:4px;}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--navy-d);color:white;padding:10px 20px;border-radius:6px;font-size:13px;font-weight:600;z-index:500;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
+  .toast.show{opacity:1;}
+  .page-footer{text-align:center;font-size:11px;color:var(--grey-3);padding:14px;border-top:1px solid var(--grey-1);background:var(--white);margin-top:auto;}
+  @media(max-width:900px){.site-header{padding:10px 16px;}.portal-band,.nav-tabs{padding-left:12px;padding-right:12px;}.main-content{padding:16px 12px 32px;}.dept-label{display:none;}}
+  /* Password fields must NEVER be uppercase */
+  input[type="password"] { text-transform: none !important; letter-spacing: 0.05em; }
+  #resetNewPwd, #resetConfirmPwd { text-transform: none !important; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="site-header">
+  <div class="logo-area">
+    <svg class="rhc-cross" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="13,1 25,1 25,25 1,25 1,13 13,13" fill="#D32F2F"/>
+      <polygon points="29,1 41,1 41,13 53,13 53,25 29,25" fill="#F5A800"/>
+      <polygon points="1,29 25,29 25,53 13,53 13,41 1,41" fill="#1565C0"/>
+      <polygon points="29,29 53,29 53,41 41,41 41,53 29,53" fill="#2E7D32"/>
+    </svg>
+    <div><div class="logo-gmf">Grant Medical Foundation</div><div class="logo-rhc">Ruby Hall Clinic</div></div>
+  </div>
+  <div class="header-right">
+    <div class="dept-label">Department of HR &amp; ER<span>Attendance &amp; Leave Management</span></div>
+    <div class="admin-pill">
+      <div class="admin-avatar"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+      <div><div class="admin-name" id="adminName">ADMIN</div><div class="admin-role">Attendance Manager</div></div>
+    </div>
+    <button class="back-btn" onclick="window.location.href='screen7_admin_dashboard.html'">
+      <svg viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>Dashboard
+    </button>
+  </div>
+</div>
+
+<div class="portal-band">
+  <div class="portal-title">Approved Holiday Duty Confirmation Portal</div>
+  <div class="admin-badge">USER MANAGEMENT</div>
+</div>
+
+<!-- TABS -->
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="switchTab('managersTab',this)">
+    <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+    Department Managers
+  </button>
+  <button class="nav-tab" onclick="switchTab('extensionsTab',this)">
+    <svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+    Access Extensions
+  </button>
+  <button class="nav-tab" onclick="switchTab('auditTab',this)">
+    <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+    Audit Log
+  </button>
+</div>
+
+<!-- MAIN -->
+<div class="main-content">
+
+  <!-- Global Alert -->
+  <div class="alert" id="pageAlert" style="display:none;">
+    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+    <span id="pageAlertMsg"></span>
+  </div>
+
+  <!-- ══ TAB 1: MANAGERS ══ -->
+  <div class="tab-pane active" id="managersTab">
+    <div class="filter-bar">
+      <div class="flt-grp">
+        <label>Location</label>
+        <select class="flt-sel" id="mgrLocFlt" onchange="loadManagers()"><option value="">All Locations</option></select>
+      </div>
+      <div class="flt-grp">
+        <label>Status</label>
+        <select class="flt-sel" id="mgrStatusFlt" onchange="loadManagers()">
+          <option value="">All</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+          <option value="first_login">First Login Pending</option>
+        </select>
+      </div>
+      <div class="flt-grp" style="flex:1;">
+        <label>Search</label>
+        <div class="search-box">
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" id="mgrSearch" placeholder="NAME OR EMAIL..." oninput="filterManagers()"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>#</th><th>Manager Name</th><th>Email</th><th>Location</th>
+            <th>Departments</th><th>Status</th><th>Actions</th>
+          </tr></thead>
+          <tbody id="managersBody">
+            <tr><td colspan="7" class="empty-cell"><span class="spin"></span>Loading managers...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB 2: EXTENSIONS ══ -->
+  <div class="tab-pane" id="extensionsTab">
+    <div class="filter-bar">
+      <div class="flt-grp">
+        <label>Holiday</label>
+        <select class="flt-sel" id="extHolFlt" onchange="loadExtensions()"><option value="">All Holidays</option></select>
+      </div>
+      <div class="flt-grp">
+        <label>Location</label>
+        <select class="flt-sel" id="extLocFlt" onchange="loadExtensions()"><option value="">All Locations</option></select>
+      </div>
+    </div>
+    <div class="table-card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th>#</th><th>Holiday</th><th>Department</th><th>Manager</th>
+            <th>Old Deadline</th><th>New Deadline</th><th>Extended By</th><th>Extended At</th><th>Reason</th>
+          </tr></thead>
+          <tbody id="extensionsBody">
+            <tr><td colspan="9" class="empty-cell"><span class="spin"></span>Loading extensions...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB 3: AUDIT LOG ══ -->
+  <div class="tab-pane" id="auditTab">
+    <div class="filter-bar">
+      <div class="flt-grp">
+        <label>Role</label>
+        <select class="flt-sel" id="auditRoleFlt" onchange="loadAudit()">
+          <option value="">All Roles</option>
+          <option value="ADMIN">Admin</option>
+          <option value="MANAGER">Manager</option>
+        </select>
+      </div>
+      <div class="flt-grp">
+        <label>Action Type</label>
+        <select class="flt-sel" id="auditActionFlt" onchange="loadAudit()">
+          <option value="">All Actions</option>
+          <option value="LOGIN">Login</option>
+          <option value="SUBMISSION_FINALISED">Submission</option>
+          <option value="PASSWORD_RESET_BY_ADMIN">Password Reset</option>
+          <option value="ACCESS_EXTENDED">Access Extended</option>
+          <option value="VALIDATION_STATUS_UPLOADED">Validation Upload</option>
+          <option value="EMPLOYEE_MASTER_UPLOADED">Employee Upload</option>
+          <option value="HOLIDAY_CREATED">Holiday Created</option>
+        </select>
+      </div>
+      <div class="flt-grp" style="flex:1;">
+        <label>Search User</label>
+        <div class="search-box">
+          <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" id="auditSearch" placeholder="SEARCH BY USER..." oninput="loadAudit()"/>
+        </div>
+      </div>
+    </div>
+    <div class="table-card">
+      <div class="table-wrap" style="max-height:520px;overflow-y:auto;">
+        <table>
+          <thead><tr>
+            <th>#</th><th>Date &amp; Time</th><th>Action</th><th>Performed By</th>
+            <th>Role</th><th>Department</th><th>Details</th>
+          </tr></thead>
+          <tbody id="auditBody">
+            <tr><td colspan="7" class="empty-cell"><span class="spin"></span>Loading audit log...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- PASSWORD RESET MODAL -->
+<div class="modal-overlay" id="resetModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Reset Manager Password</h3>
+      <button class="modal-close" onclick="closeModal('resetModal')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-box" id="resetModalInfo"></div>
+      <div class="alert alert-error" id="resetModalError" style="display:none;">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+        <span id="resetModalErrorMsg"></span>
+      </div>
+      <div class="form-group">
+        <label>New Password <span style="color:var(--red);">*</span></label>
+        <input type="password" id="resetNewPwd" placeholder="Minimum 8 characters" oninput="checkPwdStrength(this.value)"/>
+        <div class="strength-wrap">
+          <div class="strength-bg"><div class="strength-bar" id="resetStrengthBar"></div></div>
+          <div class="strength-lbl" id="resetStrengthLbl"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password <span style="color:var(--red);">*</span></label>
+        <input type="password" id="resetConfirmPwd" placeholder="Re-enter new password"/>
+        <div class="field-note">This password is set directly — no OTP or email required. Communicate the new password to the manager personally.</div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal('resetModal')">Cancel</button>
+      <button class="btn-modal-danger" onclick="confirmReset()">Reset Password</button>
+    </div>
+  </div>
+</div>
+
+<!-- DEACTIVATE MODAL -->
+<div class="modal-overlay" id="deactivateModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Deactivate Manager Account</h3>
+      <button class="modal-close" onclick="closeModal('deactivateModal')">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="info-box" id="deactivateInfo"></div>
+      <div style="font-size:13.5px;color:var(--text);line-height:1.7;">
+        Deactivating this account will prevent the manager from logging in. Their past submission records will be retained.
+        You can re-activate anytime from this screen.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-modal-cancel" onclick="closeModal('deactivateModal')">Cancel</button>
+      <button class="btn-modal-danger" onclick="confirmDeactivate()">Deactivate</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="page-footer">&copy; 2026 &nbsp;Grant Medical Foundation &nbsp;|&nbsp; Ruby Hall Clinic &nbsp;|&nbsp; Department of HR &amp; ER</div>
+
+<script>
+const SUPABASE_URL  = 'sb_publishable_m9N8d07XWyZa0SWxN0f06w_t1TIiVL9';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlwcWxxZ3l4Zm1jb3FxamNnY2hkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA4MjU3MjMsImV4cCI6MjA5NjQwMTcyM30.tKoN4jw7a_YiyhxqCUQE5o5Ev8zFKvPXpOv56tMTSBU';
+const authToken = sessionStorage.getItem('auth_token');
+const adminName = sessionStorage.getItem('manager_name') || 'ADMIN';
+if (!authToken) window.location.href = 'index.html';
+document.getElementById('adminName').textContent = adminName;
+
+let allManagers  = [];
+let resetTarget  = null;
+let deactTarget  = null;
+
+function switchTab(tabId,btn){
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  btn.classList.add('active');
+  if(tabId==='extensionsTab') loadExtensions();
+  if(tabId==='auditTab') loadAudit();
+}
+
+function showToast(msg,dur=3000){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
+function showPageAlert(type,msg){const el=document.getElementById('pageAlert');el.className=`alert alert-${type}`;document.getElementById('pageAlertMsg').textContent=msg;el.style.display='flex';setTimeout(()=>el.style.display='none',6000);}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+
+function fmtDate(d){if(!d) return '—';return new Date(d).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}
+function fmtDateTime(d){if(!d) return '—';const dt=new Date(d);return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'})+', '+dt.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true}).toUpperCase();}
+
+async function api(path){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{headers:{'apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`}});
+  if(!res.ok) throw new Error('API error');
+  return res.json();
+}
+async function apiPatch(path,body){
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/${path}`,{method:'PATCH',headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`,'Prefer':'return=minimal'},body:JSON.stringify(body)});
+  if(!res.ok) throw new Error('Patch error');
+}
+
+async function init(){
+  // Load locations for filters
+  const locs=await api(`locations?is_active=eq.true&order=location_name.asc&select=location_id,location_name`);
+  ['mgrLocFlt','extLocFlt'].forEach(id=>{
+    const sel=document.getElementById(id);
+    locs.forEach(l=>{const o=document.createElement('option');o.value=l.location_id;o.textContent=l.location_name;sel.appendChild(o);});
+  });
+  // Load holidays for extension filter
+  const hols=await api(`holidays?order=holiday_date.desc&select=holiday_id,holiday_name,holiday_date`);
+  const extHol=document.getElementById('extHolFlt');
+  hols.forEach(h=>{const o=document.createElement('option');o.value=h.holiday_id;o.textContent=`${h.holiday_name} — ${fmtDate(h.holiday_date)}`;extHol.appendChild(o);});
+  await loadManagers();
+}
+
+// ══ MANAGERS ══
+async function loadManagers(){
+  const locFlt   = document.getElementById('mgrLocFlt').value;
+  const statFlt  = document.getElementById('mgrStatusFlt').value;
+  const tbody    = document.getElementById('managersBody');
+  tbody.innerHTML=`<tr><td colspan="7" class="empty-cell"><span class="spin"></span>Loading...</td></tr>`;
+
+  try{
+    let q=`managers?order=manager_name.asc&select=manager_id,manager_name,email,location_id,is_active,is_first_login,locations(location_name),manager_departments(department_id,departments(department_name))`;
+    if(locFlt) q+=`&location_id=eq.${locFlt}`;
+    if(statFlt==='active')      q+=`&is_active=eq.true`;
+    if(statFlt==='inactive')    q+=`&is_active=eq.false`;
+    if(statFlt==='first_login') q+=`&is_first_login=eq.true&is_active=eq.true`;
+
+    allManagers=await api(q);
+    filterManagers();
+  }catch(e){
+    tbody.innerHTML=`<tr><td colspan="7" class="empty-cell" style="color:var(--red);">Failed to load. Please refresh.</td></tr>`;
+  }
+}
+
+function filterManagers(){
+  const search = document.getElementById('mgrSearch').value.toUpperCase().trim();
+  const filtered = search
+    ? allManagers.filter(m=>m.manager_name.includes(search)||m.email.toUpperCase().includes(search))
+    : allManagers;
+
+  const tbody = document.getElementById('managersBody');
+  if(filtered.length===0){tbody.innerHTML='<tr><td colspan="7" class="empty-cell">No managers found.</td></tr>';return;}
+
+  tbody.innerHTML=filtered.map((m,i)=>{
+    const depts = m.manager_departments?.map(md=>md.departments?.department_name).filter(Boolean).join(', ')||'—';
+    const statusBadge = !m.is_active
+      ? `<span class="badge b-inactive">Inactive</span>`
+      : m.is_first_login
+      ? `<span class="badge b-first">First Login Pending</span>`
+      : `<span class="badge b-active">Active</span>`;
+
+    return `<tr>
+      <td>${i+1}</td>
+      <td><strong>${m.manager_name}</strong></td>
+      <td style="font-size:12px;">${m.email}</td>
+      <td>${m.locations?.location_name||'—'}</td>
+      <td style="font-size:12px;max-width:200px;">${depts}</td>
+      <td>${statusBadge}</td>
+      <td>
+        <button class="tbl-btn" onclick="openResetModal('${m.manager_id}','${m.manager_name}','${m.email}')">
+          <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2z"/></svg>
+          Reset Pwd
+        </button>
+        ${m.is_active
+          ? `<button class="tbl-btn danger" onclick="openDeactivateModal('${m.manager_id}','${m.manager_name}')">Deactivate</button>`
+          : `<button class="tbl-btn success" onclick="reactivate('${m.manager_id}','${m.manager_name}')">Reactivate</button>`
+        }
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+// PASSWORD RESET
+function openResetModal(mgrid,name,email){
+  resetTarget={mgrid,name,email};
+  document.getElementById('resetModalInfo').innerHTML=`<strong>Manager:</strong> ${name}<br/><strong>Email:</strong> ${email}<br/><br/>Enter a new password below. This will be set immediately without any OTP or email. Communicate the new password to the manager directly.`;
+  document.getElementById('resetNewPwd').value='';
+  document.getElementById('resetConfirmPwd').value='';
+  document.getElementById('resetModalError').style.display='none';
+  document.getElementById('resetStrengthBar').style.width='0';
+  document.getElementById('resetStrengthLbl').textContent='';
+  document.getElementById('resetModal').classList.add('open');
+}
+
+function checkPwdStrength(v){
+  let s=0;
+  if(v.length>=8) s++;
+  if(/[A-Z]/.test(v)) s++;
+  if(/[0-9]/.test(v)) s++;
+  if(/[^A-Za-z0-9]/.test(v)) s++;
+  const levels=[{w:'25%',c:'#E53935',t:'Weak'},{w:'50%',c:'#FB8C00',t:'Fair'},{w:'75%',c:'#FDD835',t:'Good'},{w:'100%',c:'#43A047',t:'Strong'}];
+  const bar=document.getElementById('resetStrengthBar');
+  const lbl=document.getElementById('resetStrengthLbl');
+  if(!v){bar.style.width='0';lbl.textContent='';return;}
+  const l=levels[s-1]||levels[0];
+  bar.style.width=l.w;bar.style.background=l.c;
+  lbl.textContent=`Strength: ${l.t}`;lbl.style.color=l.c;
+}
+
+async function confirmReset(){
+  const np=document.getElementById('resetNewPwd').value;
+  const cp=document.getElementById('resetConfirmPwd').value;
+  if(np.length<8){document.getElementById('resetModalError').style.display='flex';document.getElementById('resetModalErrorMsg').textContent='Password must be at least 8 characters.';return;}
+  if(np!==cp){document.getElementById('resetModalError').style.display='flex';document.getElementById('resetModalErrorMsg').textContent='Passwords do not match.';return;}
+  if(!resetTarget) return;
+
+  try{
+    // Reset via Supabase Admin API
+    const res=await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${resetTarget.mgrid}`,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`},
+      body:JSON.stringify({password:np})
+    });
+    if(!res.ok) throw new Error('Reset failed');
+
+    // Mark is_first_login = false if it was true (admin reset = they've been given new pwd)
+    await apiPatch(`managers?manager_id=eq.${resetTarget.mgrid}`,{is_first_login:false});
+
+    // Log audit
+    await fetch(`${SUPABASE_URL}/rest/v1/audit_log`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON,'Authorization':`Bearer ${authToken}`,'Prefer':'return=minimal'},
+      body:JSON.stringify({action_type:'PASSWORD_RESET_BY_ADMIN',performed_by:adminName,role:'ADMIN',details:{target_manager:resetTarget.name,target_email:resetTarget.email}})
+    });
+
+    closeModal('resetModal');
+    showToast(`Password reset for ${resetTarget.name}. Communicate new password personally.`);
+    showPageAlert('success',`Password reset successfully for ${resetTarget.name}. Please communicate the new password to them directly.`);
+
+  }catch(e){
+    document.getElementById('resetModalError').style.display='flex';
+    document.getElementById('resetModalErrorMsg').textContent='Failed to reset password. Please try again.';
+  }
+}
+
+// DEACTIVATE
+function openDeactivateModal(mgrid,name){
+  deactTarget={mgrid,name};
+  document.getElementById('deactivateInfo').innerHTML=`<strong>Manager:</strong> ${name}<br/>This manager will no longer be able to log in.`;
+  document.getElementById('deactivateModal').classList.add('open');
+}
+
+async function confirmDeactivate(){
+  if(!deactTarget) return;
+  try{
+    await apiPatch(`managers?manager_id=eq.${deactTarget.mgrid}`,{is_active:false});
+    closeModal('deactivateModal');
+    showToast(`${deactTarget.name} deactivated.`);
+    await loadManagers();
+  }catch(e){alert('Failed to deactivate. Please try again.');}
+}
+
+async function reactivate(mgrid,name){
+  if(!confirm(`Reactivate account for ${name}?`)) return;
+  try{
+    await apiPatch(`managers?manager_id=eq.${mgrid}`,{is_active:true,is_first_login:true});
+    showToast(`${name} reactivated. They will be prompted to set a new password on next login.`);
+    await loadManagers();
+  }catch(e){alert('Failed to reactivate.');}
+}
+
+// ══ EXTENSIONS ══
+async function loadExtensions(){
+  const holFlt = document.getElementById('extHolFlt').value;
+  const locFlt = document.getElementById('extLocFlt').value;
+  const tbody  = document.getElementById('extensionsBody');
+  tbody.innerHTML=`<tr><td colspan="9" class="empty-cell"><span class="spin"></span>Loading...</td></tr>`;
+
+  try{
+    let q=`access_extensions?order=extended_at.desc&select=extension_id,old_deadline,new_deadline,extended_by,reason,extended_at,holidays(holiday_name,holiday_date),departments(department_name,locations(location_name)),managers(manager_name,email)`;
+    if(holFlt) q+=`&holiday_id=eq.${holFlt}`;
+
+    let data=await api(q);
+    if(locFlt) data=data.filter(r=>r.departments?.locations?.location_id===locFlt||r.departments?.locations?.location_name);
+
+    if(data.length===0){tbody.innerHTML='<tr><td colspan="9" class="empty-cell">No access extensions found.</td></tr>';return;}
+
+    tbody.innerHTML=data.map((r,i)=>`<tr>
+      <td>${i+1}</td>
+      <td style="white-space:nowrap;">${r.holidays?.holiday_name||'—'}<br/><span style="font-size:11px;color:var(--grey-3);">${fmtDate(r.holidays?.holiday_date)}</span></td>
+      <td>${r.departments?.department_name||'—'}<br/><span style="font-size:11px;color:var(--grey-3);">${r.departments?.locations?.location_name||''}</span></td>
+      <td style="font-size:12px;">${r.managers?.manager_name||'—'}<br/><span style="font-size:11px;color:var(--grey-3);">${r.managers?.email||''}</span></td>
+      <td style="font-size:12px;color:var(--red);">${fmtDateTime(r.old_deadline)}</td>
+      <td style="font-size:12px;color:var(--green);font-weight:600;">${fmtDateTime(r.new_deadline)}</td>
+      <td>${r.extended_by}</td>
+      <td style="font-size:12px;">${fmtDateTime(r.extended_at)}</td>
+      <td style="font-size:12px;color:var(--text-s);">${r.reason||'—'}</td>
+    </tr>`).join('');
+  }catch(e){
+    tbody.innerHTML=`<tr><td colspan="9" class="empty-cell" style="color:var(--red);">Failed to load.</td></tr>`;
+  }
+}
+
+// ══ AUDIT LOG ══
+async function loadAudit(){
+  const roleFlt   = document.getElementById('auditRoleFlt').value;
+  const actionFlt = document.getElementById('auditActionFlt').value;
+  const search    = document.getElementById('auditSearch').value.toUpperCase().trim();
+  const tbody     = document.getElementById('auditBody');
+  tbody.innerHTML=`<tr><td colspan="7" class="empty-cell"><span class="spin"></span>Loading...</td></tr>`;
+
+  try{
+    let q=`audit_log?order=created_at.desc&limit=200&select=log_id,action_type,performed_by,role,details,created_at,departments(department_name)`;
+    if(roleFlt)   q+=`&role=eq.${roleFlt}`;
+    if(actionFlt) q+=`&action_type=eq.${actionFlt}`;
+
+    let data=await api(q);
+    if(search) data=data.filter(r=>r.performed_by?.toUpperCase().includes(search));
+
+    if(data.length===0){tbody.innerHTML='<tr><td colspan="7" class="empty-cell">No audit records found.</td></tr>';return;}
+
+    tbody.innerHTML=data.map((r,i)=>{
+      const actionClass =
+        r.action_type?.includes('LOGIN')        ? 'audit-login'  :
+        r.action_type?.includes('SUBMIT')       ? 'audit-submit' :
+        r.action_type?.includes('RESET')        ? 'audit-reset'  :
+        r.action_type?.includes('EXTEND')       ? 'audit-ext'    :
+        r.action_type?.includes('HOLIDAY')      ? 'audit-admin'  :
+        r.action_type?.includes('UPLOAD')       ? 'audit-admin'  : '';
+
+      const details = r.details ? JSON.stringify(r.details).slice(0,80) : '—';
+
+      return `<tr>
+        <td>${i+1}</td>
+        <td style="font-size:12px;white-space:nowrap;">${fmtDateTime(r.created_at)}</td>
+        <td><span class="audit-action-chip ${actionClass}">${r.action_type||'—'}</span></td>
+        <td style="font-size:12px;">${r.performed_by||'—'}</td>
+        <td><span class="badge ${r.role==='ADMIN'?'b-active':'b-inactive'}">${r.role}</span></td>
+        <td style="font-size:12px;">${r.departments?.department_name||'—'}</td>
+        <td style="font-size:11px;color:var(--text-s);max-width:200px;overflow:hidden;text-overflow:ellipsis;">${details}</td>
+      </tr>`;
+    }).join('');
+  }catch(e){
+    tbody.innerHTML=`<tr><td colspan="7" class="empty-cell" style="color:var(--red);">Failed to load audit log.</td></tr>`;
+  }
+}
+
+init();
+</script>
+</body>
+</html>
